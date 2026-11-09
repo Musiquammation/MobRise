@@ -14,7 +14,7 @@
 	<canvas></canvas>
 
 	<header x-cloak x-show="!$store.dom.is('loading')">
-		<output x-text="$store.dom.coins"></output>
+		<output x-text="$store.dom.coins.toFixed(1)"></output>
 	</header>
 
 	<template x-if="$store.dom.is('loading')">
@@ -49,12 +49,12 @@
 				<span x-show="p.combo > 1">Combo <b x-text="'×' + p.combo"></b></span>
 			</aside>
 			<template x-for="k in [p.gainKey]" :key="k">
-				<em x-show="k > 0" x-text="'+' + p.gain"></em>
+				<em x-show="k > 0" x-text="'+' + p.gain.toFixed(1)"></em>
 			</template>
 
 			<article x-show="p.phase === 'won'" x-transition>
 				<h2>Niveau terminé !</h2>
-				<p>+<b x-text="p.earned"></b> pièces</p>
+				<p>+<b x-text="p.earned.toFixed(1)"></b> pièces</p>
 				<button @click="$store.dom.next()">Suivant</button>
 			</article>
 			<article x-show="p.phase === 'lost'" x-transition>
