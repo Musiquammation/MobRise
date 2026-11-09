@@ -66,6 +66,17 @@ const aimPlane = new THREE.Plane();
 const groundPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
 const hit = new THREE.Vector3();
 
+const COMBO_K = 3;
+
+/** Coins earned by the x-th box hit in a row: ln(3x+10) - ln(k+10) + 1, rounded to a tenth. */
+export function comboGain(x: number) {
+	return roundTenth(Math.log(3 * x + 10) - Math.log(COMBO_K + 10) + 1);
+}
+
+export function roundTenth(v: number) {
+	return Math.round(v * 10) / 10;
+}
+
 export class Game extends GameLayer {
 	readonly entities = new EntityContainer({
 		onCreate: e => {
@@ -107,6 +118,7 @@ export class Game extends GameLayer {
 	private readonly crowdOptions: CrowdOptions;
 	private readonly gatherOptions: CrowdOptions;
 
+	/** Number of boxes hit in a row. */
 	private combo = 0;
 	private earned = 0;
 	private endTimer = 0;
@@ -256,11 +268,12 @@ export class Game extends GameLayer {
 		player.kill();
 		box.bump();
 		this.combo++;
-		this.earned += this.combo;
-		this.callbacks.onCoins(this.combo);
+		const gain = comboGain(this.combo);
+		this.earned = roundTenth(this.earned + gain);
+		this.callbacks.onCoins(gain);
 		if (this.ui) {
 			this.ui.combo = this.combo;
-			this.ui.gain = this.combo;
+			this.ui.gain = gain;
 			this.ui.gainKey++;
 			this.ui.earned = this.earned;
 		}

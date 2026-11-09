@@ -5,7 +5,7 @@ import {
 	createDomHandler, DomHandler, GameComponent, LoadingComponent, MainComponent, ShopComponent,
 	type DomActions,
 } from "./DomHandler";
-import { Game } from "./game/Game";
+import { Game, roundTenth } from "./game/Game";
 import { InputHandler } from "./game/InputHandler";
 import { renderSkinThumbnails } from "./game/skinThumbnails";
 import { loadSave, writeSave, type SaveData } from "./data/save";
@@ -105,7 +105,7 @@ export class App implements DomActions {
 	}
 
 	private addCoins(amount: number) {
-		this.save.coins += amount;
+		this.save.coins = roundTenth(this.save.coins + amount);
 		this.dom.coins = this.save.coins;
 		writeSave(this.save);
 	}
