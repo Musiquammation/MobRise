@@ -68,13 +68,34 @@ export class Player extends Entity {
 		this.velocity.set(vx, vy, vz);
 	}
 
+	/** Throws the player in the air (jump pads). velocity.y is unused by crowdPhysics. */
+	jump(power: number) {
+		if (this.state !== "run" || this.position.y > 0.05) return;
+		this.velocity.y = power;
+		this.position.y = 0.06;
+	}
+
+	isAirborne(): boolean {
+		return this.position.y > 0;
+	}
+
 	private run(game: Game, dt: number) {
 		// Moved by crowdPhysics: only look where it is going.
 		this.turnToward(this.velocity.x, this.velocity.z - game.speed, dt);
 
+		if (this.position.y > 0) {
+			this.velocity.y += GRAVITY * dt;
+			this.position.y += this.velocity.y * dt;
+			this.spin = Math.min(0.5, this.spin + dt * 2);
+			if (this.position.y > 0) return;
+			this.position.y = 0;
+			this.velocity.y = 0;
+			this.spin = 0;
+		}
+
 		if (!game.isSupported(this.position.x, this.position.z)) {
 			this.state = "fall";
-			this.velocity.set(0, 0, -game.speed * 0.5);
+			this.velocity.set(0, Math.min(0, this.velocity.y), -game.speed * 0.5);
 			game.markCrowdDirty();
 		}
 	}
