@@ -39,6 +39,11 @@ export abstract class Gate extends Entity {
 	/** Whether the gate increases the number of players. */
 	abstract isGood(): boolean;
 
+	/** Background color of the panel. */
+	color(): string {
+		return this.isGood() ? "#2f8cff" : "#ff3b4e";
+	}
+
 	getObject() {
 		return this.object;
 	}
@@ -66,13 +71,14 @@ export abstract class Gate extends Entity {
 		canvas.width = 256;
 		canvas.height = 160;
 		const ctx = canvas.getContext("2d")!;
-		ctx.fillStyle = this.isGood() ? "#2f8cff" : "#ff3b4e";
+		ctx.fillStyle = this.color();
 		ctx.fillRect(0, 0, 256, 160);
 		ctx.fillStyle = "#fff";
-		ctx.font = "bold 92px system-ui, sans-serif";
+		const label = this.label();
+		ctx.font = `bold ${label.length > 3 ? 72 : 92}px system-ui, sans-serif`;
 		ctx.textAlign = "center";
 		ctx.textBaseline = "middle";
-		ctx.fillText(this.label(), 128, 86);
+		ctx.fillText(label, 128, 86);
 
 		const texture = new THREE.CanvasTexture(canvas);
 		texture.colorSpace = THREE.SRGBColorSpace;

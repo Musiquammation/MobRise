@@ -9,6 +9,9 @@ export class InputHandler {
 	x: number | null = null;
 	y: number | null = null;
 
+	/** Incremented on every press (lets relative controls ignore the jump to a new touch). */
+	presses = 0;
+
 	private pointerId: number | null = null;
 
 	constructor(target: EventTarget = window) {
@@ -28,6 +31,7 @@ export class InputHandler {
 		if (this.pointerId !== null) return;
 		this.pointerId = e.pointerId;
 		this.down = true;
+		this.presses++;
 		this.x = e.clientX;
 		this.y = e.clientY;
 	}

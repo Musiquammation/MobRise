@@ -10,11 +10,11 @@
   "gates": [
     { "z": 15, "x": -2, "width": 4, "type": "add", "value": 5 },
     { "z": 15, "x": 2, "width": 4, "type": "mul", "value": 2 },
-    { "z": 40, "x": -2, "width": 4, "type": "add", "value": 10 },
-    { "z": 40, "x": 2, "width": 4, "type": "add", "value": -3 },
+    { "z": 40, "x": -2, "width": 4, "type": "add", "value": 6 },
+    { "z": 40, "x": 2, "width": 4, "type": "pct", "value": 80 },
     { "z": 80, "x": -2, "width": 4, "type": "mul", "value": 3 },
     { "z": 80, "x": 2, "width": 4, "type": "add", "value": 8 }
   ],
-  "arrows": [],
+  "spikes": [],
   "cannon": { "boxes": 5, "distance": 24, "height": 7, "rx": 5, "ry": 2.5, "speed": 0.15 }
 }

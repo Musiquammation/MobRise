@@ -7,10 +7,11 @@ import type { InputHandler } from "./InputHandler";
 import type { Entity } from "./Entity";
 import { Player } from "./entities/Player";
 import { Floor, FLOOR_AFTER } from "./entities/platforms/Floor";
-import { Arrow } from "./entities/hazards/Arrow";
+import { SpikeBall } from "./entities/hazards/SpikeBall";
 import type { Gate } from "./entities/Gate";
 import { Addition } from "./entities/gates/Addition";
 import { Multiplication } from "./entities/gates/Multiplication";
+import { Percentage } from "./entities/gates/Percentage";
 import { Cannon } from "./entities/Cannon";
 import { MysteryBox } from "./entities/MysteryBox";
 import { DEFAULT_CROWD_OPTIONS, FORCES, stepCrowd, type CrowdOptions, type ForceName } from "./crowdPhysics";
@@ -108,6 +109,11 @@ export class Game extends GameLayer {
 	private readonly gatherOptions: CrowdOptions;
 
 	private combo = 0;
+	/** Box hit by the last shot (the combo grows only on this one). */
+	private comboBox: MysteryBox | null = null;
+	/** Pointer screen position at the previous frame (relative aiming). */
+	private aimPrev: THREE.Vector3 | null = null;
+	private aimPress = -1;
 	private earned = 0;
 	private endTimer = 0;
 	private ui: GameComponent | null = null;
@@ -136,13 +142,13 @@ export class Game extends GameLayer {
 		const model = (id: string) => resources.getModel(id).scene;
 
 		for (const g of level.gates) {
-			const Type = g.type === "mul" ? Multiplication : Addition;
+			const Type = g.type === "mul" ? Multiplication : g.type === "pct" ? Percentage : Addition;
 			this.entities.add("gate", new Type(model("gate_post"), g.x, -g.z, g.width, g.value));
 		}
 
-		for (const a of level.arrows) {
-			this.entities.add("hazard", new Arrow(
-				model("arrow"), -a.z, a.speed, level.width / 2 + 2.5, a.height ?? 0.55, a.offset ?? 0,
+		for (const s of level.spikes) {
+			this.entities.add("hazard", new SpikeBall(
+				model("spike_ball"), -s.z, s.speed, level.width / 2 + 2.5, s.offset ?? 0,
 			));
 		}
 
@@ -243,6 +249,9 @@ export class Game extends GameLayer {
 		this.crowdDirty = false;
 		this.crowd = [];
 		this.combo = 0;
+		this.comboBox = null;
+		this.aimPrev = null;
+		this.aimPoint.copy(this.boxCenter);
 		this.input.reset();
 	}
 
@@ -255,7 +264,9 @@ export class Game extends GameLayer {
 	onBoxHit(box: MysteryBox, player: Player) {
 		player.kill();
 		box.bump();
-		this.combo++;
+		// The combo only grows while the same box keeps being hit.
+		this.combo = box === this.comboBox ? this.combo + 1 : 1;
+		this.comboBox = box;
 		this.earned += this.combo;
 		this.callbacks.onCoins(this.combo);
 		if (this.ui) {
@@ -268,20 +279,45 @@ export class Game extends GameLayer {
 
 	onMiss() {
 		this.combo = 0;
+		this.comboBox = null;
 		if (this.ui) this.ui.combo = 0;
 	}
 
+	/**
+	 * Relative aiming: the target moves by the same amount as the pointer
+	 * (measured on the plane of the boxes), it does not jump under it.
+	 */
 	private updateAim() {
-		const { x, y } = this.input;
+		const { x, y, presses } = this.input;
 		if (x === null || y === null) {
-			this.aimPoint.copy(this.boxCenter);
+			this.aimPrev = null;
 			return;
 		}
+		// A new touch starts from where the target already is.
+		const prev = this.aimPrev;
+		if (prev && presses === this.aimPress && (prev.x !== x || prev.y !== y)) {
+			// Both points measured with the current camera: a moving camera does not drift the aim.
+			aimPlane.set(new THREE.Vector3(0, 0, 1), -this.boxCenter.z);
+			if (this.pointerOnPlane(prev.x, prev.y, aimPlane, projected) && this.pointerOnPlane(x, y, aimPlane, hit)) {
+				this.aimPoint.x += hit.x - projected.x;
+				this.aimPoint.y += hit.y - projected.y;
+			}
+		}
+		this.aimPress = presses;
+		(this.aimPrev ??= new THREE.Vector3()).set(x, y, 0);
+
+		const c = this.level.cannon;
+		const mx = c.rx + 3, my = c.ry + 3;
+		this.aimPoint.x = Math.max(this.boxCenter.x - mx, Math.min(this.boxCenter.x + mx, this.aimPoint.x));
+		this.aimPoint.y = Math.max(0.5, Math.min(this.boxCenter.y + my, this.aimPoint.y));
+		this.aimPoint.z = this.boxCenter.z;
+	}
+
+	/** Point of `plane` under the screen position (x, y). */
+	private pointerOnPlane(x: number, y: number, plane: THREE.Plane, out: THREE.Vector3): boolean {
 		ndc.set((x / window.innerWidth) * 2 - 1, -(y / window.innerHeight) * 2 + 1);
 		raycaster.setFromCamera(ndc, this.camera.get());
-		aimPlane.set(new THREE.Vector3(0, 0, 1), -this.boxCenter.z);
-		if (!raycaster.ray.intersectPlane(aimPlane, this.aimPoint)) this.aimPoint.copy(this.boxCenter);
-		this.aimPoint.y = Math.max(0.5, this.aimPoint.y);
+		return raycaster.ray.intersectPlane(plane, out) !== null;
 	}
 
 	// ------------------------------------------------------------- loop
@@ -394,7 +430,7 @@ export class Game extends GameLayer {
 	private updateCamera(dt: number, snap = false) {
 		if (this.phase === "cannon" || this.phase === "won") {
 			const c = this.cannon.position;
-			camPos.set(c.x, c.y + 4.2, c.z + 7.5);
+			camPos.set(c.x, c.y + 5.6, c.z + 11);
 			camLook.set(this.boxCenter.x, this.boxCenter.y * 0.75, this.boxCenter.z);
 		} else {
 			const zoom = Math.min(7, Math.sqrt(this.crowd.length) * 0.4);

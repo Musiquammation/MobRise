@@ -15,17 +15,17 @@
     { "z": 15, "x": 1.75, "width": 3.5, "type": "add", "value": 10 },
     { "z": 50, "x": -1.75, "width": 3.5, "type": "add", "value": -20 },
     { "z": 50, "x": 1.75, "width": 3.5, "type": "mul", "value": 2 },
-    { "z": 115, "x": -1.75, "width": 3.5, "type": "mul", "value": 3 },
-    { "z": 115, "x": 1.75, "width": 3.5, "type": "add", "value": 40 },
+    { "z": 115, "x": -1.75, "width": 3.5, "type": "add", "value": 25 },
+    { "z": 115, "x": 1.75, "width": 3.5, "type": "pct", "value": 75 },
     { "z": 175, "x": -1.75, "width": 3.5, "type": "add", "value": -30 },
     { "z": 175, "x": 1.75, "width": 3.5, "type": "mul", "value": 0.5 }
   ],
-  "arrows": [
+  "spikes": [
     { "z": 40, "speed": 6 },
     { "z": 60, "speed": 7, "offset": 0.5 },
     { "z": 130, "speed": 8 },
     { "z": 140, "speed": 8, "offset": 0.5 },
-    { "z": 165, "speed": 6, "height": 0.35, "offset": 0.25 }
+    { "z": 165, "speed": 6, "offset": 0.25 }
   ],
   "cannon": { "boxes": 8, "distance": 30, "height": 8.5, "rx": 8, "ry": 3.5, "speed": 0.22 }
 }
