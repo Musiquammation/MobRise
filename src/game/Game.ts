@@ -27,6 +27,13 @@ const PLAYER_HALF = 0.22;
  * beyond the edge squeezes the crowd against it.
  */
 const EDGE_OVERSHOOT = 2.5;
+/**
+ * Sideways slide of the whole crowd toward the pointer, on top of the
+ * attraction: speed = gain * distance (1/s), capped. Moves everyone the same
+ * way, so the crowd keeps its shape.
+ */
+const SLIDE_GAIN = 7;
+const SLIDE_MAX_SPEED = 14;
 /** Attraction used while walking to the cannon (constant: everyone walks). */
 const GATHER_FORCE = () => 56;
 
@@ -324,7 +331,21 @@ export class Game extends GameLayer {
 	/** Moves the crowd (attraction + collisions) and the players walking to the cannon. */
 	private stepCrowds(dt: number) {
 		if (this.crowd.length > 0) {
-			for (const p of this.crowd) p.position.z -= this.speed * dt;
+			// Slide sideways, but only until the crowd touches a wall (then the
+			// attraction squeezes it, pushing harder would only make it shake).
+			let left = Infinity, right = -Infinity;
+			for (const p of this.crowd) {
+				left = Math.min(left, p.position.x);
+				right = Math.max(right, p.position.x);
+			}
+			const speed = Math.max(-SLIDE_MAX_SPEED, Math.min(SLIDE_MAX_SPEED, (this.centerX - this.crowdX) * SLIDE_GAIN));
+			const slide = speed > 0
+				? Math.min(speed * dt, Math.max(0, this.crowdOptions.maxX - right))
+				: Math.max(speed * dt, Math.min(0, this.crowdOptions.minX - left));
+			for (const p of this.crowd) {
+				p.position.x += slide;
+				p.position.z -= this.speed * dt;
+			}
 			stepCrowd(this.crowd, this.centerX, this.centerZ, dt, this.crowdOptions);
 			let sum = 0;
 			for (const p of this.crowd) sum += p.position.x;
