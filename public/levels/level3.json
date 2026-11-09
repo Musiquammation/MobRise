@@ -1,34 +1,71 @@
 {
-  "name": "Le gouffre",
+  "name": "Le grand défi",
   "width": 9,
-  "length": 170,
-  "speed": 8,
-  "start": 6,
+  "length": 440,
+  "speed": 9.5,
+  "start": 15,
   "holes": [
-    { "x": 3, "z": 25, "width": 3, "depth": 8 },
-    { "x": -3, "z": 55, "width": 3, "depth": 8 },
-    { "x": 0, "z": 95, "width": 4, "depth": 5 },
-    { "x": -3.5, "z": 135, "width": 2, "depth": 10 },
-    { "x": 3.5, "z": 135, "width": 2, "depth": 10 }
+    { "x": 0, "z": 87, "width": 9, "depth": 5 },
+    { "x": 2.25, "z": 258, "width": 4.5, "depth": 10 },
+    { "x": 0, "z": 362, "width": 9, "depth": 5 }
   ],
   "gates": [
-    { "z": 12, "x": -2.25, "width": 4.5, "type": "add", "value": 6 },
-    { "z": 12, "x": 2.25, "width": 4.5, "type": "mul", "value": 2 },
-    { "z": 45, "x": -2.25, "width": 4.5, "type": "mul", "value": 3 },
-    { "z": 45, "x": 2.25, "width": 4.5, "type": "add", "value": -10 },
-    { "z": 75, "x": -3, "width": 3, "type": "add", "value": 12 },
-    { "z": 75, "x": 0, "width": 3, "type": "mul", "value": 2 },
-    { "z": 75, "x": 3, "width": 3, "type": "add", "value": -15 },
-    { "z": 115, "x": -2.25, "width": 4.5, "type": "add", "value": 25 },
-    { "z": 115, "x": 2.25, "width": 4.5, "type": "mul", "value": 0.5 },
-    { "z": 155, "x": -2.25, "width": 4.5, "type": "mul", "value": 2 },
-    { "z": 155, "x": 2.25, "width": 4.5, "type": "add", "value": 30 }
+    { "z": 12, "x": -2.25, "width": 4.5, "type": "add", "value": 20 },
+    { "z": 12, "x": 2.25, "width": 4.5, "type": "mul", "value": 3 },
+    { "z": 45, "x": -2.25, "width": 4.5, "type": "mul", "value": 2 },
+    { "z": 45, "x": 2.25, "width": 4.5, "type": "add", "value": -8 },
+    { "z": 120, "x": -2.25, "width": 4.5, "type": "mul", "value": 3 },
+    { "z": 120, "x": 2.25, "width": 4.5, "type": "add", "value": 20 },
+    { "z": 180, "x": -2.25, "width": 4.5, "type": "add", "value": 30 },
+    { "z": 180, "x": 2.25, "width": 4.5, "type": "mul", "value": 0.5 },
+    { "z": 245, "x": -2.25, "width": 4.5, "type": "mul", "value": 2 },
+    { "z": 245, "x": 2.25, "width": 4.5, "type": "add", "value": 40 },
+    { "z": 310, "x": -2.25, "width": 4.5, "type": "add", "value": 50 },
+    { "z": 310, "x": 2.25, "width": 4.5, "type": "mul", "value": 2 },
+    { "z": 378, "x": -3, "width": 3, "type": "mul", "value": 2 },
+    { "z": 378, "x": 0, "width": 3, "type": "add", "value": 60 },
+    { "z": 378, "x": 3, "width": 3, "type": "add", "value": -40 }
   ],
   "arrows": [
-    { "z": 35, "speed": 5 },
-    { "z": 65, "speed": 6.5, "offset": 0.3 },
-    { "z": 105, "speed": 7, "offset": 0.7 },
-    { "z": 125, "speed": 5.5, "height": 0.35 }
+    { "z": 163, "speed": 6 }
   ],
-  "cannon": { "boxes": 7, "distance": 28, "height": 8, "rx": 7, "ry": 3.5, "speed": 0.2 }
+  "spikes": [
+    { "x": -2.75, "z": 62, "width": 3.5, "depth": 3, "period": 2 },
+    { "x": 2.75, "z": 67, "width": 3.5, "depth": 3, "period": 2, "offset": 0.5 },
+    { "x": -2.75, "z": 195, "width": 3.5, "depth": 3 },
+    { "x": 2.75, "z": 203, "width": 3.5, "depth": 3 },
+    { "x": -2.75, "z": 211, "width": 3.5, "depth": 3 },
+    { "x": -2.25, "z": 262.5, "width": 4.5, "depth": 3.5 },
+    { "x": -2.25, "z": 348, "width": 4.5, "depth": 2, "period": 3 },
+    { "x": 2.25, "z": 348, "width": 4.5, "depth": 2, "period": 3, "offset": 0.5 },
+    { "x": 0, "z": 425, "width": 3, "depth": 2, "period": 1.8 }
+  ],
+  "saws": [
+    { "x": 0, "z": 25, "axis": "x", "length": 7, "speed": 6 },
+    { "x": 0, "z": 32, "axis": "x", "length": 7, "speed": 6, "offset": 0.5 },
+    { "x": -3, "z": 142, "axis": "z", "length": 12, "speed": 7 },
+    { "x": 0, "z": 142, "axis": "z", "length": 12, "speed": 7, "offset": 0.33 },
+    { "x": 3, "z": 142, "axis": "z", "length": 12, "speed": 7, "offset": 0.66 },
+    { "x": 0, "z": 290, "axis": "x", "length": 6, "speed": 7, "radius": 0.75 },
+    { "x": -3, "z": 415, "axis": "z", "length": 8, "speed": 6 },
+    { "x": 3, "z": 415, "axis": "z", "length": 8, "speed": 6, "offset": 0.5 }
+  ],
+  "archers": [
+    { "z": 100, "side": 1, "interval": 1.6 },
+    { "z": 295, "side": 1, "interval": 1.4 },
+    { "z": 300, "side": -1, "interval": 1.4, "offset": 0.5 },
+    { "z": 405, "side": 1, "interval": 1.2 }
+  ],
+  "enemies": [
+    { "x": 0, "z": 105, "count": 20 },
+    { "x": -2, "z": 230, "count": 35 },
+    { "x": 0, "z": 330, "count": 55 },
+    { "x": 0, "z": 400, "count": 75 }
+  ],
+  "jumps": [
+    { "x": 0, "z": 85, "width": 9 },
+    { "x": -2.25, "z": 260, "width": 4.5 },
+    { "x": 0, "z": 360, "width": 9 }
+  ],
+  "cannon": { "boxes": 8, "distance": 30, "height": 8.5, "rx": 8, "ry": 3.5, "speed": 0.22 }
 }

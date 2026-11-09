@@ -8,6 +8,11 @@ import type { Entity } from "./Entity";
 import { Player } from "./entities/Player";
 import { Floor, FLOOR_AFTER } from "./entities/platforms/Floor";
 import { Arrow } from "./entities/hazards/Arrow";
+import { Spikes } from "./entities/hazards/Spikes";
+import { Saw } from "./entities/hazards/Saw";
+import { JumpPad } from "./entities/JumpPad";
+import { Archer } from "./entities/props/Archer";
+import { Enemy } from "./entities/enemies/Enemy";
 import type { Gate } from "./entities/Gate";
 import { Addition } from "./entities/gates/Addition";
 import { Multiplication } from "./entities/gates/Multiplication";
@@ -36,6 +41,23 @@ const SLIDE_GAIN = 7;
 const SLIDE_MAX_SPEED = 14;
 /** Attraction used while walking to the cannon (constant: everyone walks). */
 const GATHER_FORCE = () => 56;
+
+/** Enemies start charging when the crowd is this close. */
+const ENEMY_TRIGGER = 13;
+/** Distance between the centers of a player and an enemy that kills both. */
+const ENEMY_CONTACT = 0.42;
+const ENEMY_COLOR = "#e11d2a";
+/** Default vertical speed given by a jump pad. */
+const JUMP_POWER = 10;
+
+type EnemyZone = {
+	/** World z of the zone. */
+	z: number;
+	enemies: Enemy[];
+	triggered: boolean;
+	label: THREE.Sprite;
+	shown: number;
+};
 
 /** Attraction function of the crowd. Can be changed with ?force=<name> in the URL. */
 function pickForce(): ForceName {
@@ -95,6 +117,9 @@ export class Game extends GameLayer {
 
 	private readonly floor: Floor;
 	private playerRenderer: PlayerRenderer;
+	private readonly enemyRenderer: PlayerRenderer;
+	private readonly enemyZones: EnemyZone[] = [];
+	private readonly enemyOptions: CrowdOptions;
 
 	/** Players currently in the crowd (state "run"). */
 	private crowd: Player[] = [];
@@ -126,9 +151,12 @@ export class Game extends GameLayer {
 		const walls = { minX: -room, maxX: room };
 		this.crowdOptions = { ...DEFAULT_CROWD_OPTIONS, ...walls, force: FORCES[pickForce()] };
 		this.gatherOptions = { ...DEFAULT_CROWD_OPTIONS, ...walls, force: GATHER_FORCE, maxSpeed: 8 };
+		this.enemyOptions = { ...DEFAULT_CROWD_OPTIONS, ...walls, force: FORCES.mixed, maxSpeed: 5.5 };
 
 		this.playerRenderer = new PlayerRenderer(resources, skin, MAX_PLAYERS);
 		this.scene.add(this.playerRenderer.group);
+		this.enemyRenderer = new PlayerRenderer(resources, { color: ENEMY_COLOR, hat: null }, MAX_PLAYERS);
+		this.scene.add(this.enemyRenderer.group);
 
 		this.floor = new Floor(level);
 		this.entities.add("platform", this.floor);
@@ -145,6 +173,22 @@ export class Game extends GameLayer {
 				model("arrow"), -a.z, a.speed, level.width / 2 + 2.5, a.height ?? 0.55, a.offset ?? 0,
 			));
 		}
+
+		for (const s of level.spikes ?? [])
+			this.entities.add("hazard", new Spikes(s.x, s.z, s.width, s.depth, s.period, s.offset));
+
+		for (const s of level.saws ?? [])
+			this.entities.add("hazard", new Saw(s.x, s.z, s.axis, s.length, s.speed, s.radius, s.offset));
+
+		for (const j of level.jumps ?? [])
+			this.entities.add("pad", new JumpPad(j.x, j.z, j.width, j.power ?? JUMP_POWER));
+
+		for (const a of level.archers ?? []) {
+			const x = a.side * (level.width / 2 + 1.6);
+			this.entities.add("prop", new Archer(model("player"), model("arrow"), x, -a.z, a.interval ?? 1.4, a.offset ?? 0));
+		}
+
+		for (const g of level.enemies ?? []) this.spawnEnemyZone(g.x, -g.z, g.count);
 
 		const c = level.cannon;
 		this.cannon = new Cannon(model("cannon_base"), model("cannon_barrel"), -(level.length + FLOOR_AFTER - 6));
@@ -183,6 +227,142 @@ export class Game extends GameLayer {
 		this.entities.clear();
 		this.scene.remove(this.playerRenderer.group);
 		this.playerRenderer.dispose();
+		this.scene.remove(this.enemyRenderer.group);
+		this.enemyRenderer.dispose();
+		for (const zone of this.enemyZones) {
+			this.scene.remove(zone.label);
+			zone.label.material.map?.dispose();
+			zone.label.material.dispose();
+		}
+	}
+
+	// ------------------------------------------------------------- queries used by entities
+
+	/** Center of the running crowd (world x / z). */
+	crowdCenter(): { x: number; z: number } {
+		return { x: this.crowdX, z: this.centerZ };
+	}
+
+	crowdSize(): number {
+		return this.crowd.length;
+	}
+
+	addProp(entity: Entity) {
+		this.entities.add("prop", entity);
+	}
+
+	/** Kills the players of the crowd standing in the circle (x, z, radius). */
+	hitArea(x: number, z: number, radius: number) {
+		for (const p of this.crowd) {
+			if (p.state !== "run" || p.position.y > 1) continue;
+			const dx = p.position.x - x, dz = p.position.z - z;
+			const d = Math.hypot(dx, dz);
+			if (d > radius) continue;
+			const k = 4 / Math.max(0.2, d);
+			p.die(dx * k, 6, dz * k);
+		}
+		this.crowdDirty = true;
+	}
+
+	// ------------------------------------------------------------- enemies
+
+	private spawnEnemyZone(x: number, z: number, count: number) {
+		const room = this.level.width / 2 - PLAYER_HALF;
+		const enemies: Enemy[] = [];
+		const index = this.enemyZones.length;
+		for (let i = 0; i < count; i++) {
+			// Sunflower pattern: a packed disk.
+			const r = Math.sqrt(i + 0.5) * 0.24;
+			const a = i * 2.39996;
+			const e = new Enemy(
+				Math.max(-room, Math.min(room, x + Math.cos(a) * r)),
+				z + Math.sin(a) * r,
+				index,
+			);
+			enemies.push(e);
+			this.entities.add("enemy", e);
+		}
+
+		const canvas = document.createElement("canvas");
+		canvas.width = 128;
+		canvas.height = 64;
+		const texture = new THREE.CanvasTexture(canvas);
+		texture.colorSpace = THREE.SRGBColorSpace;
+		const label = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, depthTest: false, transparent: true }));
+		label.scale.set(1.6, 0.8, 1);
+		label.renderOrder = 10;
+		this.scene.add(label);
+
+		const zone: EnemyZone = { z, enemies, triggered: false, label, shown: -1 };
+		this.enemyZones.push(zone);
+		this.updateEnemyLabel(zone);
+	}
+
+	private updateEnemyLabel(zone: EnemyZone) {
+		const alive = zone.enemies.filter(e => e.isAlive() && e.state !== "dying" && e.state !== "fall");
+		zone.label.visible = alive.length > 0;
+		if (alive.length === 0) return;
+		let sx = 0, sz = 0;
+		for (const e of alive) {
+			sx += e.position.x;
+			sz += e.position.z;
+		}
+		zone.label.position.set(sx / alive.length, 1.9, sz / alive.length);
+		if (zone.shown === alive.length) return;
+		zone.shown = alive.length;
+		const texture = zone.label.material.map as THREE.CanvasTexture;
+		const ctx = (texture.image as HTMLCanvasElement).getContext("2d")!;
+		ctx.clearRect(0, 0, 128, 64);
+		ctx.fillStyle = "#e11d2a";
+		ctx.beginPath();
+		ctx.roundRect(14, 6, 100, 52, 18);
+		ctx.fill();
+		ctx.fillStyle = "#fff";
+		ctx.font = "bold 40px system-ui, sans-serif";
+		ctx.textAlign = "center";
+		ctx.textBaseline = "middle";
+		ctx.fillText(String(alive.length), 64, 34);
+		texture.needsUpdate = true;
+	}
+
+	/** Wakes the enemy groups near the crowd, moves the charging ones, resolves the fights. */
+	private stepEnemies(dt: number) {
+		for (const zone of this.enemyZones) {
+			zone.enemies = zone.enemies.filter(e => e.isAlive());
+			if (zone.enemies.length === 0) continue;
+
+			if (!zone.triggered && this.phase === "run" && zone.z - this.centerZ > -ENEMY_TRIGGER) {
+				zone.triggered = true;
+				for (const e of zone.enemies) if (e.state === "idle") e.state = "run";
+			}
+			if (!zone.triggered) continue;
+
+			const runners = zone.enemies.filter(e => e.state === "run");
+			if (this.phase === "run" && this.crowd.length > 0) {
+				stepCrowd(runners, this.crowdX, this.centerZ, dt, this.enemyOptions);
+			} else {
+				for (const e of runners) e.velocity.set(0, 0, 0);
+			}
+			// Left far behind the crowd: gone.
+			for (const e of runners) if (e.position.z > this.centerZ + 10) e.kill();
+		}
+
+		// Fights: each enemy touching a player kills it and dies.
+		if (this.phase !== "run") return;
+		const c2 = ENEMY_CONTACT * ENEMY_CONTACT;
+		for (const e of this.entities.get("enemy")) {
+			if (e.state !== "run" && e.state !== "idle") continue;
+			if (Math.abs(e.position.z - this.centerZ) > 12) continue;
+			for (const p of this.crowd) {
+				if (p.state !== "run" || p.position.y > 0.6) continue;
+				const dx = p.position.x - e.position.x, dz = p.position.z - e.position.z;
+				if (dx * dx + dz * dz > c2) continue;
+				p.die(-dx * 4, 4, 2);
+				e.die(dx * 4, 4, -3);
+				this.crowdDirty = true;
+				break;
+			}
+		}
 	}
 
 	// ------------------------------------------------------------- crowd
@@ -239,7 +419,12 @@ export class Game extends GameLayer {
 	private startCannon() {
 		this.phase = "cannon";
 		this.speed = 0;
-		for (const p of this.crowd) p.state = "gather";
+		for (const p of this.crowd) {
+			p.state = "gather";
+			p.position.y = 0;
+			p.velocity.y = 0;
+			p.spin = 0;
+		}
 		this.crowdDirty = false;
 		this.crowd = [];
 		this.combo = 0;
@@ -295,6 +480,8 @@ export class Game extends GameLayer {
 			if (-this.centerZ >= this.level.length) this.startCannon();
 		}
 		this.stepCrowds(dt);
+		this.stepEnemies(dt);
+		this.refreshCrowd();
 
 		if (this.phase === "cannon") this.updateAim();
 
@@ -361,7 +548,7 @@ export class Game extends GameLayer {
 
 	private detectCollisions() {
 		const others: Entity[] = [];
-		for (const list of [this.entities.get("hazard"), this.entities.get("gate"), this.entities.get("box")])
+		for (const list of [this.entities.get("pad"), this.entities.get("hazard"), this.entities.get("gate"), this.entities.get("box")])
 			for (const e of list) {
 				e.refreshHitbox();
 				others.push(e);
@@ -387,6 +574,8 @@ export class Game extends GameLayer {
 	protected gameUpdate(dt: number) {
 		for (const e of this.entities.iterate()) e.update();
 		this.playerRenderer.update(this.entities.get("player"), this.time);
+		this.enemyRenderer.update(this.entities.get("enemy"), this.time);
+		for (const zone of this.enemyZones) this.updateEnemyLabel(zone);
 		this.updateCamera(dt);
 		this.syncUi();
 	}

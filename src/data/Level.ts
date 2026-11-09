@@ -21,6 +21,25 @@ export type LevelData = {
 	gates: { z: number; x: number; width: number; type: "add" | "mul"; value: number }[];
 	/** Arrows flying across the track at distance z. */
 	arrows: { z: number; speed: number; height?: number; offset?: number }[];
+	/**
+	 * Spike fields (x = center, z = start). With `period`, the spikes go up and
+	 * down (up during the first half of the cycle, `offset` in [0, 1) shifts it).
+	 */
+	spikes?: { x: number; z: number; width: number; depth: number; period?: number; offset?: number }[];
+	/**
+	 * Saw blades going back and forth along `axis` around (x, z), over `length`.
+	 * `speed` = average speed (units/s).
+	 */
+	saws?: { x: number; z: number; axis: "x" | "z"; length: number; speed: number; radius?: number; offset?: number }[];
+	/**
+	 * Archers standing next to the track (side -1 = left, 1 = right). They shoot
+	 * at where the crowd will be: moving sideways dodges the arrow.
+	 */
+	archers?: { z: number; side: -1 | 1; interval?: number; offset?: number }[];
+	/** Groups of red enemies waiting at (x, z). Each one kills one player. */
+	enemies?: { x: number; z: number; count: number }[];
+	/** Jump pads (x = center, z = start). `power` = vertical speed. */
+	jumps?: { x: number; z: number; width: number; power?: number }[];
 	/** Cannon bonus phase. */
 	cannon: {
 		/** Number of "?" boxes. */

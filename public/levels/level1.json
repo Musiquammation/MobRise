@@ -1,20 +1,44 @@
 {
   "name": "Premiers pas",
   "width": 8,
-  "length": 110,
-  "speed": 7,
-  "start": 3,
+  "length": 280,
+  "speed": 7.5,
+  "start": 5,
   "holes": [
-    { "x": 2.5, "z": 55, "width": 3, "depth": 6 }
+    { "x": 3, "z": 50, "width": 2, "depth": 6 },
+    { "x": 0, "z": 112, "width": 8, "depth": 3.5 }
   ],
   "gates": [
-    { "z": 15, "x": -2, "width": 4, "type": "add", "value": 5 },
-    { "z": 15, "x": 2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 12, "x": -2, "width": 4, "type": "add", "value": 5 },
+    { "z": 12, "x": 2, "width": 4, "type": "mul", "value": 2 },
     { "z": 40, "x": -2, "width": 4, "type": "add", "value": 10 },
     { "z": 40, "x": 2, "width": 4, "type": "add", "value": -3 },
-    { "z": 80, "x": -2, "width": 4, "type": "mul", "value": 3 },
-    { "z": 80, "x": 2, "width": 4, "type": "add", "value": 8 }
+    { "z": 95, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 95, "x": 2, "width": 4, "type": "add", "value": 8 },
+    { "z": 150, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 150, "x": 2, "width": 4, "type": "add", "value": 15 },
+    { "z": 235, "x": -2, "width": 4, "type": "add", "value": 20 },
+    { "z": 235, "x": 2, "width": 4, "type": "mul", "value": 0.5 }
   ],
   "arrows": [],
+  "spikes": [
+    { "x": -2.5, "z": 28, "width": 3, "depth": 4 },
+    { "x": 2.5, "z": 130, "width": 3, "depth": 3, "period": 2.5 },
+    { "x": 0, "z": 255, "width": 3, "depth": 3 }
+  ],
+  "saws": [
+    { "x": 0, "z": 65, "axis": "x", "length": 6, "speed": 4 },
+    { "x": -2.5, "z": 185, "axis": "z", "length": 10, "speed": 5 }
+  ],
+  "archers": [
+    { "z": 195, "side": 1, "interval": 1.6 }
+  ],
+  "enemies": [
+    { "x": 0, "z": 82, "count": 8 },
+    { "x": 0, "z": 215, "count": 20 }
+  ],
+  "jumps": [
+    { "x": 0, "z": 110, "width": 8 }
+  ],
   "cannon": { "boxes": 5, "distance": 24, "height": 7, "rx": 5, "ry": 2.5, "speed": 0.15 }
 }

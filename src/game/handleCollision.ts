@@ -4,6 +4,7 @@ import { Player } from "./entities/Player";
 import { Hazard } from "./entities/Hazard";
 import { Gate } from "./entities/Gate";
 import { MysteryBox } from "./entities/MysteryBox";
+import { JumpPad } from "./entities/JumpPad";
 
 type EntityConstructor<T extends Entity = Entity> = abstract new (...args: any[]) => T;
 
@@ -19,6 +20,10 @@ class CollisionHandler<T1 extends Entity, T2 extends Entity> {
 const handlers: CollisionHandler<any, any>[] = [
 	new CollisionHandler(Player, Hazard, (player: Player, hazard: Hazard, game) => {
 		if (player.state === "run") hazard.onPlayerHit(player, game);
+	}),
+
+	new CollisionHandler(Player, JumpPad, (player: Player, pad: JumpPad) => {
+		player.jump(pad.power);
 	}),
 
 	new CollisionHandler(Player, Gate, (player: Player, gate: Gate, game) => {

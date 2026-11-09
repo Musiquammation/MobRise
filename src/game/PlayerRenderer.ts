@@ -1,7 +1,16 @@
 import * as THREE from "three";
 import type { ResourceManager } from "../resources/ResourceManager";
 import type { Skin } from "../data/skins";
-import type { Player } from "./entities/Player";
+
+/** What the renderer needs to draw a character (players and enemies). */
+export type RenderedBody = {
+	readonly position: THREE.Vector3;
+	readonly state: string;
+	readonly animPhase: number;
+	readonly yaw: number;
+	readonly spin: number;
+	readonly scale: number;
+};
 
 /** Height of the top of the player's head (hats are placed there). */
 const HEAD_TOP = 1.07;
@@ -21,12 +30,12 @@ export class PlayerRenderer {
 	private readonly meshes: THREE.InstancedMesh[] = [];
 	private readonly owned: { dispose(): void }[] = [];
 
-	constructor(resources: ResourceManager, skin: Skin, private readonly capacity: number) {
+	constructor(resources: ResourceManager, skin: Pick<Skin, "color" | "hat">, private readonly capacity: number) {
 		this.addModel(resources.getModel("player").scene, skin, 0);
 		if (skin.hat) this.addModel(resources.getModel(skin.hat).scene, skin, HEAD_TOP);
 	}
 
-	update(players: readonly Player[], time: number) {
+	update(players: readonly RenderedBody[], time: number) {
 		const n = Math.min(players.length, this.capacity);
 		for (let i = 0; i < n; i++) {
 			const p = players[i];
@@ -54,7 +63,7 @@ export class PlayerRenderer {
 		for (const m of this.meshes) m.dispose();
 	}
 
-	private addModel(scene: THREE.Object3D, skin: Skin, offsetY: number) {
+	private addModel(scene: THREE.Object3D, skin: Pick<Skin, "color" | "hat">, offsetY: number) {
 		scene.updateMatrixWorld(true);
 		scene.traverse(o => {
 			const mesh = o as THREE.Mesh;
