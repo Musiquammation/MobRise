@@ -7,13 +7,19 @@
     "dev": "vite --host",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --host",
-    "models": "node scripts/genModels.mjs"
+    "models": "node scripts/genModels.mjs",
+    "cap:sync": "npm run build && cap sync android",
+    "android": "npm run cap:sync && ANDROID_HOME=${ANDROID_HOME:-$HOME/Android/Sdk} JAVA_HOME=${JAVA_HOME_ANDROID:-/usr/lib/jvm/java-21-openjdk-amd64} cap run android --target ${ANDROID_SERIAL:-$(adb devices | awk 'NR==2{print $1}')}",
+    "android:open": "cap open android"
   },
   "dependencies": {
+    "@capacitor/android": "^8.6.0",
+    "@capacitor/core": "^8.6.0",
     "alpinejs": "^3.17.5",
     "three": "^0.187.0"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.6.0",
     "@types/alpinejs": "^3.17.0",
     "@types/three": "^0.187.0",
     "typescript": "^7.0.2",

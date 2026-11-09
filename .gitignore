@@ -2,3 +2,5 @@ draft/
 node_modules/
 dist/
 .claude/
+android/
+release/
