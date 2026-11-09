@@ -4,7 +4,7 @@ import type { ResourceRequest } from "./ResourceManager";
 export const CORE_MODELS: ResourceRequest[] = [
 	{ id: "player", path: "/models/player.gltf", priority: 0 },
 	{ id: "gate_post", path: "/models/gate_post.gltf", priority: 1 },
-	{ id: "arrow", path: "/models/arrow.gltf", priority: 1 },
+	{ id: "spike_ball", path: "/models/spike_ball.gltf", priority: 1 },
 	{ id: "cannon_base", path: "/models/cannon_base.gltf", priority: 1 },
 	{ id: "cannon_barrel", path: "/models/cannon_barrel.gltf", priority: 1 },
 	{ id: "mystery_box", path: "/models/mystery_box.gltf", priority: 1 },

@@ -17,10 +17,13 @@ export type LevelData = {
 	start: number;
 	/** Rectangular holes in the floor. x = center, z = start of the hole. */
 	holes: { x: number; z: number; width: number; depth: number }[];
-	/** Gates. Gates sharing the same z form a row: only one of them is taken. */
-	gates: { z: number; x: number; width: number; type: "add" | "mul"; value: number }[];
-	/** Arrows flying across the track at distance z. */
-	arrows: { z: number; speed: number; height?: number; offset?: number }[];
+	/**
+	 * Gates. Gates sharing the same z form a row: only one of them is taken.
+	 * "pct": value is a percentage (10 = +10% of the players).
+	 */
+	gates: { z: number; x: number; width: number; type: "add" | "mul" | "pct"; value: number }[];
+	/** Spiked balls rolling across the track at distance z. */
+	spikes: { z: number; speed: number; offset?: number }[];
 	/** Cannon bonus phase. */
 	cannon: {
 		/** Number of "?" boxes. */

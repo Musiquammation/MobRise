@@ -94,6 +94,56 @@ function cyl(rBottom, rTop, h, p, axis = "y", seg = 16) {
 	return { pos, nor, idx };
 }
 
+/** UV sphere of radius r centered on p. */
+function sphere(r, p, seg = 14, rings = 10) {
+	const pos = [], nor = [], idx = [];
+	for (let j = 0; j <= rings; j++) {
+		const v = (j / rings) * Math.PI;
+		for (let i = 0; i <= seg; i++) {
+			const u = (i / seg) * Math.PI * 2;
+			const n = [Math.sin(v) * Math.sin(u), Math.cos(v), Math.sin(v) * Math.cos(u)];
+			pos.push(p[0] + n[0] * r, p[1] + n[1] * r, p[2] + n[2] * r);
+			nor.push(...n);
+		}
+	}
+	for (let j = 0; j < rings; j++)
+		for (let i = 0; i < seg; i++) {
+			const a = j * (seg + 1) + i, b = a + seg + 1;
+			idx.push(a, b, a + 1, a + 1, b, b + 1);
+		}
+	return { pos, nor, idx };
+}
+
+/** Cones pointing outward along the 6 axes and the 8 diagonals, starting at distance d. */
+function spikes(d, len, r) {
+	const out = [];
+	const dirs = [];
+	for (const a of [-1, 1]) dirs.push([a, 0, 0], [0, a, 0], [0, 0, a]);
+	for (const x of [-1, 1]) for (const y of [-1, 1]) for (const z of [-1, 1]) dirs.push([x, y, z].map(v => v / Math.sqrt(3)));
+	for (const dir of dirs) {
+		// Cone along +Y, then rotated so +Y maps onto `dir`.
+		const g = cyl(r, 0, len, [0, d + len / 2, 0], "y", 8);
+		const up = [0, 1, 0];
+		const axis = [up[1] * dir[2] - up[2] * dir[1], up[2] * dir[0] - up[0] * dir[2], up[0] * dir[1] - up[1] * dir[0]];
+		const sin = Math.hypot(...axis), cos = dir[1];
+		const k = sin > 1e-6 ? axis.map(v => v / sin) : [1, 0, 0];
+		const rot = v => {
+			// Rodrigues rotation (dir = ±Y: identity or 180deg around X).
+			const c = cos, s = sin;
+			const kv = k[0] * v[0] + k[1] * v[1] + k[2] * v[2];
+			const kx = [k[1] * v[2] - k[2] * v[1], k[2] * v[0] - k[0] * v[2], k[0] * v[1] - k[1] * v[0]];
+			return [0, 1, 2].map(i => v[i] * c + kx[i] * s + k[i] * kv * (1 - c));
+		};
+		for (let i = 0; i < g.pos.length; i += 3) {
+			const a = rot(g.pos.slice(i, i + 3)), n = rot(g.nor.slice(i, i + 3));
+			g.pos.splice(i, 3, ...a);
+			g.nor.splice(i, 3, ...n);
+		}
+		out.push(["steel", g]);
+	}
+	return out;
+}
+
 // ---------------------------------------------------------------- materials
 
 const MATERIALS = {
@@ -185,11 +235,10 @@ const MODELS = {
 	],
 
 	// Flies along +X. Origin at its center.
-	arrow: [
-		["brown", box([1.6, 0.1, 0.1], [0, 0, 0])],
-		["steel", cyl(0.22, 0, 0.5, [1.05, 0, 0], "x", 8)],
-		["red", box([0.36, 0.3, 0.03], [-0.68, 0, 0])],
-		["red", box([0.36, 0.03, 0.3], [-0.68, 0, 0])],
+	// Rolling hazard. Origin at its center, radius ~0.95 with the spikes.
+	spike_ball: [
+		["red", sphere(0.55, [0, 0, 0])],
+		...spikes(0.5, 0.42, 0.16),
 	],
 
 	// Origin at the ground, center of the base. Faces -Z.

@@ -21,14 +21,14 @@
     { "z": 75, "x": 3, "width": 3, "type": "add", "value": -15 },
     { "z": 115, "x": -2.25, "width": 4.5, "type": "add", "value": 25 },
     { "z": 115, "x": 2.25, "width": 4.5, "type": "mul", "value": 0.5 },
-    { "z": 155, "x": -2.25, "width": 4.5, "type": "mul", "value": 2 },
-    { "z": 155, "x": 2.25, "width": 4.5, "type": "add", "value": 30 }
+    { "z": 155, "x": -2.25, "width": 4.5, "type": "add", "value": 40 },
+    { "z": 155, "x": 2.25, "width": 4.5, "type": "pct", "value": 50 }
   ],
-  "arrows": [
+  "spikes": [
     { "z": 35, "speed": 5 },
     { "z": 65, "speed": 6.5, "offset": 0.3 },
     { "z": 105, "speed": 7, "offset": 0.7 },
-    { "z": 125, "speed": 5.5, "height": 0.35 }
+    { "z": 125, "speed": 5.5 }
   ],
   "cannon": { "boxes": 7, "distance": 28, "height": 8, "rx": 7, "ry": 3.5, "speed": 0.2 }
 }

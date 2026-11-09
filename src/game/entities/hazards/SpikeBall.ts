@@ -3,25 +3,26 @@ import { Hazard } from "../Hazard";
 import type { Game } from "../../Game";
 import type { Player } from "../Player";
 
-/** Flies across the track back and forth. */
-export class Arrow extends Hazard {
+/** Radius of the ball (with its spikes). */
+const RADIUS = 0.95;
+
+/** Spiked ball rolling across the track back and forth. */
+export class SpikeBall extends Hazard {
 	private readonly object: THREE.Object3D;
 	private dir = 1;
-	private roll = 0;
 
 	constructor(
 		model: THREE.Object3D,
 		z: number,
 		private readonly speed: number,
 		private readonly range: number,
-		height: number,
 		offset: number,
 	) {
 		super();
 		this.object = model.clone();
 		// offset in [0, 1]: starting point along the trip.
-		this.position.set(-range + offset * 2 * range, height, z);
-		this.hitboxHalf.set(0.9, 0.2, 0.15);
+		this.position.set(-range + offset * 2 * range, RADIUS, z);
+		this.hitboxHalf.set(0.75, 0.75, 0.75);
 	}
 
 	getObject() {
@@ -34,7 +35,6 @@ export class Arrow extends Hazard {
 			this.position.x = Math.sign(this.position.x) * this.range;
 			this.dir = -this.dir;
 		}
-		this.roll += dt * 10;
 	}
 
 	protected knockback(_player: Player) {
@@ -43,6 +43,7 @@ export class Arrow extends Hazard {
 
 	update() {
 		super.update();
-		this.object.rotation.set(this.roll, this.dir > 0 ? 0 : Math.PI, 0);
+		// Rolls on the floor.
+		this.object.rotation.set(0, 0, -this.position.x / RADIUS);
 	}
 }
