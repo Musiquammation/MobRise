@@ -1,0 +1,26 @@
+{
+  "name": "Flèches",
+  "width": 8,
+  "length": 140,
+  "speed": 7.5,
+  "start": 5,
+  "holes": [
+    { "x": -2.5, "z": 30, "width": 3, "depth": 5 },
+    { "x": 0, "z": 100, "width": 3, "depth": 4 }
+  ],
+  "gates": [
+    { "z": 15, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 15, "x": 2, "width": 4, "type": "add", "value": 4 },
+    { "z": 45, "x": -2, "width": 4, "type": "add", "value": -8 },
+    { "z": 45, "x": 2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 80, "x": -2, "width": 4, "type": "add", "value": 15 },
+    { "z": 80, "x": 2, "width": 4, "type": "mul", "value": 3 },
+    { "z": 120, "x": -2, "width": 4, "type": "mul", "value": 0.5 },
+    { "z": 120, "x": 2, "width": 4, "type": "add", "value": 20 }
+  ],
+  "arrows": [
+    { "z": 62, "speed": 5 },
+    { "z": 92, "speed": 6, "offset": 0.5 }
+  ],
+  "cannon": { "boxes": 6, "distance": 26, "height": 7.5, "rx": 6, "ry": 3, "speed": 0.18 }
+}

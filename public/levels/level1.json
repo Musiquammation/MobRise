@@ -1,0 +1,20 @@
+{
+  "name": "Premiers pas",
+  "width": 8,
+  "length": 110,
+  "speed": 7,
+  "start": 3,
+  "holes": [
+    { "x": 2.5, "z": 55, "width": 3, "depth": 6 }
+  ],
+  "gates": [
+    { "z": 15, "x": -2, "width": 4, "type": "add", "value": 5 },
+    { "z": 15, "x": 2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 40, "x": -2, "width": 4, "type": "add", "value": 10 },
+    { "z": 40, "x": 2, "width": 4, "type": "add", "value": -3 },
+    { "z": 80, "x": -2, "width": 4, "type": "mul", "value": 3 },
+    { "z": 80, "x": 2, "width": 4, "type": "add", "value": 8 }
+  ],
+  "arrows": [],
+  "cannon": { "boxes": 5, "distance": 24, "height": 7, "rx": 5, "ry": 2.5, "speed": 0.15 }
+}
