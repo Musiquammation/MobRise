@@ -1,0 +1,69 @@
+{
+  "name": "fullSpeed",
+  "width": 8,
+  "length": 450,
+  "speed": 10,
+  "start": 20,
+  "holes": [
+    { "x": 0, "z": 60, "width": 8, "depth": 9 },
+    { "x": 0, "z": 117, "width": 8, "depth": 9 },
+    { "x": 0, "z": 264, "width": 8, "depth": 9 },
+    { "x": 0, "z": 335, "width": 8, "depth": 9 },
+    { "x": -3, "z": 350, "width": 2, "depth": 10 },
+    { "x": 3, "z": 350, "width": 2, "depth": 10 },
+    { "x": 0, "z": 360, "width": 8, "depth": 9 }
+  ],
+  "gates": [
+    { "z": 10, "x": -2, "width": 4, "type": "add", "value": 10 },
+    { "z": 10, "x": 2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 90, "x": -2, "width": 4, "type": "pct", "value": 50 },
+    { "z": 90, "x": 2, "width": 4, "type": "add", "value": 15 },
+    { "z": 98, "x": 2, "width": 4, "type": "add", "value": 20 },
+    { "z": 200, "x": -2, "width": 4, "type": "add", "value": 30 },
+    { "z": 200, "x": 2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 290, "x": -2, "width": 4, "type": "pct", "value": 50 },
+    { "z": 290, "x": 2, "width": 4, "type": "add", "value": 40 },
+    { "z": 385, "x": -2, "width": 4, "type": "set", "value": 100 },
+    { "z": 385, "x": 2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 430, "x": -2, "width": 4, "type": "add", "value": 50 },
+    { "z": 430, "x": 2, "width": 4, "type": "pct", "value": 50 }
+  ],
+  "spikes": [],
+  "spikeFields": [
+    { "x": -2, "z": 170, "width": 4, "depth": 2.5 },
+    { "x": 2, "z": 178, "width": 4, "depth": 2.5 },
+    { "x": -2, "z": 186, "width": 4, "depth": 2.5 },
+    { "x": -2, "z": 398, "width": 4, "depth": 3, "period": 2 },
+    { "x": 2, "z": 398, "width": 4, "depth": 3, "period": 2, "offset": 0.5 }
+  ],
+  "archers": [
+    { "z": 225, "side": 1, "interval": 0.9 },
+    { "z": 232, "side": -1, "interval": 0.9, "offset": 0.5 }
+  ],
+  "enemies": [
+    { "x": 0, "z": 140, "count": 15 },
+    { "x": 0, "z": 305, "count": 30 },
+    { "x": 0, "z": 412, "count": 40 }
+  ],
+  "jumps": [
+    { "x": 0, "z": 58, "width": 8 },
+    { "x": 0, "z": 115, "width": 8 },
+    { "x": 0, "z": 262, "width": 8 },
+    { "x": 0, "z": 333, "width": 8 },
+    { "x": 0, "z": 358, "width": 8 }
+  ],
+  "boosts": [
+    { "x": 0, "z": 25, "width": 8 },
+    { "x": 0, "z": 50, "width": 8 },
+    { "x": -2, "z": 105, "width": 4 },
+    { "x": 0, "z": 160, "width": 8 },
+    { "x": 0, "z": 215, "width": 8 },
+    { "x": 2, "z": 252, "width": 4 },
+    { "x": 0, "z": 325, "width": 8 },
+    { "x": 0, "z": 350, "width": 4 }
+  ],
+  "winds": [
+    { "z": 248, "depth": 18, "strength": -2.5 }
+  ],
+  "cannon": { "boxes": 6, "distance": 28, "height": 8, "rx": 2, "ry": 1.2, "speed": 0.2, "path": "pendulum", "spacing": 2.6 }
+}

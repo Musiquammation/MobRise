@@ -21,8 +21,9 @@ export type LevelData = {
 	/**
 	 * Gates. Gates sharing the same z form a row: only one of them is taken.
 	 * "pct": value is a percentage (10 = +10% of the players).
+	 * "set": purple gate, the crowd becomes exactly `value` players (spawns or kills).
 	 */
-	gates: { z: number; x: number; width: number; type: "add" | "mul" | "pct"; value: number }[];
+	gates: { z: number; x: number; width: number; type: "add" | "mul" | "pct" | "set"; value: number }[];
 	/** Spiked balls rolling across the track at distance z. */
 	spikes: { z: number; speed: number; offset?: number }[];
 	/**
@@ -44,6 +45,27 @@ export type LevelData = {
 	enemies?: { x: number; z: number; count: number }[];
 	/** Jump pads (x = center, z = start). `power` = vertical speed. */
 	jumps?: { x: number; z: number; width: number; power?: number }[];
+	/**
+	 * Giant swordsmen blocking the track. The crowd stops and attacks them (each
+	 * player touching the boss deals 1.5 damage/s); every `interval` seconds
+	 * (default 1.5) the sword kills the players in front, within `reach`
+	 * (default 1.2) of the body.
+	 */
+	bosses?: { x: number; z: number; hp: number; interval?: number; reach?: number }[];
+	/**
+	 * Speed strips (x = center, z = start): the crowd runs `factor` times faster
+	 * (default 1.8) for `duration` seconds (default 1.2). Put one before a jump
+	 * pad for a longer jump.
+	 */
+	boosts?: { x: number; z: number; width: number; depth?: number; factor?: number; duration?: number }[];
+	/**
+	 * Fans next to the track blowing the crowd sideways over [z, z + depth]:
+	 * the crowd drifts at `strength` units/s (> 0 toward +x) unless the player
+	 * steers against it. 2 = gentle, 4 = strong.
+	 */
+	winds?: { z: number; depth: number; strength: number }[];
+	/** Groups of gray players waiting at (x, z): each one touched joins the crowd. */
+	recruits?: { x: number; z: number; count: number }[];
 	/** Cannon bonus phase. */
 	cannon: {
 		/** Number of "?" boxes. */

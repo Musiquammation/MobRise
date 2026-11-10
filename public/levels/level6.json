@@ -1,7 +1,7 @@
 {
   "name": "bigMix",
   "width": 8,
-  "length": 460,
+  "length": 490,
   "speed": 10,
   "start": 20,
   "holes": [
@@ -73,5 +73,8 @@
     { "x": 0, "z": 440, "count": 45 }
   ],
   "jumps": [],
+  "bosses": [
+    { "x": 0, "z": 470, "hp": 80 }
+  ],
   "cannon": { "boxes": 6, "distance": 28, "height": 8, "rx": 2, "ry": 1.2, "speed": 0.15, "path": "row", "spacing": 2.4, "sway": 2, "swaySpeed": 0.07 }
 }

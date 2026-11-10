@@ -39,6 +39,8 @@ export class App implements DomActions {
 
 		this.dom = createDomHandler(this);
 		this.dom.coins = this.save.coins;
+		// Dev only: lets the console (and tests) inspect the running game.
+		if (import.meta.env.DEV) (window as unknown as { mobrise: unknown }).mobrise = this;
 	}
 
 	async boot() {
@@ -59,7 +61,9 @@ export class App implements DomActions {
 
 	/** Loads the current level and shows the main menu in front of it. */
 	private async openLevel() {
-		const file = this.levels[this.current % this.levels.length];
+		// Dev only: ?level=<file> plays public/levels/<file> (level design / tests).
+		const forced = import.meta.env.DEV ? new URLSearchParams(location.search).get("level") : null;
+		const file = forced ?? this.levels[this.current % this.levels.length];
 		const request = levelRequest(file);
 
 		if (this.levelResource !== request.id) {

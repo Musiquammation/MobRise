@@ -7,16 +7,22 @@ import type { MysteryBox } from "./entities/MysteryBox";
 import type { Cannon } from "./entities/Cannon";
 import type { JumpPad } from "./entities/JumpPad";
 import type { Enemy } from "./entities/enemies/Enemy";
+import type { Boss } from "./entities/enemies/Boss";
+import type { SpeedPad } from "./entities/SpeedPad";
+import type { Recruit } from "./entities/Recruit";
 
 /** Every list of the container and the type of entity it holds. */
 export type EntityLists = {
 	platform: Platform;
 	pad: JumpPad;
+	boost: SpeedPad;
 	gate: Gate;
 	hazard: Hazard;
 	/** Entities without collisions (archers, their arrows...). */
 	prop: Entity;
 	enemy: Enemy;
+	boss: Boss;
+	recruit: Recruit;
 	cannon: Cannon;
 	box: MysteryBox;
 	player: Player;
@@ -25,11 +31,14 @@ export type EntityLists = {
 export type EntityKey = keyof EntityLists;
 
 /** Iteration order (also the frame order). */
-const ORDER: EntityKey[] = ["platform", "pad", "gate", "hazard", "prop", "enemy", "cannon", "box", "player"];
+const ORDER: EntityKey[] = [
+	"platform", "pad", "boost", "gate", "hazard", "prop", "enemy", "boss", "recruit", "cannon", "box", "player",
+];
 
 export class EntityContainer {
 	private lists: { [K in EntityKey]: EntityLists[K][] } = {
-		platform: [], pad: [], gate: [], hazard: [], prop: [], enemy: [], cannon: [], box: [], player: [],
+		platform: [], pad: [], boost: [], gate: [], hazard: [], prop: [], enemy: [], boss: [], recruit: [],
+		cannon: [], box: [], player: [],
 	};
 
 	constructor(

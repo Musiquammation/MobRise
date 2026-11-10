@@ -54,5 +54,10 @@ export default {
 		spikeField: "Campo de pinchos",
 		redTowers: "Las torres rojas",
 		bigMix: "La gran mezcla",
+		purpleGates: "Puertas moradas",
+		windyRoad: "Camino ventoso",
+		storm: "La tormenta",
+		fullSpeed: "A toda velocidad",
+		joinUs: "¡Únete!",
 	},
 } satisfies Messages;
