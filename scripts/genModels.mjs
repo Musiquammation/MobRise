@@ -159,7 +159,20 @@ const MATERIALS = {
 	metalLight: { color: [0.62, 0.64, 0.68], roughness: 0.3, metallic: 0.6 },
 	steel: { color: [0.85, 0.86, 0.9], roughness: 0.25, metallic: 0.7 },
 	blue: { color: [0.2, 0.55, 1], roughness: 0.5 },
+	purple: { color: [0.42, 0.2, 0.85], roughness: 0.5 },
+	horn: { color: [0.96, 0.9, 0.76], roughness: 0.6 },
+	glow: { color: [1, 0.92, 0.45], roughness: 0.2, metallic: 0.3 },
 };
+
+/** Ring of small boxes (flat, around Y) of radius r at height y. */
+function ring(mat, r, y, count, size) {
+	const out = [];
+	for (let i = 0; i < count; i++) {
+		const a = (i / count) * Math.PI * 2;
+		out.push([mat, box([size, size * 0.6, size], [Math.cos(a) * r, y, Math.sin(a) * r])]);
+	}
+	return out;
+}
 
 // ---------------------------------------------------------------- models
 
@@ -226,6 +239,20 @@ const MODELS = {
 		["red", box([0.04, 0.05, 0.16], [0.05, -0.12, 0.22])],
 		["red", box([0.04, 0.05, 0.16], [-0.05, -0.14, 0.22])],
 	],
+
+	hat_wizard: [
+		["purple", cyl(0.3, 0.3, 0.03, [0, 0.015, 0])],
+		["purple", cyl(0.17, 0, 0.46, [0, 0.26, 0])],
+		["gold", box([0.06, 0.06, 0.02], [0, 0.16, -0.13])],
+	],
+	hat_viking: [
+		["metalLight", box([0.38, 0.12, 0.34], [0, 0.04, 0])],
+		["metalLight", box([0.28, 0.06, 0.26], [0, 0.13, 0])],
+		["gold", box([0.04, 0.16, 0.36], [0, 0.07, 0])],
+		["horn", cyl(0, 0.06, 0.2, [-0.28, 0.1, 0], "x")],
+		["horn", cyl(0.06, 0, 0.2, [0.28, 0.1, 0], "x")],
+	],
+	hat_halo: ring("glow", 0.2, 0.13, 16, 0.075),
 
 	// Origin at the bottom of the post.
 	gate_post: [

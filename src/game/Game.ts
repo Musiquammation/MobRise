@@ -28,7 +28,7 @@ import { MysteryBox } from "./entities/MysteryBox";
 import { boxPath, boxPathExtent } from "./boxPath";
 import { DEFAULT_CROWD_OPTIONS, FORCES, stepCrowd, type CrowdOptions, type ForceName } from "./crowdPhysics";
 import type { LevelData } from "../data/Level";
-import type { Skin } from "../data/skins";
+import { skinAbilities, type Skin, type SkinAbilities } from "../data/skins";
 import type { ResourceManager } from "../resources/ResourceManager";
 import type { GameComponent } from "../DomHandler";
 
@@ -171,6 +171,8 @@ export class Game extends GameLayer {
 	speed = 0;
 	/** Enemies are charging: the crowd stops and each player aims at an opponent. */
 	fighting = false;
+	/** Abilities of the equipped skin (jump, shields, speed, coins). */
+	abilities: SkinAbilities;
 
 	readonly cannon: Cannon;
 	/** Center of the "?" boxes loop. */
@@ -226,10 +228,14 @@ export class Game extends GameLayer {
 		private readonly callbacks: GameCallbacks,
 	) {
 		super(renderer, input);
+		this.abilities = skinAbilities(skin.stats);
 
 		const room = level.width / 2 - PLAYER_HALF;
 		const walls = { minX: -room, maxX: room };
-		this.crowdOptions = { ...DEFAULT_CROWD_OPTIONS, ...walls, force: FORCES[pickForce()] };
+		this.crowdOptions = {
+			...DEFAULT_CROWD_OPTIONS, ...walls, force: FORCES[pickForce()],
+			maxSpeed: DEFAULT_CROWD_OPTIONS.maxSpeed * this.abilities.speed,
+		};
 		this.gatherOptions = { ...DEFAULT_CROWD_OPTIONS, ...walls, force: GATHER_FORCE, maxSpeed: 8 };
 		this.enemyOptions = { ...DEFAULT_CROWD_OPTIONS, ...walls, force: FORCES.mixed, maxSpeed: 5.5 };
 
@@ -312,11 +318,20 @@ export class Game extends GameLayer {
 	start(ui: GameComponent) {
 		this.ui = ui;
 		this.phase = "run";
-		this.speed = this.level.speed;
+		this.speed = this.runSpeed();
 		this.syncUi();
 	}
 
+	/** Forward speed of the crowd, with the bonus of the skin. */
+	private runSpeed() {
+		return this.level.speed * this.abilities.speed;
+	}
+
 	setSkin(skin: Skin) {
+		// Only changed in the menu (idle): the shields of the crowd are drawn again.
+		this.abilities = skinAbilities(skin.stats);
+		this.crowdOptions.maxSpeed = DEFAULT_CROWD_OPTIONS.maxSpeed * this.abilities.speed;
+		for (const p of this.crowd) p.shield = Math.random() < this.abilities.shieldChance;
 		this.scene.remove(this.playerRenderer.group);
 		this.playerRenderer.dispose();
 		this.playerRenderer = new PlayerRenderer(this.resources, skin, MAX_PLAYERS);
@@ -371,7 +386,7 @@ export class Game extends GameLayer {
 			const d = Math.hypot(dx, dz);
 			if (d > radius) continue;
 			const k = 4 / Math.max(0.2, d);
-			p.die(dx * k, 6, dz * k);
+			p.hurt(dx * k, 6, dz * k);
 		}
 		this.crowdDirty = true;
 	}
@@ -445,6 +460,7 @@ export class Game extends GameLayer {
 						if (dx * dx + dz * dz > c2) continue;
 						r.kill();
 						const joined = new Player(r.position.x, 0, r.position.z);
+						joined.shield = Math.random() < this.abilities.shieldChance;
 						this.crowd.push(joined);
 						this.entities.add("player", joined);
 						zone.joined++;
@@ -512,7 +528,7 @@ export class Game extends GameLayer {
 				if (p.state !== "run" || p.position.y > 0.6) continue;
 				const dx = p.position.x - e.position.x, dz = p.position.z - e.position.z;
 				if (dx * dx + dz * dz > c2) continue;
-				p.die(-dx * 4, 4, 2);
+				p.hurt(-dx * 4, 4, 2);
 				e.die(dx * 4, 4, -3);
 				this.crowdDirty = true;
 				break;
@@ -543,6 +559,7 @@ export class Game extends GameLayer {
 			for (let i = 0; i < diff; i++) {
 				const a = Math.random() * Math.PI * 2, r = Math.sqrt(Math.random()) * spread;
 				const p = new Player(this.crowdX + Math.cos(a) * r, 0, this.centerZ + Math.sin(a) * r);
+				p.shield = Math.random() < this.abilities.shieldChance;
 				this.crowd.push(p);
 				this.entities.add("player", p);
 			}
@@ -676,7 +693,7 @@ export class Game extends GameLayer {
 			if (!this.fighting) this.steer(dt);
 			this.boostTime = Math.max(0, this.boostTime - dt);
 			const boosted = this.boostTime > 0 ? this.boostFactor : 1;
-			const wanted = this.fighting ? 0 : this.level.speed * boosted;
+			const wanted = this.fighting ? 0 : this.runSpeed() * boosted;
 			// Fast to speed up on a boost, slower to come back to normal.
 			const rate = this.fighting ? FIGHT_BRAKE : wanted > this.speed ? BOOST_ACCEL : BOOST_DECEL;
 			this.speed += Math.max(-rate * dt, Math.min(rate * dt, wanted - this.speed));
@@ -741,7 +758,8 @@ export class Game extends GameLayer {
 				left = Math.min(left, p.position.x);
 				right = Math.max(right, p.position.x);
 			}
-			const speed = Math.max(-SLIDE_MAX_SPEED, Math.min(SLIDE_MAX_SPEED, (this.centerX - this.crowdX) * SLIDE_GAIN));
+			const maxSlide = SLIDE_MAX_SPEED * this.abilities.speed;
+			const speed = Math.max(-maxSlide, Math.min(maxSlide, (this.centerX - this.crowdX) * SLIDE_GAIN));
 			const slide = speed > 0
 				? Math.min(speed * dt, Math.max(0, this.crowdOptions.maxX - right))
 				: Math.max(speed * dt, Math.min(0, this.crowdOptions.minX - left));
@@ -791,6 +809,16 @@ export class Game extends GameLayer {
 	}
 
 	private end(won: boolean) {
+		// Coin multiplier of the skin: bonus on what the boxes gave.
+		if (won && this.abilities.coins > 1) {
+			const bonus = roundTenth(this.earned * (this.abilities.coins - 1));
+			this.earned = roundTenth(this.earned + bonus);
+			if (bonus > 0) this.callbacks.onCoins(bonus);
+			if (this.ui) {
+				this.ui.multiplier = this.abilities.coins;
+				this.ui.earned = this.earned;
+			}
+		}
 		this.phase = won ? "won" : "lost";
 		this.speed = 0;
 		this.fighting = false;

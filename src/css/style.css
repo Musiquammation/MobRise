@@ -233,23 +233,48 @@ progress::-moz-progress-bar {
 	gap: 16px;
 }
 
-#main nav button:first-child {
+#main nav > button {
 	--c: var(--green);
 	--c-light: var(--green-light);
 	--c-dark: var(--green-dark);
+	width: min(100%, 300px);
 	font-size: 34px;
-	padding: 12px 64px 16px;
+	padding: 12px 24px 16px;
 	border-radius: 24px;
 	animation: pulse 1.2s ease-in-out infinite;
 }
 
-#main nav button + button {
+#main nav div {
+	width: min(100%, 300px);
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 12px;
+}
+
+#main nav div button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	font-size: 20px;
+	min-height: 52px;
+	padding: 6px 10px 9px;
+}
+
+#main nav div button + button {
 	--c: var(--gold);
 	--c-light: var(--gold-light);
 	--c-dark: var(--gold-dark);
-	font-size: 20px;
-	min-height: 48px;
-	padding: 6px 26px 9px;
+}
+
+#main nav svg {
+	flex: none;
+	width: 22px;
+	height: 22px;
+	fill: #fff;
+	stroke: var(--ink);
+	stroke-width: 1.5;
+	filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.3));
 }
 
 @keyframes pulse {
@@ -446,6 +471,17 @@ progress::-moz-progress-bar {
 	color: var(--gold);
 }
 
+/* Coin multiplier of the skin. */
+#game > article p small {
+	padding: 2px 10px 4px;
+	font-size: 20px;
+	color: var(--ink);
+	text-shadow: none;
+	background: var(--gold);
+	border-radius: 999px;
+	animation: pulse 0.9s ease-in-out infinite;
+}
+
 #game > article button {
 	--c: var(--green);
 	--c-light: var(--green-light);
@@ -530,6 +566,257 @@ progress::-moz-progress-bar {
 	--c: var(--red);
 	--c-light: #ff7a85;
 	--c-dark: var(--red-dark);
+}
+
+/* levels */
+
+#levels {
+	background: radial-gradient(circle at 50% 0%, #b7e3ff, #4f9de0 70%);
+	gap: 16px;
+}
+
+#levels h2 {
+	margin-top: 40px;
+}
+
+#levels ol {
+	flex: 1;
+	width: min(100%, 360px);
+	list-style: none;
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 14px;
+	align-content: start;
+	overflow-y: auto;
+	touch-action: pan-y;
+	padding: 10px 8px 18px;
+}
+
+#levels li button {
+	position: relative;
+	width: 100%;
+	aspect-ratio: 1;
+	min-height: 0;
+	padding: 0 0 4px;
+	display: grid;
+	place-items: center;
+	font-size: 30px;
+	border-radius: 20px;
+}
+
+#levels li button[data-state="current"] {
+	--c: var(--green);
+	--c-light: var(--green-light);
+	--c-dark: var(--green-dark);
+	outline: 4px solid var(--gold);
+	outline-offset: 2px;
+	animation: pulse 1.2s ease-in-out infinite;
+}
+
+#levels li button[data-state="locked"] {
+	opacity: 0.7;
+	box-shadow: inset 0 3px 0 rgba(255, 255, 255, 0.35), inset 0 -5px 0 var(--c-dark), 0 5px 0 rgba(29, 37, 64, 0.6);
+	border-color: rgba(29, 37, 64, 0.6);
+}
+
+#levels li button svg {
+	width: 26px;
+	height: 26px;
+	fill: #fff;
+}
+
+/* Gold check badge of the won levels. */
+#levels li button i {
+	position: absolute;
+	top: -8px;
+	right: -8px;
+	width: 26px;
+	height: 26px;
+	display: grid;
+	place-items: center;
+	border-radius: 50%;
+	background: linear-gradient(var(--gold-light), var(--gold) 60%);
+	border: 2px solid var(--ink);
+	box-shadow: 0 2px 0 var(--ink);
+}
+
+#levels li button i svg {
+	width: 16px;
+	height: 16px;
+	fill: none;
+	stroke: var(--ink);
+	stroke-width: 4;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}
+
+#levels > button {
+	--c: var(--red);
+	--c-light: #ff7a85;
+	--c-dark: var(--red-dark);
+	min-width: 180px;
+}
+
+#shop li {
+	cursor: pointer;
+}
+
+#shop li[data-selected="true"] {
+	outline: 4px solid var(--blue);
+	outline-offset: 2px;
+}
+
+/* Stats of the selected skin: panel sliding from the right. */
+#shop > div {
+	position: fixed;
+	inset: 0;
+	z-index: 4;
+	background: rgba(29, 37, 64, 0.35);
+}
+
+#shop > aside {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 5;
+	width: min(340px, 88vw);
+	padding: calc(64px + var(--safe-top)) 16px calc(20px + var(--safe-bottom));
+	background: #fff;
+	border-left: 3px solid var(--ink);
+	box-shadow: -6px 0 0 rgba(29, 37, 64, 0.25);
+	overflow-y: auto;
+	transition: transform 0.22s ease-out;
+}
+
+#shop > aside.closed {
+	transform: translateX(100%);
+}
+
+#shop > aside > div {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 12px;
+}
+
+#shop > aside img {
+	max-width: 150px;
+}
+
+#shop > aside h3 {
+	font-size: 28px;
+}
+
+#shop > aside [data-close] {
+	position: absolute;
+	top: calc(12px + var(--safe-top));
+	left: 12px;
+	min-height: 0;
+	width: 44px;
+	height: 44px;
+	padding: 0 0 4px;
+	font-size: 28px;
+	line-height: 1;
+	--c: var(--red);
+	--c-light: #ff7a85;
+	--c-dark: var(--red-dark);
+}
+
+#shop dl {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+}
+
+#shop dl > div {
+	--bar: var(--blue);
+	display: grid;
+	grid-template-columns: 1fr auto;
+	gap: 4px 8px;
+	align-items: baseline;
+}
+
+#shop dl > [data-stat="flight"] { --bar: #a855f7; }
+#shop dl > [data-stat="shield"] { --bar: #38bdf8; }
+#shop dl > [data-stat="speed"] { --bar: #f97316; }
+#shop dl > [data-stat="coins"] { --bar: var(--gold); }
+
+#shop [data-power] {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	padding: 4px 6px 4px 16px;
+	font-size: 18px;
+	color: #fff;
+	background: var(--ink);
+	border-radius: 999px;
+}
+
+#shop [data-power] b {
+	font-weight: 400;
+	min-width: 38px;
+	padding: 2px 8px 4px;
+	text-align: center;
+	color: var(--ink);
+	background: var(--gold);
+	border-radius: 999px;
+}
+
+#shop dt {
+	font-family: inherit;
+	font-size: 20px;
+}
+
+#shop dd {
+	font-size: 18px;
+	font-variant-numeric: tabular-nums;
+}
+
+#shop meter {
+	grid-column: 1 / -1;
+	width: 100%;
+	height: 16px;
+	appearance: none;
+	border: 3px solid var(--ink);
+	border-radius: 10px;
+	background: #e3e9f3;
+	overflow: hidden;
+}
+
+#shop meter::-webkit-meter-bar {
+	background: #e3e9f3;
+	border: 0;
+	border-radius: 0;
+	height: 100%;
+}
+
+#shop meter::-webkit-meter-optimum-value {
+	background: var(--bar);
+	transition: width 0.3s;
+}
+
+#shop meter::-moz-meter-bar {
+	background: var(--bar);
+}
+
+#shop small {
+	grid-column: 1 / -1;
+	font-family: system-ui, sans-serif;
+	font-size: 13px;
+	color: #56607a;
+}
+
+#shop > aside > div > button {
+	width: 100%;
+	justify-content: center;
+}
+
+#shop > aside button[data-price]:not(:disabled) {
+	--c: var(--green);
+	--c-light: var(--green-light);
+	--c-dark: var(--green-dark);
 }
 
 #fps {

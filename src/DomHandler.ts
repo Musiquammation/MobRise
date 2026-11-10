@@ -3,7 +3,7 @@ import type { Skin } from "./data/skins";
 import type { GamePhase } from "./game/Game";
 import { t } from "./i18n";
 
-export type PanelSymbol = "loading" | "main" | "game" | "shop";
+export type PanelSymbol = "loading" | "main" | "game" | "shop" | "levels";
 
 export class LoadingComponent {
 	readonly panel = "loading" as const;
@@ -33,8 +33,10 @@ export class GameComponent {
 	/** Change of the crowd at the last gate, and a key that changes on every gate. */
 	gateDelta = 0;
 	gateKey = 0;
-	/** Coins earned during this level. */
+	/** Coins earned during this level (with the skin bonus once won). */
 	earned = 0;
+	/** Coin multiplier of the skin, applied when the level is won (1 = none). */
+	multiplier = 1;
 	/** Screen position of the crowd counter. */
 	bubble = { x: 0, y: 0, visible: false };
 	/** Screen position of the cannon crosshair. */
@@ -43,25 +45,58 @@ export class GameComponent {
 	constructor(public levelNumber: number) {}
 }
 
+/** One line of the stats panel of a skin. */
+export type ShopStat = {
+	/** Key of `shop.stats` / `shop.hints` in the locales. */
+	id: "flight" | "shield" | "speed" | "coins";
+	/** In [0, 100]: length of the bar. */
+	level: number;
+	/** What it does in game ("0.6 s", "45 %"...). */
+	value: string;
+};
+
 export type ShopItem = {
 	skin: Skin;
 	thumbnail: string;
 	owned: boolean;
 	equipped: boolean;
+	stats: ShopStat[];
+	/** Average of the stats, in [0, 100]. */
+	power: number;
 };
 
 export class ShopComponent {
 	readonly panel = "shop" as const;
+	/** Skin whose stats are shown in the side panel. */
+	selected: string | null = null;
 	constructor(public items: ShopItem[]) {}
+
+	get selectedItem(): ShopItem | null {
+		return this.items.find(i => i.skin.id === this.selected) ?? null;
+	}
 }
 
-export type Panel = LoadingComponent | MainComponent | GameComponent | ShopComponent;
+export type LevelItem = {
+	/** Index of the level (0-based, can exceed the number of level files: they loop). */
+	index: number;
+	/** done: won at least once, current: furthest level reached, locked: not reached yet. */
+	state: "done" | "current" | "locked";
+};
+
+export class LevelsComponent {
+	readonly panel = "levels" as const;
+	constructor(public items: LevelItem[]) {}
+}
+
+export type Panel = LoadingComponent | MainComponent | GameComponent | ShopComponent | LevelsComponent;
 
 /** What the buttons of the interface trigger (implemented by App). */
 export interface DomActions {
 	play(): void;
 	openShop(): void;
 	closeShop(): void;
+	openLevels(): void;
+	selectLevel(index: number): void;
 	buy(skinId: string): void;
 	equip(skinId: string): void;
 	next(): void;
@@ -96,6 +131,8 @@ export class DomHandler {
 	play() { actions?.play(); }
 	openShop() { actions?.openShop(); }
 	closeShop() { actions?.closeShop(); }
+	openLevels() { actions?.openLevels(); }
+	selectLevel(index: number) { actions?.selectLevel(index); }
 	buy(id: string) { actions?.buy(id); }
 	equip(id: string) { actions?.equip(id); }
 	next() { actions?.next(); }

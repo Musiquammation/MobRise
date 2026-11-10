@@ -5,6 +5,7 @@ export default {
 		level: "Livello {n}",
 		play: "Gioca",
 		skins: "Skin",
+		levels: "Livelli",
 	},
 	game: {
 		aim: "Mira ai <b>?</b>",
@@ -19,6 +20,20 @@ export default {
 		equipped: "Equipaggiato",
 		equip: "Equipaggia",
 		back: "Indietro",
+		close: "Chiudi",
+		stats: {
+			flight: "Volo",
+			shield: "Scudo",
+			speed: "Velocità",
+			coins: "Monete",
+		},
+		hints: {
+			flight: "Salta da solo quando finisce il terreno, più in alto e più lontano.",
+			shield: "Probabilità che ogni corridore abbia uno scudo che blocca un colpo.",
+			speed: "Corre e schiva più veloce.",
+			coins: "Moltiplica le monete guadagnate quando il livello è superato.",
+		},
+		power: "Media",
 	},
 	skins: {
 		blue: "Blu",
@@ -28,6 +43,9 @@ export default {
 		party: "Festa",
 		ninja: "Ninja",
 		king: "Re",
+		wizard: "Mago",
+		viking: "Vichingo",
+		angel: "Angelo",
 	},
 	levels: {
 		welcome: "Benvenuto!",

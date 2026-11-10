@@ -234,8 +234,7 @@ export class Boss extends Entity {
 			if (d > reach) continue;
 			if (d > 0.01 && (px * fx + pz * fz) / d < cosHalf) continue;
 			const k = 7 / Math.max(0.3, d);
-			p.die(px * k, 7, pz * k);
-			this.kills++;
+			if (p.hurt(px * k, 7, pz * k)) this.kills++;
 		}
 		game.markCrowdDirty();
 	}

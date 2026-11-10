@@ -17,6 +17,9 @@ export const HAT_MODELS: ResourceRequest[] = [
 	{ id: "hat_crown", path: "/models/hat_crown.gltf", priority: 2 },
 	{ id: "hat_party", path: "/models/hat_party.gltf", priority: 2 },
 	{ id: "hat_band", path: "/models/hat_band.gltf", priority: 2 },
+	{ id: "hat_wizard", path: "/models/hat_wizard.gltf", priority: 2 },
+	{ id: "hat_viking", path: "/models/hat_viking.gltf", priority: 2 },
+	{ id: "hat_halo", path: "/models/hat_halo.gltf", priority: 2 },
 ];
 
 export const LEVEL_INDEX: ResourceRequest = { id: "levels", path: "/levels/index.json", priority: 0 };
