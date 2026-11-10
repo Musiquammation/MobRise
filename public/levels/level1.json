@@ -1,47 +1,44 @@
 {
-  "name": "Premiers pas",
+  "name": "Bienvenue !",
   "width": 8,
-  "length": 280,
-  "speed": 7.5,
+  "length": 170,
+  "speed": 8.5,
   "start": 10,
   "holes": [
-    { "x": 3, "z": 50, "width": 2, "depth": 6 },
-    { "x": 0, "z": 112, "width": 8, "depth": 3.5 }
+    { "x": 3, "z": 18, "width": 2, "depth": 5 },
+    { "x": 0, "z": 56, "width": 3, "depth": 4 },
+    { "x": 0, "z": 82, "width": 8, "depth": 4 },
+    { "x": -3, "z": 106, "width": 2, "depth": 5 },
+    { "x": 3, "z": 106, "width": 2, "depth": 5 }
   ],
   "gates": [
-    { "z": 12, "x": -2, "width": 4, "type": "add", "value": 10 },
-    { "z": 12, "x": 2, "width": 4, "type": "mul", "value": 2 },
-    { "z": 40, "x": -2, "width": 4, "type": "add", "value": -5 },
-    { "z": 40, "x": 2, "width": 4, "type": "pct", "value": -20 },
-    { "z": 95, "x": -2, "width": 4, "type": "mul", "value": 2 },
-    { "z": 95, "x": 2, "width": 4, "type": "add", "value": 15 },
-    { "z": 150, "x": -2, "width": 4, "type": "add", "value": 20 },
-    { "z": 150, "x": 2, "width": 4, "type": "pct", "value": 40 },
-    { "z": 170, "x": -2.0, "width": 4, "type": "pct", "value": 25 },
-    { "z": 170, "x": 2.0, "width": 4, "type": "add", "value": 15 },
-    { "z": 235, "x": -2, "width": 4, "type": "add", "value": -10 },
-    { "z": 235, "x": 2, "width": 4, "type": "pct", "value": -20 },
-    { "z": 268, "x": -2.0, "width": 4, "type": "pct", "value": 60 },
-    { "z": 268, "x": 2.0, "width": 4, "type": "add", "value": 45 }
+    { "z": 8, "x": -2, "width": 4, "type": "add", "value": 10 },
+    { "z": 8, "x": 2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 28, "x": -2, "width": 4, "type": "add", "value": 10 },
+    { "z": 28, "x": 2, "width": 4, "type": "add", "value": 5 },
+    { "z": 68, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 68, "x": 2, "width": 4, "type": "add", "value": 15 },
+    { "z": 118, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 118, "x": 2, "width": 4, "type": "add", "value": 20 },
+    { "z": 152, "x": -2, "width": 4, "type": "add", "value": 30 },
+    { "z": 152, "x": 2, "width": 4, "type": "mul", "value": 2 }
   ],
   "spikes": [],
   "spikeFields": [
-    { "x": -2.5, "z": 28, "width": 3, "depth": 4 },
-    { "x": 2.5, "z": 130, "width": 3, "depth": 3, "period": 2.5 }
+    { "x": -2.5, "z": 46, "width": 3, "depth": 3 },
+    { "x": 0, "z": 163, "width": 2, "depth": 2 }
   ],
-  "saws": [
-    { "x": 0, "z": 65, "axis": "x", "length": 6, "speed": 3 },
-    { "x": -2.5, "z": 185, "axis": "z", "length": 10, "speed": 3.5 }
-  ],
+  "saws": [],
   "archers": [
-    { "z": 195, "side": 1, "interval": 1.4 }
+    { "z": 132, "side": 1, "interval": 1.6 }
   ],
   "enemies": [
-    { "x": 0, "z": 82, "count": 3 },
-    { "x": 0, "z": 215, "count": 3 }
+    { "x": 0, "z": 38, "count": 4 },
+    { "x": 0, "z": 96, "count": 8 },
+    { "x": 0, "z": 142, "count": 12 }
   ],
   "jumps": [
-    { "x": 0, "z": 110, "width": 8 }
+    { "x": 0, "z": 80, "width": 8 }
   ],
-  "cannon": { "boxes": 5, "distance": 24, "height": 7, "rx": 5, "ry": 2.5, "speed": 0.15 }
+  "cannon": { "boxes": 4, "distance": 22, "height": 6.5, "rx": 4.5, "ry": 2, "speed": 0.1 }
 }

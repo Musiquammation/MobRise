@@ -1,63 +1,42 @@
 {
-  "name": "Pluie de flèches",
+  "name": "Premiers pas",
   "width": 8,
-  "length": 360,
+  "length": 160,
   "speed": 8.5,
-  "start": 15,
+  "start": 10,
   "holes": [
-    { "x": 0, "z": 122, "width": 8, "depth": 4.5 },
-    { "x": -2.5, "z": 200, "width": 3, "depth": 8 },
-    { "x": 2, "z": 279, "width": 4, "depth": 9 }
+    { "x": 3, "z": 18, "width": 2, "depth": 5 },
+    { "x": -3, "z": 28, "width": 2, "depth": 5 },
+    { "x": -3, "z": 60, "width": 2, "depth": 5 },
+    { "x": 3, "z": 60, "width": 2, "depth": 5 },
+    { "x": 2.5, "z": 88, "width": 3, "depth": 5 },
+    { "x": -2.5, "z": 98, "width": 3, "depth": 5 },
+    { "x": -3, "z": 132, "width": 2, "depth": 5 },
+    { "x": 3, "z": 140, "width": 2, "depth": 5 }
   ],
   "gates": [
-    { "z": 12, "x": -2, "width": 4, "type": "mul", "value": 2 },
-    { "z": 12, "x": 2, "width": 4, "type": "add", "value": 15 },
-    { "z": 48, "x": -2, "width": 4, "type": "add", "value": -3 },
-    { "z": 48, "x": 2, "width": 4, "type": "pct", "value": -10 },
-    { "z": 105, "x": -2, "width": 4, "type": "mul", "value": 2 },
-    { "z": 105, "x": 2, "width": 4, "type": "add", "value": 20 },
-    { "z": 160, "x": -2, "width": 4, "type": "mul", "value": 3 },
-    { "z": 160, "x": 2, "width": 4, "type": "add", "value": 25 },
-    { "z": 172, "x": -2.0, "width": 4, "type": "pct", "value": 20 },
-    { "z": 172, "x": 2.0, "width": 4, "type": "add", "value": 15 },
-    { "z": 240, "x": -2, "width": 4, "type": "add", "value": -10 },
-    { "z": 240, "x": 2, "width": 4, "type": "pct", "value": -20 },
-    { "z": 300, "x": -2, "width": 4, "type": "pct", "value": 35 },
-    { "z": 300, "x": 2, "width": 4, "type": "add", "value": 40 },
-    { "z": 312, "x": -2.0, "width": 4, "type": "add", "value": -8 },
-    { "z": 312, "x": 2.0, "width": 4, "type": "pct", "value": -15 }
+    { "z": 8, "x": -2, "width": 4, "type": "add", "value": 5 },
+    { "z": 8, "x": 2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 38, "x": -2, "width": 4, "type": "add", "value": 10 },
+    { "z": 38, "x": 2, "width": 4, "type": "add", "value": 5 },
+    { "z": 70, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 70, "x": 2, "width": 4, "type": "add", "value": 10 },
+    { "z": 78, "x": -2, "width": 4, "type": "add", "value": -5 },
+    { "z": 78, "x": 2, "width": 4, "type": "add", "value": -10 },
+    { "z": 120, "x": -2, "width": 4, "type": "add", "value": 15 },
+    { "z": 120, "x": 2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 156, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 156, "x": 2, "width": 4, "type": "add", "value": 20 }
   ],
-  "spikes": [
-    { "z": 25, "speed": 5 }
-  ],
-  "spikeFields": [
-    { "x": -2.5, "z": 64, "width": 3, "depth": 3 },
-    { "x": 2.5, "z": 72, "width": 3, "depth": 3 },
-    { "x": -2, "z": 185, "width": 4, "depth": 2, "period": 3.2 },
-    { "x": 2, "z": 185, "width": 4, "depth": 2, "period": 3.2, "offset": 0.5 },
-    { "x": -2, "z": 282, "width": 4, "depth": 3.5 }
-  ],
-  "saws": [
-    { "x": 0, "z": 36, "axis": "x", "length": 6, "speed": 4 },
-    { "x": -2.5, "z": 140, "axis": "z", "length": 10, "speed": 4.5 },
-    { "x": 2.5, "z": 140, "axis": "z", "length": 10, "speed": 4.5, "offset": 0.5 },
-    { "x": 0, "z": 258, "axis": "x", "length": 6, "speed": 4.5 },
-    { "x": 0, "z": 266, "axis": "x", "length": 6, "speed": 4.5, "offset": 0.5 }
-  ],
-  "archers": [
-    { "z": 80, "side": -1, "interval": 1.2 },
-    { "z": 190, "side": 1, "interval": 1.4 },
-    { "z": 200, "side": -1, "interval": 1.4, "offset": 0.5 },
-    { "z": 330, "side": 1, "interval": 1.1 }
-  ],
+  "spikes": [],
+  "spikeFields": [],
+  "saws": [],
+  "archers": [],
   "enemies": [
-    { "x": 0, "z": 92, "count": 6 },
-    { "x": 0, "z": 222, "count": 15 },
-    { "x": 0, "z": 335, "count": 25 }
+    { "x": 0, "z": 48, "count": 4 },
+    { "x": 0, "z": 110, "count": 10 },
+    { "x": 0, "z": 150, "count": 12 }
   ],
-  "jumps": [
-    { "x": 0, "z": 120, "width": 8 },
-    { "x": -2, "z": 280, "width": 4 }
-  ],
-  "cannon": { "boxes": 6, "distance": 26, "height": 7.5, "rx": 6, "ry": 3, "speed": 0.18 }
+  "jumps": [],
+  "cannon": { "boxes": 4, "distance": 22, "height": 6.5, "rx": 4, "ry": 2, "speed": 0.12, "sway": 1.5, "swaySpeed": 0.08 }
 }
