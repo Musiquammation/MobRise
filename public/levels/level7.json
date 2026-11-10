@@ -1,0 +1,59 @@
+{
+  "name": "purpleGates",
+  "width": 8,
+  "length": 500,
+  "speed": 10,
+  "start": 40,
+  "holes": [
+    { "x": 0, "z": 60, "width": 3, "depth": 5 },
+    { "x": 3, "z": 120, "width": 2, "depth": 5 },
+    { "x": -2.5, "z": 320, "width": 3, "depth": 8 },
+    { "x": 2.5, "z": 332, "width": 3, "depth": 8 },
+    { "x": 0, "z": 347, "width": 8, "depth": 5 },
+    { "x": 0, "z": 445, "width": 4, "depth": 6 }
+  ],
+  "gates": [
+    { "z": 100, "x": -2, "width": 4, "type": "set", "value": 100 },
+    { "z": 135, "x": -2, "width": 4, "type": "pct", "value": 50 },
+    { "z": 135, "x": 2, "width": 4, "type": "add", "value": 20 },
+    { "z": 195, "x": -2, "width": 4, "type": "add", "value": 60 },
+    { "z": 195, "x": 2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 222, "x": -2, "width": 4, "type": "add", "value": -200 },
+    { "z": 222, "x": 2, "width": 4, "type": "set", "value": 20 },
+    { "z": 362, "x": -2.667, "width": 2.667, "type": "set", "value": 50 },
+    { "z": 362, "x": 0, "width": 2.667, "type": "add", "value": 20 },
+    { "z": 362, "x": 2.667, "width": 2.667, "type": "pct", "value": 30 },
+    { "z": 482, "x": -2.667, "width": 2.667, "type": "mul", "value": 4 },
+    { "z": 482, "x": 0, "width": 2.667, "type": "add", "value": 100 },
+    { "z": 482, "x": 2.667, "width": 2.667, "type": "set", "value": 200 }
+  ],
+  "spikes": [],
+  "spikeFields": [
+    { "x": -2, "z": 45, "width": 4, "depth": 3, "period": 2 },
+    { "x": 2, "z": 45, "width": 4, "depth": 3, "period": 2, "offset": 0.5 },
+    { "x": -3, "z": 155, "width": 2, "depth": 3 },
+    { "x": -2, "z": 270, "width": 4, "depth": 3, "period": 2.2 },
+    { "x": 2, "z": 270, "width": 4, "depth": 3, "period": 2.2, "offset": 0.5 },
+    { "x": -2, "z": 405, "width": 4, "depth": 2.5 },
+    { "x": 2, "z": 412, "width": 4, "depth": 2.5 },
+    { "x": -2, "z": 419, "width": 4, "depth": 2.5 }
+  ],
+  "archers": [
+    { "z": 25, "side": 1, "interval": 1.0 },
+    { "z": 30, "side": -1, "interval": 1.0, "offset": 0.5 },
+    { "z": 290, "side": 1, "interval": 0.9 },
+    { "z": 300, "side": -1, "interval": 0.9, "offset": 0.5 },
+    { "z": 430, "side": 1, "interval": 0.8 },
+    { "z": 435, "side": -1, "interval": 0.8, "offset": 0.5 }
+  ],
+  "enemies": [
+    { "x": 0, "z": 80, "count": 12 },
+    { "x": 0, "z": 250, "count": 20 },
+    { "x": 0, "z": 390, "count": 30 },
+    { "x": 0, "z": 462, "count": 25 }
+  ],
+  "jumps": [
+    { "x": 0, "z": 345, "width": 8 }
+  ],
+  "cannon": { "boxes": 6, "distance": 28, "height": 8, "rx": 2, "ry": 1.2, "speed": 0.15, "path": "row", "spacing": 2.4, "sway": 1.5, "swaySpeed": 0.08 }
+}

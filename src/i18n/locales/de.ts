@@ -36,5 +36,10 @@ export default {
 		spikeField: "Stachelfeld",
 		redTowers: "Die roten Türme",
 		bigMix: "Der große Mix",
+		purpleGates: "Lila Tore",
+		windyRoad: "Windige Straße",
+		storm: "Der Sturm",
+		fullSpeed: "Volle Geschwindigkeit",
+		joinUs: "Mach mit!",
 	},
 } satisfies Messages;

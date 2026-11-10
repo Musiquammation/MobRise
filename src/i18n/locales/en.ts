@@ -43,6 +43,11 @@ const en = {
 		spikeField: "Spike field",
 		redTowers: "The red towers",
 		bigMix: "The big mix",
+		purpleGates: "Purple gates",
+		windyRoad: "Windy road",
+		storm: "The storm",
+		fullSpeed: "Full speed",
+		joinUs: "Join us!",
 	},
 };
 

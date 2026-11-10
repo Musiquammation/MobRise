@@ -36,5 +36,10 @@ export default {
 		spikeField: "Campo de espinhos",
 		redTowers: "As torres vermelhas",
 		bigMix: "A grande mistura",
+		purpleGates: "Portas roxas",
+		windyRoad: "Estrada ventosa",
+		storm: "A tempestade",
+		fullSpeed: "A toda velocidade",
+		joinUs: "Junte-se a nós!",
 	},
 } satisfies Messages;

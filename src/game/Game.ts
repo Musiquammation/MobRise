@@ -249,12 +249,12 @@ export class Game extends GameLayer {
 			const Type = { add: Addition, mul: Multiplication, pct: Percentage, set: SetCount }[g.type] ?? Addition;
 			this.entities.add("gate", new Type(model("gate_post"), g.x, -g.z, g.width, g.value));
 		}
-		// Level design rule: a row with a red gate is all red.
+		// Level design rule: a row with a red gate has no blue / green gate (purple is allowed).
 		const rows = new Map<number, Gate[]>();
 		for (const g of this.entities.get("gate")) rows.set(g.position.z, [...rows.get(g.position.z) ?? [], g]);
 		for (const [z, row] of rows)
-			if (row.some(g => !g.isGood()) && row.some(g => g.isGood()))
-				console.warn(`${level.name}: gate row z=${-z} mixes red and non-red gates`);
+			if (row.some(g => !g.isGood()) && row.some(g => g.isGood() && !(g instanceof SetCount)))
+				console.warn(`${level.name}: gate row z=${-z} mixes red and blue / green gates`);
 
 		for (const s of level.spikes) {
 			this.entities.add("hazard", new SpikeBall(

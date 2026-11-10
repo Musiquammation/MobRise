@@ -1,0 +1,54 @@
+{
+  "name": "joinUs",
+  "width": 8,
+  "length": 480,
+  "speed": 10,
+  "start": 15,
+  "holes": [
+    { "x": -1, "z": 82, "width": 3, "depth": 8 },
+    { "x": 0, "z": 322, "width": 8, "depth": 6 }
+  ],
+  "gates": [
+    { "z": 40, "x": -2, "width": 4, "type": "add", "value": 10 },
+    { "z": 40, "x": 2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 110, "x": -2, "width": 4, "type": "add", "value": 20 },
+    { "z": 245, "x": -2, "width": 4, "type": "pct", "value": 50 },
+    { "z": 245, "x": 2, "width": 4, "type": "add", "value": 30 },
+    { "z": 365, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 365, "x": 2, "width": 4, "type": "pct", "value": 60 }
+  ],
+  "spikes": [],
+  "spikeFields": [
+    { "x": 2, "z": 190, "width": 4, "depth": 3 }
+  ],
+  "archers": [
+    { "z": 215, "side": -1, "interval": 1.0 }
+  ],
+  "enemies": [
+    { "x": 0, "z": 135, "count": 20 },
+    { "x": 0, "z": 300, "count": 30 },
+    { "x": 0, "z": 410, "count": 35 }
+  ],
+  "jumps": [
+    { "x": 0, "z": 320, "width": 8 }
+  ],
+  "winds": [
+    { "z": 265, "depth": 15, "strength": -2.5 }
+  ],
+  "recruits": [
+    { "x": 0, "z": 20, "count": 10 },
+    { "x": -2.5, "z": 60, "count": 15 },
+    { "x": 2.5, "z": 85, "count": 20 },
+    { "x": 2.5, "z": 112, "count": 30 },
+    { "x": 2.5, "z": 196, "count": 25 },
+    { "x": -2.5, "z": 220, "count": 25 },
+    { "x": 2.5, "z": 272, "count": 30 },
+    { "x": 0, "z": 340, "count": 35 },
+    { "x": -2, "z": 390, "count": 40 }
+  ],
+  "bosses": [
+    { "x": 0, "z": 165, "hp": 60 },
+    { "x": 0, "z": 455, "hp": 180 }
+  ],
+  "cannon": { "boxes": 6, "distance": 30, "height": 8.5, "rx": 2.5, "ry": 1.5, "speed": 0.12, "path": "row", "spacing": 2.4, "sway": 2, "swaySpeed": 0.08 }
+}

@@ -36,5 +36,10 @@ export default {
 		spikeField: "Champ de pointes",
 		redTowers: "Les tours rouges",
 		bigMix: "Le grand mélange",
+		purpleGates: "Portes violettes",
+		windyRoad: "Route venteuse",
+		storm: "La tempête",
+		fullSpeed: "À toute vitesse",
+		joinUs: "Rejoignez-nous !",
 	},
 } satisfies Messages;
