@@ -11,6 +11,7 @@ import { renderSkinThumbnails } from "./game/skinThumbnails";
 import { loadSave, writeSave, type SaveData } from "./data/save";
 import { getSkin, SKINS } from "./data/skins";
 import type { LevelData, LevelIndex } from "./data/Level";
+import { t } from "./i18n";
 
 export class App implements DomActions {
 	private readonly resources = createResourceManager(32 * 1024 * 1024);
@@ -64,7 +65,7 @@ export class App implements DomActions {
 
 		this.buildGame();
 		const level = this.resources.getJson<LevelData>(request.id);
-		this.dom.show(new MainComponent(this.save.level + 1, level.name));
+		this.dom.show(new MainComponent(this.save.level + 1, levelTitle(level)));
 	}
 
 	private buildGame() {
@@ -159,4 +160,11 @@ export class App implements DomActions {
 		this.buildGame();
 		this.play();
 	}
+}
+
+/** Translated name of a level (its `name` is a key of `levels` in src/i18n/locales). */
+function levelTitle(level: LevelData): string {
+	const key = `levels.${level.name}`;
+	const text = t(key);
+	return text === key ? level.name : text;
 }

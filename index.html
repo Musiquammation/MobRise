@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -27,11 +27,11 @@
 	<template x-if="$store.dom.is('main')">
 		<section id="main" x-data="{ get p() { return $store.dom.panel } }" @click="$store.dom.play()">
 			<h1>MobRise</h1>
-			<p>Niveau <b x-text="p.levelNumber"></b></p>
+			<p x-html="$t('main.level', { n: `<b>${p.levelNumber}</b>` })"></p>
 			<small x-text="p.levelName"></small>
 			<nav>
-				<button>Jouer</button>
-				<button @click.stop="$store.dom.openShop()">Skins</button>
+				<button x-text="$t('main.play')"></button>
+				<button @click.stop="$store.dom.openShop()" x-text="$t('main.skins')"></button>
 			</nav>
 		</section>
 	</template>
@@ -39,7 +39,7 @@
 	<template x-if="$store.dom.is('game')">
 		<section id="game" x-data="{ get p() { return $store.dom.panel } }">
 			<progress :value="p.progress" max="1" x-show="p.phase === 'run'"></progress>
-			<p x-show="p.phase === 'cannon'">Visez les <b>?</b></p>
+			<p x-show="p.phase === 'cannon'" x-html="$t('game.aim')"></p>
 
 			<output x-show="p.bubble.visible" :style="`left:${p.bubble.x}px;top:${p.bubble.y}px`" x-text="p.count"></output>
 			<template x-for="k in [p.gateKey]" :key="k">
@@ -50,7 +50,7 @@
 			<i x-show="p.aim.visible" :style="`left:${p.aim.x}px;top:${p.aim.y}px`"></i>
 
 			<aside x-show="p.phase === 'cannon'">
-				<span>Tirs <b x-text="p.count"></b></span>
+				<span x-html="$t('game.shots', { n: `<b>${p.count}</b>` })"></span>
 				<span x-show="p.combo > 1" x-text="'×' + p.combo"></span>
 			</aside>
 			<template x-for="k in [p.gainKey]" :key="k">
@@ -58,35 +58,35 @@
 			</template>
 
 			<article x-show="p.phase === 'won'" x-transition>
-				<h2>Niveau <span x-text="p.levelNumber"></span></h2>
+				<h2 x-text="$t('game.level', { n: p.levelNumber })"></h2>
 				<p>+<b x-text="p.earned.toFixed(1)"></b></p>
-				<button @click="$store.dom.next()">Suivant</button>
+				<button @click="$store.dom.next()" x-text="$t('game.next')"></button>
 			</article>
 			<article x-show="p.phase === 'lost'" x-transition data-lost>
-				<h2>Perdu</h2>
-				<button @click="$store.dom.retry()">Réessayer</button>
+				<h2 x-text="$t('game.lost')"></h2>
+				<button @click="$store.dom.retry()" x-text="$t('game.retry')"></button>
 			</article>
 		</section>
 	</template>
 
 	<template x-if="$store.dom.is('shop')">
 		<section id="shop" x-data="{ get p() { return $store.dom.panel } }">
-			<h2>Skins</h2>
+			<h2 x-text="$t('shop.title')"></h2>
 			<ul>
 				<template x-for="item in p.items" :key="item.skin.id">
 					<li :aria-current="item.equipped">
-						<img :src="item.thumbnail" :alt="item.skin.name">
-						<h3 x-text="item.skin.name"></h3>
+						<img :src="item.thumbnail" :alt="$t('skins.' + item.skin.id)">
+						<h3 x-text="$t('skins.' + item.skin.id)"></h3>
 						<button
 							:disabled="item.equipped || (!item.owned && $store.dom.coins < item.skin.price)"
 							:data-price="item.owned ? null : item.skin.price"
 							@click="item.owned ? $store.dom.equip(item.skin.id) : $store.dom.buy(item.skin.id)"
-							x-text="item.equipped ? 'Équipé' : item.owned ? 'Équiper' : item.skin.price"
+							x-text="item.equipped ? $t('shop.equipped') : item.owned ? $t('shop.equip') : item.skin.price"
 						></button>
 					</li>
 				</template>
 			</ul>
-			<button @click="$store.dom.closeShop()">Retour</button>
+			<button @click="$store.dom.closeShop()" x-text="$t('shop.back')"></button>
 		</section>
 	</template>
 </body>

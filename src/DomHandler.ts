@@ -1,6 +1,7 @@
 import Alpine from "alpinejs";
 import type { Skin } from "./data/skins";
 import type { GamePhase } from "./game/Game";
+import { t } from "./i18n";
 
 export type PanelSymbol = "loading" | "main" | "game" | "shop";
 
@@ -105,6 +106,8 @@ export class DomHandler {
 export function createDomHandler(bound: DomActions): DomHandler {
 	actions = bound;
 	(window as unknown as { Alpine: typeof Alpine }).Alpine = Alpine; // handy for debugging
+	// `$t(key, params)` in the templates (see src/i18n).
+	Alpine.magic("t", () => t);
 	Alpine.store("dom", new DomHandler());
 	Alpine.start();
 	return Alpine.store("dom") as DomHandler;
