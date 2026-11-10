@@ -21,16 +21,16 @@
 		<section id="loading" x-data="{ get p() { return $store.dom.panel } }">
 			<h1>MobRise</h1>
 			<progress :value="p.progress" max="1"></progress>
-			<p x-text="p.label"></p>
 		</section>
 	</template>
 
 	<template x-if="$store.dom.is('main')">
 		<section id="main" x-data="{ get p() { return $store.dom.panel } }" @click="$store.dom.play()">
 			<h1>MobRise</h1>
-			<p>Niveau <b x-text="p.levelNumber"></b> · <span x-text="p.levelName"></span></p>
-			<strong>Touchez pour jouer</strong>
+			<p>Niveau <b x-text="p.levelNumber"></b></p>
+			<small x-text="p.levelName"></small>
 			<nav>
+				<button>Jouer</button>
 				<button @click.stop="$store.dom.openShop()">Skins</button>
 			</nav>
 		</section>
@@ -39,27 +39,31 @@
 	<template x-if="$store.dom.is('game')">
 		<section id="game" x-data="{ get p() { return $store.dom.panel } }">
 			<progress :value="p.progress" max="1" x-show="p.phase === 'run'"></progress>
-			<p x-show="p.phase === 'cannon'">Visez les blocs <b>?</b> avec le doigt</p>
+			<p x-show="p.phase === 'cannon'">Visez les <b>?</b></p>
 
 			<output x-show="p.bubble.visible" :style="`left:${p.bubble.x}px;top:${p.bubble.y}px`" x-text="p.count"></output>
+			<template x-for="k in [p.gateKey]" :key="k">
+				<mark x-show="k > 0 && p.bubble.visible" :class="p.gateDelta >= 0 ? 'up' : 'down'"
+					:style="`left:${p.bubble.x}px;top:${p.bubble.y}px`"
+					x-text="(p.gateDelta >= 0 ? '+' : '−') + Math.abs(p.gateDelta)"></mark>
+			</template>
 			<i x-show="p.aim.visible" :style="`left:${p.aim.x}px;top:${p.aim.y}px`"></i>
 
 			<aside x-show="p.phase === 'cannon'">
 				<span>Tirs <b x-text="p.count"></b></span>
-				<span x-show="p.combo > 1">Combo <b x-text="'×' + p.combo"></b></span>
+				<span x-show="p.combo > 1" x-text="'×' + p.combo"></span>
 			</aside>
 			<template x-for="k in [p.gainKey]" :key="k">
 				<em x-show="k > 0" x-text="'+' + p.gain.toFixed(1)"></em>
 			</template>
 
 			<article x-show="p.phase === 'won'" x-transition>
-				<h2>Niveau terminé !</h2>
-				<p>+<b x-text="p.earned.toFixed(1)"></b> pièces</p>
+				<h2>Niveau <span x-text="p.levelNumber"></span></h2>
+				<p>+<b x-text="p.earned.toFixed(1)"></b></p>
 				<button @click="$store.dom.next()">Suivant</button>
 			</article>
-			<article x-show="p.phase === 'lost'" x-transition>
-				<h2>Perdu…</h2>
-				<p>Votre foule a disparu.</p>
+			<article x-show="p.phase === 'lost'" x-transition data-lost>
+				<h2>Perdu</h2>
 				<button @click="$store.dom.retry()">Réessayer</button>
 			</article>
 		</section>

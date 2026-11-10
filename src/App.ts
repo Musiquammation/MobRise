@@ -36,7 +36,7 @@ export class App implements DomActions {
 	}
 
 	async boot() {
-		await this.loadWithScreen([...CORE_MODELS, ...HAT_MODELS, LEVEL_INDEX], "Chargement des modèles…");
+		await this.loadWithScreen([...CORE_MODELS, ...HAT_MODELS, LEVEL_INDEX]);
 		this.levels = this.resources.getJson<LevelIndex>("levels");
 		this.thumbnails = renderSkinThumbnails(this.resources, SKINS);
 		await this.openLevel();
@@ -44,9 +44,8 @@ export class App implements DomActions {
 	}
 
 	/** Loads resources while the loading panel shows the progress. */
-	private async loadWithScreen(requests: ResourceRequest[], label: string) {
+	private async loadWithScreen(requests: ResourceRequest[]) {
 		const screen = this.dom.show(new LoadingComponent());
-		screen.label = label;
 		await this.resources.load(requests, (loaded, total) => {
 			screen.progress = total ? loaded / total : 1;
 		});
@@ -58,7 +57,7 @@ export class App implements DomActions {
 		const request = levelRequest(file);
 
 		if (this.levelResource !== request.id) {
-			await this.loadWithScreen([request], "Chargement du niveau…");
+			await this.loadWithScreen([request]);
 			if (this.levelResource) this.resources.release([this.levelResource]);
 			this.levelResource = request.id;
 		}

@@ -1,13 +1,22 @@
 :root {
-	--blue: #2f8cff;
-	--blue-dark: #1b5fc2;
-	--gold: #ffc21f;
-	--gold-dark: #c78a06;
-	--red: #ff3b4e;
-	--ink: #13233d;
-	--panel: rgba(255, 255, 255, 0.94);
+	--sky: #8fd0f7;
+	--ink: #1d2540;
+	--blue: #3d8bff;
+	--blue-light: #6fb0ff;
+	--blue-dark: #1f5bc4;
+	--green: #4cd137;
+	--green-light: #7ee86b;
+	--green-dark: #2a9a1e;
+	--gold: #ffc928;
+	--gold-light: #ffe27a;
+	--gold-dark: #d08a00;
+	--red: #ff4757;
+	--red-dark: #c0202f;
 	--safe-top: env(safe-area-inset-top, 0px);
 	--safe-bottom: env(safe-area-inset-bottom, 0px);
+	/* Thick outline + drop, the classic mobile game title text. */
+	--outline: -2px -2px 0 var(--ink), 2px -2px 0 var(--ink), -2px 2px 0 var(--ink), 2px 2px 0 var(--ink),
+		0 -2px 0 var(--ink), 0 2px 0 var(--ink), -2px 0 0 var(--ink), 2px 0 0 var(--ink), 0 5px 0 var(--ink);
 }
 
 * {
@@ -27,9 +36,10 @@ html, body {
 }
 
 body {
-	background: #8fd0f7;
+	background: var(--sky);
 	color: var(--ink);
-	font: 600 16px/1.3 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+	font: 400 18px/1.15 "Lilita One", system-ui, sans-serif;
+	letter-spacing: 0.5px;
 	touch-action: none;
 	user-select: none;
 	-webkit-user-select: none;
@@ -47,52 +57,63 @@ body > canvas {
 body > section {
 	position: fixed;
 	inset: 0;
-	padding: calc(16px + var(--safe-top)) 16px calc(16px + var(--safe-bottom));
+	padding: calc(16px + var(--safe-top)) 16px calc(24px + var(--safe-bottom));
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 }
 
+h1, h2, h3, button {
+	font-weight: 400;
+}
+
 h1 {
-	margin-top: 12vh;
-	font-size: clamp(44px, 14vw, 72px);
-	font-weight: 900;
-	letter-spacing: -1px;
+	margin-top: 13vh;
+	font-size: clamp(56px, 17vw, 84px);
 	color: #fff;
-	text-shadow: 0 4px 0 var(--blue-dark), 0 8px 18px rgba(0, 0, 0, 0.25);
+	text-shadow: var(--outline), 0 10px 16px rgba(0, 0, 0, 0.25);
+	transform: rotate(-4deg);
 }
 
 h2 {
-	font-size: 28px;
-	font-weight: 900;
+	font-size: 34px;
+	color: #fff;
+	text-shadow: var(--outline);
 }
 
+/* Chunky 3D button: light top, dark bottom edge, presses down. */
 button {
+	--c: var(--blue);
+	--c-light: var(--blue-light);
+	--c-dark: var(--blue-dark);
 	font: inherit;
-	font-size: 20px;
-	font-weight: 800;
+	font-size: 22px;
 	color: #fff;
-	background: var(--blue);
-	border: 0;
-	border-radius: 16px;
-	padding: 14px 28px;
-	min-height: 52px;
-	box-shadow: 0 5px 0 var(--blue-dark);
+	text-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+	background: linear-gradient(var(--c-light), var(--c) 55%);
+	border: 3px solid var(--ink);
+	border-radius: 18px;
+	padding: 10px 28px 12px;
+	min-height: 56px;
+	box-shadow: inset 0 3px 0 rgba(255, 255, 255, 0.45), inset 0 -5px 0 var(--c-dark), 0 5px 0 var(--ink);
 	cursor: pointer;
 	touch-action: manipulation;
+	transition: transform 0.06s;
 }
 
 button:active:not(:disabled) {
 	transform: translateY(4px);
-	box-shadow: 0 1px 0 var(--blue-dark);
+	box-shadow: inset 0 3px 0 rgba(255, 255, 255, 0.45), inset 0 -3px 0 var(--c-dark), 0 1px 0 var(--ink);
 }
 
 button:disabled {
-	background: #9aa7ba;
-	box-shadow: 0 5px 0 #6f7a8b;
+	--c: #a7b1c2;
+	--c-light: #c3cad6;
+	--c-dark: #838da0;
+	color: #eef1f6;
 }
 
-/* ------------------------------------------------------------ coins */
+/* coins */
 
 header {
 	position: fixed;
@@ -110,30 +131,41 @@ button[data-price] {
 }
 
 header output {
-	background: rgba(19, 35, 61, 0.55);
+	min-width: 96px;
+	justify-content: flex-end;
+	padding: 4px 14px 4px 6px;
+	font-size: 22px;
 	color: #fff;
-	font-size: 20px;
-	font-weight: 800;
-	padding: 6px 14px 6px 8px;
+	text-shadow: 0 2px 0 rgba(0, 0, 0, 0.4);
+	background: rgba(29, 37, 64, 0.6);
+	border: 2px solid rgba(255, 255, 255, 0.25);
 	border-radius: 999px;
 }
 
 header output::before,
-button[data-price]::before {
+button[data-price]::before,
+#game > article p::after {
 	content: "";
-	width: 22px;
-	height: 22px;
+	flex: none;
+	width: 26px;
+	height: 26px;
 	border-radius: 50%;
-	background: radial-gradient(circle, var(--gold) 45%, var(--gold-dark) 47%, var(--gold-dark) 55%, var(--gold) 57%);
-	box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.2);
+	background:
+		radial-gradient(circle at 35% 30%, #fff8 0 15%, transparent 16%),
+		radial-gradient(circle, var(--gold) 0 48%, var(--gold-dark) 50% 58%, var(--gold) 60%);
+	border: 2px solid var(--ink);
 }
 
-/* ------------------------------------------------------------ loading */
+header output::before {
+	margin-right: auto;
+}
+
+/* loading */
 
 #loading {
 	justify-content: center;
-	gap: 24px;
-	background: linear-gradient(#8fd0f7, #5aa9e6);
+	gap: 32px;
+	background: radial-gradient(circle at 50% 35%, #b7e3ff, #5aa9e6);
 }
 
 #loading h1 {
@@ -142,93 +174,89 @@ button[data-price]::before {
 
 progress {
 	appearance: none;
-	width: min(70vw, 320px);
-	height: 16px;
-	border: 0;
+	width: min(70vw, 300px);
+	height: 22px;
+	border: 3px solid var(--ink);
 	border-radius: 999px;
 	overflow: hidden;
-	background: rgba(255, 255, 255, 0.45);
+	background: rgba(29, 37, 64, 0.45);
 }
 
 progress::-webkit-progress-bar {
-	background: rgba(255, 255, 255, 0.45);
+	background: rgba(29, 37, 64, 0.45);
 }
 
 progress::-webkit-progress-value {
-	background: var(--gold);
+	background: linear-gradient(var(--gold-light), var(--gold) 50%, var(--gold-dark));
+	border-radius: 999px;
 	transition: width 0.2s;
 }
 
 progress::-moz-progress-bar {
-	background: var(--gold);
+	background: linear-gradient(var(--gold-light), var(--gold) 50%, var(--gold-dark));
+	border-radius: 999px;
 }
 
-#loading p {
-	color: #fff;
-}
-
-/* ------------------------------------------------------------ main */
+/* main menu */
 
 #main {
 	cursor: pointer;
 }
 
 #main p {
+	margin-top: 26px;
+	padding: 4px 20px 6px;
+	font-size: 24px;
+	color: #fff;
+	text-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
+	background: var(--ink);
+	border-radius: 999px;
+}
+
+#main p b {
+	font-weight: 400;
+	color: var(--gold);
+}
+
+#main small {
 	margin-top: 8px;
+	font-size: 20px;
 	color: #fff;
-	font-size: 18px;
-	text-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
-}
-
-#main strong {
-	margin-top: auto;
-	margin-bottom: 28px;
-	color: #fff;
-	font-size: 26px;
-	font-weight: 900;
-	text-shadow: 0 3px 0 var(--blue-dark), 0 6px 12px rgba(0, 0, 0, 0.3);
-	animation: pulse 1.1s ease-in-out infinite;
-}
-
-#main strong::after {
-	content: "";
-	display: block;
-	margin: 18px auto 0;
-	width: 120px;
-	height: 6px;
-	border-radius: 3px;
-	background: rgba(255, 255, 255, 0.8);
-	mask: radial-gradient(circle at var(--x, 50%) 50%, #000 14px, rgba(0, 0, 0, 0.35) 15px);
-	animation: swipe 1.6s ease-in-out infinite;
+	text-shadow: var(--outline);
 }
 
 #main nav {
+	margin-top: auto;
 	display: flex;
-	gap: 12px;
+	flex-direction: column;
+	align-items: center;
+	gap: 16px;
 }
 
-#main nav button {
-	background: var(--gold);
-	color: var(--ink);
-	box-shadow: 0 5px 0 var(--gold-dark);
+#main nav button:first-child {
+	--c: var(--green);
+	--c-light: var(--green-light);
+	--c-dark: var(--green-dark);
+	font-size: 34px;
+	padding: 12px 64px 16px;
+	border-radius: 24px;
+	animation: pulse 1.2s ease-in-out infinite;
+}
+
+#main nav button + button {
+	--c: var(--gold);
+	--c-light: var(--gold-light);
+	--c-dark: var(--gold-dark);
+	font-size: 20px;
+	min-height: 48px;
+	padding: 6px 26px 9px;
 }
 
 @keyframes pulse {
-	50% { transform: scale(1.08); }
+	50% { transform: scale(1.06); }
 }
 
-@property --x {
-	syntax: "<percentage>";
-	inherits: false;
-	initial-value: 50%;
-}
-
-@keyframes swipe {
-	0%, 100% { --x: 10%; }
-	50% { --x: 90%; }
-}
-
-/* ------------------------------------------------------------ game */
+/* in game */
 
 #game {
 	pointer-events: none;
@@ -239,61 +267,91 @@ progress::-moz-progress-bar {
 }
 
 #game > progress {
-	margin-top: 4px;
-	width: min(60vw, 280px);
-	height: 12px;
+	margin-top: 54px; /* under the coins */
+	width: min(60vw, 260px);
+	height: 18px;
 }
 
 #game > p {
-	margin-top: 56px;
+	margin-top: 64px;
+	font-size: 28px;
 	color: #fff;
-	font-size: 18px;
-	text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+	text-shadow: var(--outline);
+}
+
+#game > p b {
+	font-weight: 400;
+	color: var(--gold);
 }
 
 /* crowd counter */
 #game > output {
 	position: absolute;
 	transform: translate(-50%, -100%);
-	min-width: 44px;
-	padding: 4px 12px;
+	min-width: 48px;
+	padding: 3px 12px 5px;
 	text-align: center;
+	font-size: 24px;
 	color: #fff;
-	font-size: 22px;
-	font-weight: 900;
-	background: var(--blue);
-	border-radius: 12px;
-	box-shadow: 0 3px 0 var(--blue-dark);
+	text-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+	background: linear-gradient(var(--blue-light), var(--blue) 60%);
+	border: 3px solid #fff;
+	border-radius: 14px;
+	box-shadow: 0 3px 0 var(--blue-dark), 0 4px 10px rgba(0, 0, 0, 0.25);
 }
 
 #game > output::after {
 	content: "";
 	position: absolute;
 	left: 50%;
-	bottom: -7px;
-	margin-left: -7px;
-	border: 7px solid transparent;
+	bottom: -11px;
+	margin-left: -8px;
+	border: 8px solid transparent;
 	border-bottom: 0;
-	border-top-color: var(--blue);
+	border-top-color: #fff;
+}
+
+/* change of the crowd at a gate */
+#game > mark {
+	position: absolute;
+	transform: translate(-50%, -100%);
+	background: none;
+	font-size: 38px;
+	text-shadow: var(--outline);
+	color: var(--blue-light);
+	pointer-events: none;
+	animation: gate 0.9s ease-out forwards;
+}
+
+#game > mark.down {
+	color: var(--red);
+}
+
+@keyframes gate {
+	0% { translate: 0 -40px; scale: 0.4; opacity: 0; }
+	15% { translate: 0 -48px; scale: 1.2; opacity: 1; }
+	30% { scale: 1; }
+	100% { translate: 0 -110px; opacity: 0; }
 }
 
 /* cannon crosshair */
 #game > i {
 	position: absolute;
-	width: 44px;
-	height: 44px;
-	margin: -22px 0 0 -22px;
+	width: 46px;
+	height: 46px;
+	margin: -23px 0 0 -23px;
 	border: 4px solid #fff;
 	border-radius: 50%;
-	box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.25), inset 0 0 0 2px rgba(0, 0, 0, 0.25);
+	box-shadow: 0 0 0 2px var(--ink), inset 0 0 0 2px var(--ink);
 }
 
 #game > i::after {
 	content: "";
 	position: absolute;
-	inset: 14px;
+	inset: 13px;
 	border-radius: 50%;
 	background: var(--red);
+	border: 2px solid var(--ink);
 }
 
 #game > aside {
@@ -302,29 +360,40 @@ progress::-moz-progress-bar {
 	top: calc(12px + var(--safe-top));
 	display: flex;
 	flex-direction: column;
+	align-items: flex-start;
 	gap: 6px;
 }
 
 #game > aside span {
-	background: rgba(19, 35, 61, 0.55);
+	padding: 4px 14px 5px;
+	font-size: 20px;
 	color: #fff;
-	padding: 6px 12px;
+	text-shadow: 0 2px 0 rgba(0, 0, 0, 0.4);
+	background: rgba(29, 37, 64, 0.6);
+	border: 2px solid rgba(255, 255, 255, 0.25);
 	border-radius: 999px;
 }
 
 #game > aside b {
+	font-weight: 400;
 	color: var(--gold);
 }
 
-/* coin gain popup */
+#game > aside span + span {
+	color: var(--ink);
+	text-shadow: none;
+	background: var(--gold);
+	border-color: var(--ink);
+}
+
+/* coin gain */
 #game > em {
 	position: absolute;
-	top: 28%;
+	top: 26%;
 	font-style: normal;
-	font-size: 54px;
-	font-weight: 900;
+	font-size: 60px;
 	color: var(--gold);
-	text-shadow: 0 4px 0 var(--gold-dark), 0 8px 16px rgba(0, 0, 0, 0.3);
+	text-shadow: var(--outline);
 	animation: gain 0.8s ease-out forwards;
 }
 
@@ -337,35 +406,61 @@ progress::-moz-progress-bar {
 /* end of level */
 #game > article {
 	margin: auto 0;
-	width: min(100%, 340px);
-	padding: 28px 20px;
+	width: min(100%, 320px);
+	padding: 0 20px 26px;
 	text-align: center;
-	background: var(--panel);
-	border-radius: 24px;
-	box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+	background: #fff;
+	border: 4px solid var(--ink);
+	border-radius: 26px;
+	box-shadow: 0 8px 0 var(--ink), 0 20px 40px rgba(0, 0, 0, 0.3);
+	overflow: hidden;
 	pointer-events: auto;
 }
 
+#game > article h2 {
+	margin: 0 -20px 18px;
+	padding: 14px 0 16px;
+	background: linear-gradient(var(--blue-light), var(--blue) 60%);
+	border-bottom: 4px solid var(--ink);
+}
+
+#game > article[data-lost] h2 {
+	background: linear-gradient(#ff7a85, var(--red) 60%);
+}
+
 #game > article p {
-	margin: 12px 0 22px;
-	font-size: 20px;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 6px 18px 6px 20px;
+	margin-bottom: 22px;
+	font-size: 32px;
+	color: #fff;
+	text-shadow: 0 2px 0 rgba(0, 0, 0, 0.4);
+	background: var(--ink);
+	border-radius: 999px;
 }
 
 #game > article b {
-	color: var(--gold-dark);
-	font-size: 28px;
+	font-weight: 400;
+	color: var(--gold);
 }
 
-/* ------------------------------------------------------------ shop */
+#game > article button {
+	--c: var(--green);
+	--c-light: var(--green-light);
+	--c-dark: var(--green-dark);
+	display: block;
+	margin: 0 auto;
+	min-width: 200px;
+	font-size: 26px;
+}
+
+/* shop */
 
 #shop {
-	background: linear-gradient(rgba(143, 208, 247, 0.85), rgba(90, 169, 230, 0.95));
+	background: radial-gradient(circle at 50% 0%, #b7e3ff, #4f9de0 70%);
 	gap: 14px;
-}
-
-#shop > h2 {
-	color: #fff;
-	text-shadow: 0 3px 0 var(--blue-dark);
 }
 
 #shop ul {
@@ -378,7 +473,7 @@ progress::-moz-progress-bar {
 	align-content: start;
 	overflow-y: auto;
 	touch-action: pan-y;
-	padding: 4px 2px 12px;
+	padding: 4px 4px 14px;
 }
 
 #shop li {
@@ -387,33 +482,54 @@ progress::-moz-progress-bar {
 	align-items: center;
 	gap: 6px;
 	padding: 10px;
-	background: var(--panel);
-	border-radius: 18px;
-	border: 3px solid transparent;
+	background: #fff;
+	border: 3px solid var(--ink);
+	border-radius: 20px;
+	box-shadow: 0 5px 0 var(--ink);
 }
 
 #shop li[aria-current="true"] {
-	border-color: var(--gold);
+	background: #fff6d6;
+	border-color: var(--gold-dark);
+	box-shadow: 0 5px 0 var(--gold-dark), 0 0 0 4px var(--gold);
 }
 
 #shop img {
 	width: 100%;
 	max-width: 120px;
 	aspect-ratio: 1;
-	border-radius: 12px;
-	background: radial-gradient(circle at 50% 40%, #fff, #dbe8f7);
+	border-radius: 14px;
+	background: radial-gradient(circle at 50% 40%, #fff, #d6e6f8);
 }
 
 #shop h3 {
-	font-size: 17px;
+	font-size: 19px;
 }
 
 #shop li button {
 	width: 100%;
 	justify-content: center;
-	font-size: 17px;
-	padding: 8px 10px;
-	min-height: 44px;
+	font-size: 18px;
+	padding: 6px 8px 8px;
+	min-height: 46px;
+	border-radius: 14px;
+}
+
+#shop li button[data-price]:not(:disabled) {
+	--c: var(--green);
+	--c-light: var(--green-light);
+	--c-dark: var(--green-dark);
+}
+
+#shop li button[data-price]::before {
+	width: 20px;
+	height: 20px;
+}
+
+#shop > button {
+	--c: var(--red);
+	--c-light: #ff7a85;
+	--c-dark: var(--red-dark);
 }
 
 #fps {
