@@ -6,6 +6,7 @@
  * In the 3D world the crowd runs toward -Z, so worldZ = -z.
  */
 export type LevelData = {
+	/** Translation key in the `levels` section of src/i18n/locales. */
 	name: string;
 	/** Track width. */
 	width: number;
