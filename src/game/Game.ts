@@ -13,10 +13,16 @@ import { Saw } from "./entities/hazards/Saw";
 import { JumpPad } from "./entities/JumpPad";
 import { Archer } from "./entities/props/Archer";
 import { Enemy } from "./entities/enemies/Enemy";
+import { Boss } from "./entities/enemies/Boss";
+import { SpeedPad } from "./entities/SpeedPad";
+import { Fan } from "./entities/props/Fan";
+import { Recruit } from "./entities/Recruit";
+import { CountLabel } from "./CountLabel";
 import type { Gate } from "./entities/Gate";
 import { Addition } from "./entities/gates/Addition";
 import { Multiplication } from "./entities/gates/Multiplication";
 import { Percentage } from "./entities/gates/Percentage";
+import { SetCount } from "./entities/gates/SetCount";
 import { Cannon } from "./entities/Cannon";
 import { MysteryBox } from "./entities/MysteryBox";
 import { boxPath, boxPathExtent } from "./boxPath";
@@ -53,14 +59,29 @@ const ENEMY_COLOR = "#e11d2a";
 const FIGHT_BRAKE = 25;
 /** Default vertical speed given by a jump pad. */
 const JUMP_POWER = 10;
+/** How fast the crowd reaches the boosted speed, and slows down after (units/s²). */
+const BOOST_ACCEL = 40;
+const BOOST_DECEL = 10;
+/** Distance between the centers of a player and a recruit that makes it join. */
+const RECRUIT_CONTACT = 0.5;
+const RECRUIT_COLOR = "#a3a3a3";
+/** Out of the wind, the drift it caused fades at this rate (1/s). */
+const WIND_RECOVER = 1.5;
 
 type EnemyZone = {
 	/** World z of the zone. */
 	z: number;
 	enemies: Enemy[];
 	triggered: boolean;
-	label: THREE.Sprite;
-	shown: number;
+	label: CountLabel;
+};
+
+type RecruitZone = {
+	recruits: Recruit[];
+	label: CountLabel;
+	/** Recruits that joined the crowd (shown when the crowd leaves the zone). */
+	joined: number;
+	reported: boolean;
 };
 
 /** Attraction function of the crowd. Can be changed with ?force=<name> in the URL. */
@@ -117,6 +138,17 @@ function nearest(from: THREE.Vector3, list: readonly { position: THREE.Vector3 }
 	return best;
 }
 
+/** Puts the label above the middle of the group, showing how many are left. */
+function updateGroupLabel(label: CountLabel, group: readonly { position: THREE.Vector3 }[]) {
+	let sx = 0, sz = 0;
+	for (const e of group) {
+		sx += e.position.x;
+		sz += e.position.z;
+	}
+	const n = group.length || 1;
+	label.set(group.length, sx / n, 1.9, sz / n);
+}
+
 export class Game extends GameLayer {
 	readonly entities = new EntityContainer({
 		onCreate: e => {
@@ -151,12 +183,21 @@ export class Game extends GameLayer {
 	private readonly enemyRenderer: PlayerRenderer;
 	private readonly enemyZones: EnemyZone[] = [];
 	private readonly enemyOptions: CrowdOptions;
+	private readonly recruitRenderer: PlayerRenderer;
+	private readonly recruitZones: RecruitZone[] = [];
+	/** Speed boost: remaining time at full boost, and its factor. */
+	private boostTime = 0;
+	private boostFactor = 1;
 
 	/** Players currently in the crowd (state "run"). */
 	private crowd: Player[] = [];
 	private crowdDirty = false;
 	/** Point every player of the crowd is attracted to (moved by the finger). */
 	private centerX = 0;
+	/** Track x under the finger (centerX = pointerX + windDrift). */
+	private pointerX = 0;
+	/** How far the fans have blown the attraction point (back to 0 out of the wind). */
+	private windDrift = 0;
 	private centerZ = 0;
 	/** Average x of the crowd (followed by the camera). */
 	private crowdX = 0;
@@ -196,6 +237,8 @@ export class Game extends GameLayer {
 		this.scene.add(this.playerRenderer.group);
 		this.enemyRenderer = new PlayerRenderer(resources, { color: ENEMY_COLOR, hat: null }, MAX_PLAYERS);
 		this.scene.add(this.enemyRenderer.group);
+		this.recruitRenderer = new PlayerRenderer(resources, { color: RECRUIT_COLOR, hat: null }, MAX_PLAYERS);
+		this.scene.add(this.recruitRenderer.group);
 
 		this.floor = new Floor(level);
 		this.entities.add("platform", this.floor);
@@ -203,7 +246,7 @@ export class Game extends GameLayer {
 		const model = (id: string) => resources.getModel(id).scene;
 
 		for (const g of level.gates) {
-			const Type = g.type === "mul" ? Multiplication : g.type === "pct" ? Percentage : Addition;
+			const Type = { add: Addition, mul: Multiplication, pct: Percentage, set: SetCount }[g.type] ?? Addition;
 			this.entities.add("gate", new Type(model("gate_post"), g.x, -g.z, g.width, g.value));
 		}
 		// Level design rule: a row with a red gate is all red.
@@ -234,6 +277,16 @@ export class Game extends GameLayer {
 		}
 
 		for (const g of level.enemies ?? []) this.spawnEnemyZone(g.x, -g.z, g.count);
+
+		for (const b of level.bosses ?? [])
+			this.entities.add("boss", new Boss(model("player"), b.x, -b.z, b.hp, b.interval ?? 1.5, b.reach ?? 1.2));
+
+		for (const b of level.boosts ?? [])
+			this.entities.add("boost", new SpeedPad(b.x, b.z, b.width, b.depth ?? 2, b.factor ?? 1.8, b.duration ?? 1.2));
+
+		for (const w of level.winds ?? []) this.entities.add("prop", new Fan(w.z, w.depth, w.strength, level.width));
+
+		for (const g of level.recruits ?? []) this.spawnRecruitZone(g.x, -g.z, g.count);
 
 		const c = level.cannon;
 		this.cannon = new Cannon(model("cannon_base"), model("cannon_barrel"), -(level.length + FLOOR_AFTER - 6));
@@ -276,10 +329,11 @@ export class Game extends GameLayer {
 		this.playerRenderer.dispose();
 		this.scene.remove(this.enemyRenderer.group);
 		this.enemyRenderer.dispose();
-		for (const zone of this.enemyZones) {
-			this.scene.remove(zone.label);
-			zone.label.material.map?.dispose();
-			zone.label.material.dispose();
+		this.scene.remove(this.recruitRenderer.group);
+		this.recruitRenderer.dispose();
+		for (const zone of [...this.enemyZones, ...this.recruitZones]) {
+			this.scene.remove(zone.label.sprite);
+			zone.label.dispose();
 		}
 	}
 
@@ -292,6 +346,17 @@ export class Game extends GameLayer {
 
 	crowdSize(): number {
 		return this.crowd.length;
+	}
+
+	/** Players of the running crowd. */
+	crowdPlayers(): readonly Player[] {
+		return this.crowd;
+	}
+
+	/** Speed strip touched: the crowd runs `factor` times faster for `duration` s. */
+	boost(factor: number, duration: number) {
+		this.boostFactor = this.boostTime > 0 ? Math.max(this.boostFactor, factor) : factor;
+		this.boostTime = Math.max(this.boostTime, duration);
 	}
 
 	addProp(entity: Entity) {
@@ -330,46 +395,73 @@ export class Game extends GameLayer {
 			this.entities.add("enemy", e);
 		}
 
-		const canvas = document.createElement("canvas");
-		canvas.width = 128;
-		canvas.height = 64;
-		const texture = new THREE.CanvasTexture(canvas);
-		texture.colorSpace = THREE.SRGBColorSpace;
-		const label = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, depthTest: false, transparent: true }));
-		label.scale.set(1.6, 0.8, 1);
-		label.renderOrder = 10;
-		this.scene.add(label);
-
-		const zone: EnemyZone = { z, enemies, triggered: false, label, shown: -1 };
+		const label = new CountLabel("#e11d2a");
+		this.scene.add(label.sprite);
+		const zone: EnemyZone = { z, enemies, triggered: false, label };
 		this.enemyZones.push(zone);
 		this.updateEnemyLabel(zone);
 	}
 
 	private updateEnemyLabel(zone: EnemyZone) {
 		const alive = zone.enemies.filter(e => e.isAlive() && e.state !== "dying" && e.state !== "fall");
-		zone.label.visible = alive.length > 0;
-		if (alive.length === 0) return;
-		let sx = 0, sz = 0;
-		for (const e of alive) {
-			sx += e.position.x;
-			sz += e.position.z;
+		updateGroupLabel(zone.label, alive);
+	}
+
+	// ------------------------------------------------------------- recruits
+
+	private spawnRecruitZone(x: number, z: number, count: number) {
+		const room = this.level.width / 2 - PLAYER_HALF;
+		const recruits: Recruit[] = [];
+		const index = this.recruitZones.length;
+		for (let i = 0; i < count; i++) {
+			// Looser sunflower than the enemies: they stand apart, waiting.
+			const r = Math.sqrt(i + 0.5) * 0.3;
+			const a = i * 2.39996;
+			const rec = new Recruit(Math.max(-room, Math.min(room, x + Math.cos(a) * r)), z + Math.sin(a) * r, index);
+			recruits.push(rec);
+			this.entities.add("recruit", rec);
 		}
-		zone.label.position.set(sx / alive.length, 1.9, sz / alive.length);
-		if (zone.shown === alive.length) return;
-		zone.shown = alive.length;
-		const texture = zone.label.material.map as THREE.CanvasTexture;
-		const ctx = (texture.image as HTMLCanvasElement).getContext("2d")!;
-		ctx.clearRect(0, 0, 128, 64);
-		ctx.fillStyle = "#e11d2a";
-		ctx.beginPath();
-		ctx.roundRect(14, 6, 100, 52, 18);
-		ctx.fill();
-		ctx.fillStyle = "#fff";
-		ctx.font = "bold 40px system-ui, sans-serif";
-		ctx.textAlign = "center";
-		ctx.textBaseline = "middle";
-		ctx.fillText(String(alive.length), 64, 34);
-		texture.needsUpdate = true;
+		const label = new CountLabel("#6b7280", "+");
+		this.scene.add(label.sprite);
+		const zone: RecruitZone = { recruits, label, joined: 0, reported: false };
+		this.recruitZones.push(zone);
+		updateGroupLabel(label, recruits);
+	}
+
+	/** Recruits touched by a player of the crowd join it. */
+	private stepRecruits() {
+		if (this.phase !== "run") return;
+		const c2 = RECRUIT_CONTACT * RECRUIT_CONTACT;
+		for (const zone of this.recruitZones) {
+			if (zone.reported) continue;
+			zone.recruits = zone.recruits.filter(r => r.isAlive());
+			const near = zone.recruits.length > 0 && Math.abs(zone.recruits[0].position.z - this.centerZ) < 12;
+			if (near) {
+				for (const r of zone.recruits) {
+					if (this.crowd.length >= MAX_PLAYERS) break;
+					for (const p of this.crowd) {
+						if (p.state !== "run" || p.position.y > 0.6) continue;
+						const dx = p.position.x - r.position.x, dz = p.position.z - r.position.z;
+						if (dx * dx + dz * dz > c2) continue;
+						r.kill();
+						const joined = new Player(r.position.x, 0, r.position.z);
+						this.crowd.push(joined);
+						this.entities.add("player", joined);
+						zone.joined++;
+						break;
+					}
+				}
+			}
+			// The crowd left the zone behind: show how many joined.
+			const zoneZ = zone.label.sprite.position.z;
+			if (zone.joined > 0 && (zone.recruits.every(r => !r.isAlive()) || zoneZ > this.centerZ + 3)) {
+				zone.reported = true;
+				if (this.ui) {
+					this.ui.gateDelta = zone.joined;
+					this.ui.gateKey++;
+				}
+			}
+		}
 	}
 
 	/** Wakes the enemy groups near the crowd, moves the charging ones, resolves the fights. */
@@ -396,13 +488,19 @@ export class Game extends GameLayer {
 			for (const e of runners) if (e.position.z > this.centerZ + 10) e.kill();
 		}
 
-		// While enemies charge, the crowd stops and each player aims at the closest one.
-		const fighters = this.phase === "run" ? this.entities.get("enemy").filter(e => e.state === "run") : [];
+		// While enemies charge (or a boss blocks the way), the crowd stops and
+		// each player aims at the closest opponent.
+		const fighters: { position: THREE.Vector3 }[] = this.phase === "run"
+			? [...this.entities.get("enemy").filter(e => e.state === "run"), ...this.entities.get("boss").filter(b => b.isBlocking())]
+			: [];
 		const wasFighting = this.fighting;
 		this.fighting = fighters.length > 0 && this.crowd.length > 0;
 		for (const p of this.crowd) p.target = this.fighting ? nearest(p.position, fighters) : null;
 		// Fight over: the crowd resumes from where it stands.
-		if (wasFighting && !this.fighting) this.centerX = this.crowdX;
+		if (wasFighting && !this.fighting) {
+			this.centerX = this.crowdX;
+			this.pointerX = this.crowdX - this.windDrift;
+		}
 
 		// Fights: each enemy touching a player kills it and dies.
 		if (this.phase !== "run") return;
@@ -575,15 +673,19 @@ export class Game extends GameLayer {
 
 		if (this.phase === "run") {
 			// Fighting: the crowd brakes and the pointer no longer steers it.
-			if (!this.fighting) this.followPointer();
-			const wanted = this.fighting ? 0 : this.level.speed;
-			const step = FIGHT_BRAKE * dt;
-			this.speed += Math.max(-step, Math.min(step, wanted - this.speed));
+			if (!this.fighting) this.steer(dt);
+			this.boostTime = Math.max(0, this.boostTime - dt);
+			const boosted = this.boostTime > 0 ? this.boostFactor : 1;
+			const wanted = this.fighting ? 0 : this.level.speed * boosted;
+			// Fast to speed up on a boost, slower to come back to normal.
+			const rate = this.fighting ? FIGHT_BRAKE : wanted > this.speed ? BOOST_ACCEL : BOOST_DECEL;
+			this.speed += Math.max(-rate * dt, Math.min(rate * dt, wanted - this.speed));
 			this.centerZ -= this.speed * dt;
 			if (-this.centerZ >= this.level.length) this.startCannon();
 		}
 		this.stepCrowds(dt);
 		this.stepEnemies(dt);
+		this.stepRecruits();
 		this.refreshCrowd();
 
 		if (this.phase === "cannon") this.updateAim();
@@ -608,14 +710,25 @@ export class Game extends GameLayer {
 	 * the ground under the finger / mouse (only its x matters, the crowd keeps
 	 * running forward). The walls keep the players on the track.
 	 */
-	private followPointer() {
+	private steer(dt: number) {
 		const { x, y } = this.input;
-		if (x === null || y === null) return;
-		ndc.set((x / window.innerWidth) * 2 - 1, -(y / window.innerHeight) * 2 + 1);
-		raycaster.setFromCamera(ndc, this.camera.get());
-		if (!raycaster.ray.intersectPlane(groundPlane, hit)) return;
-		const limit = this.level.width / 2 - PLAYER_HALF + EDGE_OVERSHOOT;
-		this.centerX = Math.max(-limit, Math.min(limit, hit.x));
+		if (x !== null && y !== null) {
+			ndc.set((x / window.innerWidth) * 2 - 1, -(y / window.innerHeight) * 2 + 1);
+			raycaster.setFromCamera(ndc, this.camera.get());
+			if (raycaster.ray.intersectPlane(groundPlane, hit)) this.pointerX = hit.x;
+		}
+
+		// Fans blow the attraction point away: the finger has to follow against
+		// the wind. Out of the wind, the crowd gently comes back under the finger.
+		let wind = 0;
+		for (const e of this.entities.get("prop")) if (e instanceof Fan) wind += e.pushAt(this.centerZ);
+		if (wind !== 0) this.windDrift += wind * dt;
+		else this.windDrift *= Math.exp(-WIND_RECOVER * dt);
+		const w = this.level.width;
+		this.windDrift = Math.max(-w, Math.min(w, this.windDrift));
+
+		const limit = w / 2 - PLAYER_HALF + EDGE_OVERSHOOT;
+		this.centerX = Math.max(-limit, Math.min(limit, this.pointerX + this.windDrift));
 	}
 
 	/** Moves the crowd (attraction + collisions) and the players walking to the cannon. */
@@ -637,6 +750,7 @@ export class Game extends GameLayer {
 				p.position.z -= this.speed * dt;
 			}
 			stepCrowd(this.crowd, this.centerX, this.centerZ, dt, this.crowdOptions);
+			for (const boss of this.entities.get("boss")) boss.pushOut(this.crowd);
 			let sum = 0, sumZ = 0;
 			for (const p of this.crowd) {
 				sum += p.position.x;
@@ -660,7 +774,7 @@ export class Game extends GameLayer {
 
 	private detectCollisions() {
 		const others: Entity[] = [];
-		for (const list of [this.entities.get("pad"), this.entities.get("hazard"), this.entities.get("gate"), this.entities.get("box")])
+		for (const list of [this.entities.get("pad"), this.entities.get("boost"), this.entities.get("hazard"), this.entities.get("gate"), this.entities.get("box")])
 			for (const e of list) {
 				e.refreshHitbox();
 				others.push(e);
@@ -688,7 +802,9 @@ export class Game extends GameLayer {
 		for (const e of this.entities.iterate()) e.update();
 		this.playerRenderer.update(this.entities.get("player"), this.time);
 		this.enemyRenderer.update(this.entities.get("enemy"), this.time);
+		this.recruitRenderer.update(this.entities.get("recruit"), this.time);
 		for (const zone of this.enemyZones) this.updateEnemyLabel(zone);
+		for (const zone of this.recruitZones) updateGroupLabel(zone.label, zone.recruits.filter(r => r.isAlive()));
 		this.updateCamera(dt);
 		this.syncUi();
 	}
