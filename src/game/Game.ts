@@ -148,6 +148,8 @@ export class Game extends GameLayer {
 	private combo = 0;
 	/** Box hit by the last shot (the combo grows only on this one). */
 	private comboBox: MysteryBox | null = null;
+	/** Shown in orange (not cleared by a miss). */
+	private lastHitBox: MysteryBox | null = null;
 	/** Pointer screen position at the previous frame (relative aiming). */
 	private aimPrev: THREE.Vector3 | null = null;
 	private aimPress = -1;
@@ -211,6 +213,8 @@ export class Game extends GameLayer {
 		const c = level.cannon;
 		this.cannon = new Cannon(model("cannon_base"), model("cannon_barrel"), -(level.length + FLOOR_AFTER - 6));
 		this.entities.add("cannon", this.cannon);
+		// The players pile up behind the cannon, never beside or in front of it.
+		this.gatherOptions.minZ = this.cannon.entry.z;
 
 		this.boxCenter = new THREE.Vector3(0, c.height, this.cannon.position.z - c.distance);
 		this.aimPoint.copy(this.boxCenter);
@@ -461,6 +465,11 @@ export class Game extends GameLayer {
 	onBoxHit(box: MysteryBox, player: Player) {
 		player.kill();
 		box.bump();
+		if (box !== this.lastHitBox) {
+			this.lastHitBox?.setHighlighted(false);
+			box.setHighlighted(true);
+			this.lastHitBox = box;
+		}
 		// The combo only grows while the same box keeps being hit.
 		this.combo = box === this.comboBox ? this.combo + 1 : 1;
 		this.comboBox = box;
@@ -543,7 +552,7 @@ export class Game extends GameLayer {
 		if (this.phase === "run" && this.crowd.length === 0) this.end(false);
 
 		if (this.phase === "cannon") {
-			const busy = this.cannon.ammo > 0 || this.entities.get("player").length > 0;
+			const busy = this.entities.get("player").length > 0;
 			this.endTimer = busy ? 0 : this.endTimer + dt;
 			if (this.endTimer > 1) this.end(true);
 		}
@@ -590,8 +599,8 @@ export class Game extends GameLayer {
 
 		if (this.phase === "cannon") {
 			const walkers = this.entities.get("player").filter(p => p.state === "gather");
-			const c = this.cannon.position;
-			stepCrowd(walkers, c.x, c.z, dt, this.gatherOptions);
+			const e = this.cannon.entry;
+			stepCrowd(walkers, e.x, e.z, dt, this.gatherOptions);
 		}
 	}
 
@@ -651,7 +660,7 @@ export class Game extends GameLayer {
 		if (ui.phase !== this.phase) ui.phase = this.phase;
 
 		const count = this.phase === "cannon"
-			? this.cannon.ammo + this.entities.get("player").filter(p => p.state === "gather").length
+			? this.entities.get("player").filter(p => p.state === "gather").length
 			: this.crowd.length;
 		if (ui.count !== count) ui.count = count;
 

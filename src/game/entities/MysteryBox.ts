@@ -4,6 +4,11 @@ import type { Game } from "../Game";
 
 const BUMP_TIME = 0.3;
 const COIN_TIME = 0.7;
+/** Colors of the last box hit, per material name of the model. */
+const HIT_COLORS: Record<string, THREE.ColorRepresentation> = {
+	gold: 0xff7a1a,
+	goldDark: 0xa84400,
+};
 
 /**
  * "?" box of the cannon phase. Every box follows the same elliptic loop,
@@ -15,6 +20,9 @@ export class MysteryBox extends Entity {
 	private readonly coin: THREE.Object3D;
 	private bumpT = 0;
 	private coinT = COIN_TIME;
+	/** Own copies of the box materials, with their normal and "last hit" colors. */
+	private readonly tints: { material: THREE.MeshStandardMaterial; normal: THREE.Color; hit: THREE.Color }[] = [];
+	private highlighted = false;
 
 	constructor(
 		boxModel: THREE.Object3D,
@@ -29,6 +37,15 @@ export class MysteryBox extends Entity {
 	) {
 		super();
 		this.box = boxModel.clone();
+		this.box.traverse(o => {
+			const mesh = o as THREE.Mesh;
+			if (!mesh.isMesh) return;
+			const material = (mesh.material as THREE.MeshStandardMaterial).clone();
+			mesh.material = material;
+			const hit = HIT_COLORS[material.name];
+			if (hit !== undefined)
+				this.tints.push({ material, normal: material.color.clone(), hit: new THREE.Color(hit) });
+		});
 		this.coin = coinModel.clone();
 		this.coin.visible = false;
 		this.object.add(this.box, this.coin);
@@ -37,6 +54,17 @@ export class MysteryBox extends Entity {
 
 	getObject() {
 		return this.object;
+	}
+
+	/** Shows the box as the last one hit (orange). */
+	setHighlighted(on: boolean) {
+		if (this.highlighted === on) return;
+		this.highlighted = on;
+		for (const t of this.tints) t.material.color.copy(on ? t.hit : t.normal);
+	}
+
+	dispose() {
+		for (const t of this.tints) t.material.dispose();
 	}
 
 	bump() {
