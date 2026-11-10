@@ -124,17 +124,9 @@ export class Player extends Entity {
 	}
 
 	private gather(game: Game, dt: number) {
-		// Moved by crowdPhysics toward the cannon; enters it when close enough.
-		const cannon = game.cannon.position;
-		const dx = cannon.x - this.position.x;
-		const dz = cannon.z - this.position.z;
-		const dist = Math.hypot(dx, dz);
-		if (dist < 0.8) {
-			game.cannon.load();
-			this.kill();
-			return;
-		}
-		this.turnToward(this.velocity.x, this.velocity.z, dt);
+		// Moved by crowdPhysics toward the entry of the cannon (at its back): faces it.
+		const entry = game.cannon.entry;
+		this.turnToward(entry.x - this.position.x, entry.z - this.position.z, dt);
 	}
 
 	/** Smoothly turns toward the direction (dx, dz) when moving. */

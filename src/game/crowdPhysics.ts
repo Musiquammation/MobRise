@@ -51,6 +51,8 @@ export type CrowdOptions = {
 	maxSpeed: number;
 	/** Collision solver iterations. */
 	iterations: number;
+	/** Optional back wall: the bodies stay at z >= minZ. */
+	minZ?: number;
 };
 
 export const DEFAULT_CROWD_OPTIONS: Omit<CrowdOptions, "force" | "minX" | "maxX"> = {
@@ -150,6 +152,7 @@ export function stepCrowd(bodies: readonly CrowdBody[], cx: number, cz: number, 
 			const p = b.position;
 			if (p.x < o.minX) p.x = o.minX;
 			else if (p.x > o.maxX) p.x = o.maxX;
+			if (o.minZ !== undefined && p.z < o.minZ) p.z = o.minZ;
 		}
 	}
 
