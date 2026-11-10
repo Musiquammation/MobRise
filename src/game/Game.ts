@@ -205,6 +205,12 @@ export class Game extends GameLayer {
 			const Type = g.type === "mul" ? Multiplication : g.type === "pct" ? Percentage : Addition;
 			this.entities.add("gate", new Type(model("gate_post"), g.x, -g.z, g.width, g.value));
 		}
+		// Level design rule: a row with a red gate is all red.
+		const rows = new Map<number, Gate[]>();
+		for (const g of this.entities.get("gate")) rows.set(g.position.z, [...rows.get(g.position.z) ?? [], g]);
+		for (const [z, row] of rows)
+			if (row.some(g => !g.isGood()) && row.some(g => g.isGood()))
+				console.warn(`${level.name}: gate row z=${-z} mixes red and non-red gates`);
 
 		for (const s of level.spikes) {
 			this.entities.add("hazard", new SpikeBall(
@@ -223,7 +229,7 @@ export class Game extends GameLayer {
 
 		for (const a of level.archers ?? []) {
 			const x = a.side * (level.width / 2 + 1.6);
-			this.entities.add("prop", new Archer(model("player"), x, -a.z, a.interval ?? 1.4, a.offset ?? 0));
+			this.entities.add("prop", new Archer(model("player"), x, -a.z, a.interval ?? 0.7, a.offset ?? 0));
 		}
 
 		for (const g of level.enemies ?? []) this.spawnEnemyZone(g.x, -g.z, g.count);
@@ -461,7 +467,13 @@ export class Game extends GameLayer {
 		for (const g of this.entities.get("gate"))
 			if (g.position.z === gate.position.z) g.consume();
 		this.refreshCrowd();
-		this.setCrowdCount(gate.apply(this.crowd.length));
+		const before = this.crowd.length;
+		const after = Math.max(0, Math.min(MAX_PLAYERS, gate.apply(before)));
+		this.setCrowdCount(after);
+		if (this.ui) {
+			this.ui.gateDelta = after - before;
+			this.ui.gateKey++;
+		}
 	}
 
 	// ------------------------------------------------------------- cannon phase

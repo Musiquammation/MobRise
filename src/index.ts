@@ -1,3 +1,4 @@
+import "@fontsource/lilita-one/index.css";
 import "./css/style.css";
 import { App } from "./App";
 import { DEBUG } from "./config";

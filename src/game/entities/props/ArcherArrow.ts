@@ -3,7 +3,7 @@ import { Entity } from "../../Entity";
 import type { Game } from "../../Game";
 
 /** Radius of the area hit when the arrow lands. */
-export const ARROW_HIT_RADIUS = 0.95;
+export const ARROW_HIT_RADIUS = 1.25;
 const STUCK_TIME = 0.6;
 
 const ringGeometry = new THREE.RingGeometry(ARROW_HIT_RADIUS - 0.12, ARROW_HIT_RADIUS, 32).rotateX(-Math.PI / 2);

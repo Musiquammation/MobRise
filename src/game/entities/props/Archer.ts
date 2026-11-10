@@ -10,12 +10,18 @@ const FLIGHT = 1.2;
 const RANGE_BEFORE = 34;
 /** Keeps shooting until the crowd is this far past the archer. */
 const RANGE_AFTER = 4;
+const BOW_RADIUS = 0.55;
+/** How far the string is pulled back at full draw. */
+const DRAW_LENGTH = 0.35;
 
 /** Stands on a tower next to the track and shoots arrows at the crowd. */
 export class Archer extends Entity {
 	private readonly object = new THREE.Group();
 	private readonly figure = new THREE.Group();
-	private readonly bow: THREE.Mesh;
+	private readonly bow = new THREE.Group();
+	private readonly strings: THREE.Mesh[] = [];
+	/** Arrow on the string, hidden right after a shot. */
+	private readonly nocked = new THREE.Group();
 	private readonly disposables: { dispose(): void }[] = [];
 	private cooldown: number;
 	private draw = 0;
@@ -59,12 +65,31 @@ export class Archer extends Entity {
 		body.scale.setScalar(1.15);
 		this.figure.add(body);
 
-		const bowGeo = new THREE.TorusGeometry(0.42, 0.04, 6, 16, Math.PI);
-		const bowMat = new THREE.MeshStandardMaterial({ color: "#5b3a1e", roughness: 0.8 });
-		this.disposables.push(bowGeo, bowMat);
-		this.bow = new THREE.Mesh(bowGeo, bowMat);
-		this.bow.rotation.set(0, Math.PI / 2, Math.PI / 2);
-		this.bow.position.set(0, 0.65, -0.35);
+		// Bow held at arm's length in front of the archer: vertical, bulging
+		// toward the target, light wood so it stands out from the red body.
+		const bowGeo = new THREE.TorusGeometry(BOW_RADIUS, 0.06, 6, 20, Math.PI)
+			.rotateZ(-Math.PI / 2)
+			.rotateY(Math.PI / 2);
+		const bowMat = new THREE.MeshStandardMaterial({ color: "#e8b04a", roughness: 0.6 });
+		const stringGeo = new THREE.CylinderGeometry(0.015, 0.015, 1, 4).translate(0, 0.5, 0);
+		const stringMat = new THREE.MeshBasicMaterial({ color: "#ffffff" });
+		const shaftGeo = new THREE.CylinderGeometry(0.025, 0.025, 0.9, 5).rotateX(Math.PI / 2);
+		const tipGeo = new THREE.ConeGeometry(0.06, 0.16, 5).rotateX(-Math.PI / 2).translate(0, 0, -0.5);
+		const shaftMat = new THREE.MeshStandardMaterial({ color: "#7a4a1f", roughness: 0.8 });
+		const tipMat = new THREE.MeshStandardMaterial({ color: "#cfd4dc", metalness: 0.6, roughness: 0.3 });
+		this.disposables.push(bowGeo, bowMat, stringGeo, stringMat, shaftGeo, tipGeo, shaftMat, tipMat);
+
+		this.bow.position.set(-0.12, 0.78, -0.5);
+		this.bow.rotation.x = 0.35; // aims up a bit: arrows fly in an arc
+		this.bow.add(new THREE.Mesh(bowGeo, bowMat));
+		for (const tip of [1, -1]) {
+			const string = new THREE.Mesh(stringGeo, stringMat);
+			string.position.set(0, tip * BOW_RADIUS, 0);
+			this.strings.push(string);
+			this.bow.add(string);
+		}
+		this.nocked.add(new THREE.Mesh(shaftGeo, shaftMat), new THREE.Mesh(tipGeo, tipMat));
+		this.bow.add(this.nocked);
 		this.figure.add(this.bow);
 		this.figure.position.y = TOWER_HEIGHT + 0.12;
 		this.object.add(this.figure);
@@ -75,18 +100,22 @@ export class Archer extends Entity {
 	}
 
 	frame(game: Game, dt: number) {
-		this.draw = Math.max(0, this.draw - dt * 3);
 		const crowd = game.crowdCenter();
 		// Look at the crowd.
 		this.figure.rotation.y = Math.atan2(-(crowd.x - this.position.x), -(crowd.z - this.position.z));
 
 		const ahead = crowd.z - this.position.z; // > 0: crowd has not reached the archer yet
-		if (game.phase !== "run" || game.crowdSize() === 0 || ahead > RANGE_BEFORE || ahead < -RANGE_AFTER) return;
+		if (game.phase !== "run" || game.crowdSize() === 0 || ahead > RANGE_BEFORE || ahead < -RANGE_AFTER) {
+			this.draw = Math.max(0, this.draw - dt * 3);
+			return;
+		}
 
 		this.cooldown -= dt;
+		// Pulls the string during the second half of the reload.
+		this.draw = Math.max(0, Math.min(1, 2 - (2 * this.cooldown) / this.interval));
 		if (this.cooldown > 0) return;
 		this.cooldown = this.interval;
-		this.draw = 1;
+		this.draw = 0;
 
 		this.bowPos.set(this.position.x, TOWER_HEIGHT + 1, this.position.z);
 		// Aim at where the crowd will be when the arrow lands.
@@ -97,7 +126,15 @@ export class Archer extends Entity {
 
 	update() {
 		super.update();
-		this.bow.scale.set(1, 1, 1 + this.draw * 0.3);
+		// String: two segments from the tips of the bow to the nocking point.
+		const back = this.draw * DRAW_LENGTH;
+		for (const string of this.strings) {
+			const h = -string.position.y;
+			string.scale.y = Math.hypot(h, back);
+			string.rotation.x = Math.atan2(back, h);
+		}
+		this.nocked.visible = this.cooldown < this.interval * 0.75;
+		this.nocked.position.z = back - 0.45;
 	}
 
 	dispose() {

@@ -12,23 +12,23 @@
   "gates": [
     { "z": 12, "x": -2.25, "width": 4.5, "type": "add", "value": 20 },
     { "z": 12, "x": 2.25, "width": 4.5, "type": "mul", "value": 3 },
-    { "z": 45, "x": -2.25, "width": 4.5, "type": "mul", "value": 2 },
+    { "z": 45, "x": -2.25, "width": 4.5, "type": "add", "value": -10 },
     { "z": 45, "x": 2.25, "width": 4.5, "type": "pct", "value": -25 },
     { "z": 120, "x": -2.25, "width": 4.5, "type": "mul", "value": 3 },
     { "z": 120, "x": 2.25, "width": 4.5, "type": "add", "value": 20 },
-    { "z": 152, "x": -2.25, "width": 4.5, "type": "pct", "value": 50 },
+    { "z": 152, "x": -2.25, "width": 4.5, "type": "pct", "value": 25 },
     { "z": 152, "x": 2.25, "width": 4.5, "type": "add", "value": 25 },
-    { "z": 180, "x": -2.25, "width": 4.5, "type": "add", "value": 30 },
-    { "z": 180, "x": 2.25, "width": 4.5, "type": "pct", "value": -50 },
+    { "z": 180, "x": -2.25, "width": 4.5, "type": "add", "value": -20 },
+    { "z": 180, "x": 2.25, "width": 4.5, "type": "pct", "value": -35 },
     { "z": 245, "x": -2.25, "width": 4.5, "type": "mul", "value": 2 },
     { "z": 245, "x": 2.25, "width": 4.5, "type": "add", "value": 40 },
-    { "z": 275, "x": -2.25, "width": 4.5, "type": "pct", "value": 60 },
+    { "z": 275, "x": -2.25, "width": 4.5, "type": "add", "value": -30 },
     { "z": 275, "x": 2.25, "width": 4.5, "type": "pct", "value": -30 },
     { "z": 310, "x": -2.25, "width": 4.5, "type": "add", "value": 50 },
-    { "z": 310, "x": 2.25, "width": 4.5, "type": "pct", "value": 90 },
-    { "z": 378, "x": -3, "width": 3, "type": "mul", "value": 2 },
-    { "z": 378, "x": 0, "width": 3, "type": "add", "value": 60 },
-    { "z": 378, "x": 3, "width": 3, "type": "add", "value": -40 }
+    { "z": 310, "x": 2.25, "width": 4.5, "type": "pct", "value": 40 },
+    { "z": 378, "x": -3, "width": 3, "type": "mul", "value": 5 },
+    { "z": 378, "x": 0, "width": 3, "type": "add", "value": 120 },
+    { "z": 378, "x": 3, "width": 3, "type": "pct", "value": 50 }
   ],
   "spikes": [
     { "z": 163, "speed": 6 }
@@ -55,14 +55,14 @@
     { "x": 3, "z": 415, "axis": "z", "length": 8, "speed": 6, "offset": 0.5 }
   ],
   "archers": [
-    { "z": 100, "side": 1, "interval": 1.6 },
-    { "z": 295, "side": 1, "interval": 1.4 },
-    { "z": 300, "side": -1, "interval": 1.4, "offset": 0.5 },
-    { "z": 405, "side": 1, "interval": 1.2 }
+    { "z": 100, "side": 1, "interval": 0.8 },
+    { "z": 295, "side": 1, "interval": 0.7 },
+    { "z": 300, "side": -1, "interval": 0.7, "offset": 0.5 },
+    { "z": 405, "side": 1, "interval": 0.6 }
   ],
   "enemies": [
     { "x": 0, "z": 105, "count": 20 },
-    { "x": -2, "z": 230, "count": 35 },
+    { "x": -2, "z": 230, "count": 29 },
     { "x": 0, "z": 330, "count": 45 },
     { "x": 0, "z": 400, "count": 60 }
   ],

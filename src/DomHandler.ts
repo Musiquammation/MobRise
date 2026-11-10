@@ -8,7 +8,6 @@ export class LoadingComponent {
 	readonly panel = "loading" as const;
 	/** In [0, 1]. */
 	progress = 0;
-	label = "Chargement…";
 }
 
 export class MainComponent {
@@ -30,6 +29,9 @@ export class GameComponent {
 	/** Last coin gain, and a key that changes on every gain (restarts the animation). */
 	gain = 0;
 	gainKey = 0;
+	/** Change of the crowd at the last gate, and a key that changes on every gate. */
+	gateDelta = 0;
+	gateKey = 0;
 	/** Coins earned during this level. */
 	earned = 0;
 	/** Screen position of the crowd counter. */
