@@ -446,6 +446,17 @@ progress::-moz-progress-bar {
 	color: var(--gold);
 }
 
+/* Coin multiplier of the skin. */
+#game > article p small {
+	padding: 2px 10px 4px;
+	font-size: 20px;
+	color: var(--ink);
+	text-shadow: none;
+	background: var(--gold);
+	border-radius: 999px;
+	animation: pulse 0.9s ease-in-out infinite;
+}
+
 #game > article button {
 	--c: var(--green);
 	--c-light: var(--green-light);
@@ -530,6 +541,168 @@ progress::-moz-progress-bar {
 	--c: var(--red);
 	--c-light: #ff7a85;
 	--c-dark: var(--red-dark);
+}
+
+#shop li {
+	cursor: pointer;
+}
+
+#shop li[data-selected="true"] {
+	outline: 4px solid var(--blue);
+	outline-offset: 2px;
+}
+
+/* Stats of the selected skin: panel sliding from the right. */
+#shop > div {
+	position: fixed;
+	inset: 0;
+	z-index: 4;
+	background: rgba(29, 37, 64, 0.35);
+}
+
+#shop > aside {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 5;
+	width: min(340px, 88vw);
+	padding: calc(64px + var(--safe-top)) 16px calc(20px + var(--safe-bottom));
+	background: #fff;
+	border-left: 3px solid var(--ink);
+	box-shadow: -6px 0 0 rgba(29, 37, 64, 0.25);
+	overflow-y: auto;
+	transition: transform 0.22s ease-out;
+}
+
+#shop > aside.closed {
+	transform: translateX(100%);
+}
+
+#shop > aside > div {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 12px;
+}
+
+#shop > aside img {
+	max-width: 150px;
+}
+
+#shop > aside h3 {
+	font-size: 28px;
+}
+
+#shop > aside [data-close] {
+	position: absolute;
+	top: calc(12px + var(--safe-top));
+	left: 12px;
+	min-height: 0;
+	width: 44px;
+	height: 44px;
+	padding: 0 0 4px;
+	font-size: 28px;
+	line-height: 1;
+	--c: var(--red);
+	--c-light: #ff7a85;
+	--c-dark: var(--red-dark);
+}
+
+#shop dl {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+}
+
+#shop dl > div {
+	--bar: var(--blue);
+	display: grid;
+	grid-template-columns: 1fr auto;
+	gap: 4px 8px;
+	align-items: baseline;
+}
+
+#shop dl > [data-stat="flight"] { --bar: #a855f7; }
+#shop dl > [data-stat="shield"] { --bar: #38bdf8; }
+#shop dl > [data-stat="speed"] { --bar: #f97316; }
+#shop dl > [data-stat="coins"] { --bar: var(--gold); }
+
+#shop [data-power] {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	padding: 4px 6px 4px 16px;
+	font-size: 18px;
+	color: #fff;
+	background: var(--ink);
+	border-radius: 999px;
+}
+
+#shop [data-power] b {
+	font-weight: 400;
+	min-width: 38px;
+	padding: 2px 8px 4px;
+	text-align: center;
+	color: var(--ink);
+	background: var(--gold);
+	border-radius: 999px;
+}
+
+#shop dt {
+	font-family: inherit;
+	font-size: 20px;
+}
+
+#shop dd {
+	font-size: 18px;
+	font-variant-numeric: tabular-nums;
+}
+
+#shop meter {
+	grid-column: 1 / -1;
+	width: 100%;
+	height: 16px;
+	appearance: none;
+	border: 3px solid var(--ink);
+	border-radius: 10px;
+	background: #e3e9f3;
+	overflow: hidden;
+}
+
+#shop meter::-webkit-meter-bar {
+	background: #e3e9f3;
+	border: 0;
+	border-radius: 0;
+	height: 100%;
+}
+
+#shop meter::-webkit-meter-optimum-value {
+	background: var(--bar);
+	transition: width 0.3s;
+}
+
+#shop meter::-moz-meter-bar {
+	background: var(--bar);
+}
+
+#shop small {
+	grid-column: 1 / -1;
+	font-family: system-ui, sans-serif;
+	font-size: 13px;
+	color: #56607a;
+}
+
+#shop > aside > div > button {
+	width: 100%;
+	justify-content: center;
+}
+
+#shop > aside button[data-price]:not(:disabled) {
+	--c: var(--green);
+	--c-light: var(--green-light);
+	--c-dark: var(--green-dark);
 }
 
 #fps {

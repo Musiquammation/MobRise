@@ -19,6 +19,20 @@ export default {
 		equipped: "Équipé",
 		equip: "Équiper",
 		back: "Retour",
+		close: "Fermer",
+		stats: {
+			flight: "Vol",
+			shield: "Bouclier",
+			speed: "Vitesse",
+			coins: "Pièces",
+		},
+		hints: {
+			flight: "Saute tout seul quand le sol s'arrête, plus haut et plus loin.",
+			shield: "Chance pour chaque coureur d'avoir un bouclier qui bloque un coup.",
+			speed: "Court et esquive plus vite.",
+			coins: "Multiplie les pièces gagnées quand le niveau est réussi.",
+		},
+		power: "Moyenne",
 	},
 	skins: {
 		blue: "Bleu",
@@ -28,6 +42,9 @@ export default {
 		party: "Fête",
 		ninja: "Ninja",
 		king: "Roi",
+		wizard: "Sorcier",
+		viking: "Viking",
+		angel: "Ange",
 	},
 	levels: {
 		welcome: "Bienvenue !",

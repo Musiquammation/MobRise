@@ -14,6 +14,8 @@ export type PlayerState = "run" | "fall" | "gather" | "flying" | "dying";
 export const GRAVITY = -24;
 /** Duration of the death animation. */
 const DEATH_TIME = 0.45;
+/** Invulnerability after a shield breaks (so the same hazard does not hit twice). */
+const SHIELD_GRACE = 0.6;
 
 export class Player extends Entity {
 	state: PlayerState = "run";
@@ -30,6 +32,14 @@ export class Player extends Entity {
 	/** Render scale (shrinks while dying). */
 	scale = 1;
 	private deathTime = 0;
+	/** Absorbs the next hit (skin ability). */
+	shield = false;
+	/** Seconds of invulnerability left after a shield broke. */
+	grace = 0;
+	/** The automatic jump is available (recharged on the ground). */
+	private hopReady = false;
+	/** In the air because of the automatic jump (no tumble). */
+	private hopping = false;
 	/** Random animation phase so the crowd does not bob in sync. */
 	readonly animPhase = Math.random() * Math.PI * 2;
 
@@ -70,6 +80,26 @@ export class Player extends Entity {
 		this.velocity.set(vx, vy, vz);
 	}
 
+	/**
+	 * A lethal hit: breaks the shield if any, otherwise dies.
+	 * Returns true when the player died.
+	 */
+	hurt(vx: number, vy: number, vz: number): boolean {
+		if (this.grace > 0) return false;
+		if (this.shield) {
+			this.shield = false;
+			this.grace = SHIELD_GRACE;
+			// Small hop to show the shield popped.
+			if (this.state === "run" && this.position.y <= 0.05) {
+				this.velocity.y = 4;
+				this.position.y = 0.06;
+			}
+			return false;
+		}
+		this.die(vx, vy, vz);
+		return true;
+	}
+
 	/** Throws the player in the air (jump pads). velocity.y is unused by crowdPhysics. */
 	jump(power: number) {
 		if (this.state !== "run" || this.position.y > 0.05) return;
@@ -85,18 +115,31 @@ export class Player extends Entity {
 		// Moved by crowdPhysics: only look where it is going (or at the aimed enemy).
 		if (this.target) this.turnToward(this.target.x - this.position.x, this.target.z - this.position.z, dt);
 		else this.turnToward(this.velocity.x, this.velocity.z - game.speed, dt);
+		if (this.grace > 0) this.grace -= dt;
+
+		const supported = game.isSupported(this.position.x, this.position.z);
+		// The ground ends: jump by themselves (skin ability).
+		if (!supported && this.position.y <= 0 && this.hopReady && game.abilities.hop > 0) {
+			this.hopReady = false;
+			this.velocity.y = game.abilities.hop;
+			this.position.y = 0.01;
+			this.hopping = true;
+		}
 
 		if (this.position.y > 0) {
-			this.velocity.y += GRAVITY * dt;
+			this.velocity.y += GRAVITY * game.abilities.gravity * dt;
 			this.position.y += this.velocity.y * dt;
-			this.spin = Math.min(0.5, this.spin + dt * 2);
+			if (!this.hopping) this.spin = Math.min(0.5, this.spin + dt * 2);
 			if (this.position.y > 0) return;
 			this.position.y = 0;
 			this.velocity.y = 0;
 			this.spin = 0;
+			this.hopping = false;
 		}
 
-		if (!game.isSupported(this.position.x, this.position.z)) {
+		if (supported) {
+			this.hopReady = true;
+		} else {
 			this.state = "fall";
 			this.velocity.set(0, Math.min(0, this.velocity.y), -game.speed * 0.5);
 			game.markCrowdDirty();

@@ -59,7 +59,7 @@
 
 			<article x-show="p.phase === 'won'" x-transition>
 				<h2 x-text="$t('game.level', { n: p.levelNumber })"></h2>
-				<p>+<b x-text="p.earned.toFixed(1)"></b></p>
+				<p>+<b x-text="p.earned.toFixed(1)"></b><small x-show="p.multiplier > 1" x-text="'×' + p.multiplier.toLocaleString(document.documentElement.lang, { maximumFractionDigits: 2 })"></small></p>
 				<button @click="$store.dom.next()" x-text="$t('game.next')"></button>
 			</article>
 			<article x-show="p.phase === 'lost'" x-transition data-lost>
@@ -74,19 +74,51 @@
 			<h2 x-text="$t('shop.title')"></h2>
 			<ul>
 				<template x-for="item in p.items" :key="item.skin.id">
-					<li :aria-current="item.equipped">
+					<li :aria-current="item.equipped" :data-selected="p.selected === item.skin.id"
+						@click="p.selected = item.skin.id">
 						<img :src="item.thumbnail" :alt="$t('skins.' + item.skin.id)">
 						<h3 x-text="$t('skins.' + item.skin.id)"></h3>
 						<button
 							:disabled="item.equipped || (!item.owned && $store.dom.coins < item.skin.price)"
 							:data-price="item.owned ? null : item.skin.price"
-							@click="item.owned ? $store.dom.equip(item.skin.id) : $store.dom.buy(item.skin.id)"
+							@click.stop="item.owned ? $store.dom.equip(item.skin.id) : $store.dom.buy(item.skin.id)"
 							x-text="item.equipped ? $t('shop.equipped') : item.owned ? $t('shop.equip') : item.skin.price"
 						></button>
 					</li>
 				</template>
 			</ul>
 			<button @click="$store.dom.closeShop()" x-text="$t('shop.back')"></button>
+
+			<div x-show="p.selectedItem" x-transition.opacity @click="p.selected = null"></div>
+			<aside x-show="p.selectedItem" x-transition:enter-start="closed" x-transition:leave-end="closed">
+				<template x-if="p.selectedItem">
+					<div x-data="{ get item() { return p.selectedItem } }">
+						<button data-close @click="p.selected = null" :aria-label="$t('shop.close')">×</button>
+						<img :src="item.thumbnail" :alt="$t('skins.' + item.skin.id)">
+						<h3 x-text="$t('skins.' + item.skin.id)"></h3>
+						<p data-power>
+							<span x-text="$t('shop.power')"></span>
+							<b x-text="item.power"></b>
+						</p>
+						<dl>
+							<template x-for="stat in item.stats" :key="stat.id">
+								<div :data-stat="stat.id">
+									<dt x-text="$t('shop.stats.' + stat.id)"></dt>
+									<dd x-text="stat.value"></dd>
+									<meter min="0" max="100" :value="stat.level"></meter>
+									<small x-text="$t('shop.hints.' + stat.id)"></small>
+								</div>
+							</template>
+						</dl>
+						<button
+							:disabled="item.equipped || (!item.owned && $store.dom.coins < item.skin.price)"
+							:data-price="item.owned ? null : item.skin.price"
+							@click="item.owned ? $store.dom.equip(item.skin.id) : $store.dom.buy(item.skin.id)"
+							x-text="item.equipped ? $t('shop.equipped') : item.owned ? $t('shop.equip') : item.skin.price"
+						></button>
+					</div>
+				</template>
+			</aside>
 		</section>
 	</template>
 </body>
