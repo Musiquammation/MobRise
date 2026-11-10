@@ -10,6 +10,7 @@ const en = {
 		level: "Level {n}",
 		play: "Play",
 		skins: "Skins",
+		levels: "Levels",
 	},
 	game: {
 		aim: "Aim at the <b>?</b>",

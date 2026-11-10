@@ -5,6 +5,7 @@ export default {
 		level: "Livello {n}",
 		play: "Gioca",
 		skins: "Skin",
+		levels: "Livelli",
 	},
 	game: {
 		aim: "Mira ai <b>?</b>",

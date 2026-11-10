@@ -5,6 +5,7 @@ export default {
 		level: "Nível {n}",
 		play: "Jogar",
 		skins: "Visuais",
+		levels: "Níveis",
 	},
 	game: {
 		aim: "Mire nos <b>?</b>",

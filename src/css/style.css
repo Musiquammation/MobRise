@@ -233,23 +233,48 @@ progress::-moz-progress-bar {
 	gap: 16px;
 }
 
-#main nav button:first-child {
+#main nav > button {
 	--c: var(--green);
 	--c-light: var(--green-light);
 	--c-dark: var(--green-dark);
+	width: min(100%, 300px);
 	font-size: 34px;
-	padding: 12px 64px 16px;
+	padding: 12px 24px 16px;
 	border-radius: 24px;
 	animation: pulse 1.2s ease-in-out infinite;
 }
 
-#main nav button + button {
+#main nav div {
+	width: min(100%, 300px);
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 12px;
+}
+
+#main nav div button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	font-size: 20px;
+	min-height: 52px;
+	padding: 6px 10px 9px;
+}
+
+#main nav div button + button {
 	--c: var(--gold);
 	--c-light: var(--gold-light);
 	--c-dark: var(--gold-dark);
-	font-size: 20px;
-	min-height: 48px;
-	padding: 6px 26px 9px;
+}
+
+#main nav svg {
+	flex: none;
+	width: 22px;
+	height: 22px;
+	fill: #fff;
+	stroke: var(--ink);
+	stroke-width: 1.5;
+	filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.3));
 }
 
 @keyframes pulse {
@@ -530,6 +555,95 @@ progress::-moz-progress-bar {
 	--c: var(--red);
 	--c-light: #ff7a85;
 	--c-dark: var(--red-dark);
+}
+
+/* levels */
+
+#levels {
+	background: radial-gradient(circle at 50% 0%, #b7e3ff, #4f9de0 70%);
+	gap: 16px;
+}
+
+#levels h2 {
+	margin-top: 40px;
+}
+
+#levels ol {
+	flex: 1;
+	width: min(100%, 360px);
+	list-style: none;
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 14px;
+	align-content: start;
+	overflow-y: auto;
+	touch-action: pan-y;
+	padding: 10px 8px 18px;
+}
+
+#levels li button {
+	position: relative;
+	width: 100%;
+	aspect-ratio: 1;
+	min-height: 0;
+	padding: 0 0 4px;
+	display: grid;
+	place-items: center;
+	font-size: 30px;
+	border-radius: 20px;
+}
+
+#levels li button[data-state="current"] {
+	--c: var(--green);
+	--c-light: var(--green-light);
+	--c-dark: var(--green-dark);
+	outline: 4px solid var(--gold);
+	outline-offset: 2px;
+	animation: pulse 1.2s ease-in-out infinite;
+}
+
+#levels li button[data-state="locked"] {
+	opacity: 0.7;
+	box-shadow: inset 0 3px 0 rgba(255, 255, 255, 0.35), inset 0 -5px 0 var(--c-dark), 0 5px 0 rgba(29, 37, 64, 0.6);
+	border-color: rgba(29, 37, 64, 0.6);
+}
+
+#levels li button svg {
+	width: 26px;
+	height: 26px;
+	fill: #fff;
+}
+
+/* Gold check badge of the won levels. */
+#levels li button i {
+	position: absolute;
+	top: -8px;
+	right: -8px;
+	width: 26px;
+	height: 26px;
+	display: grid;
+	place-items: center;
+	border-radius: 50%;
+	background: linear-gradient(var(--gold-light), var(--gold) 60%);
+	border: 2px solid var(--ink);
+	box-shadow: 0 2px 0 var(--ink);
+}
+
+#levels li button i svg {
+	width: 16px;
+	height: 16px;
+	fill: none;
+	stroke: var(--ink);
+	stroke-width: 4;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}
+
+#levels > button {
+	--c: var(--red);
+	--c-light: #ff7a85;
+	--c-dark: var(--red-dark);
+	min-width: 180px;
 }
 
 #fps {

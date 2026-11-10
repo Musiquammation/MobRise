@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { createResourceManager, type ResourceRequest } from "./resources/ResourceManager";
 import { CORE_MODELS, HAT_MODELS, LEVEL_INDEX, levelRequest } from "./resources/assets";
 import {
-	createDomHandler, DomHandler, GameComponent, LoadingComponent, MainComponent, ShopComponent,
+	createDomHandler, DomHandler, GameComponent, LevelsComponent, LoadingComponent, MainComponent, ShopComponent,
 	type DomActions,
 } from "./DomHandler";
 import { Game, roundTenth } from "./game/Game";
@@ -13,6 +13,9 @@ import { getSkin, SKINS } from "./data/skins";
 import type { LevelData, LevelIndex } from "./data/Level";
 import { t } from "./i18n";
 
+/** Columns of the level grid (#levels ol in style.css). */
+const LEVELS_PER_ROW = 4;
+
 export class App implements DomActions {
 	private readonly resources = createResourceManager(32 * 1024 * 1024);
 	private readonly input = new InputHandler();
@@ -22,6 +25,8 @@ export class App implements DomActions {
 
 	private levels: LevelIndex = [];
 	private levelResource: string | null = null;
+	/** Index of the level shown (<= save.level: lower when replaying an old level). */
+	private current = this.save.level;
 	private game: Game | null = null;
 	private thumbnails: Record<string, string> = {};
 	private lastTime = 0;
@@ -54,7 +59,7 @@ export class App implements DomActions {
 
 	/** Loads the current level and shows the main menu in front of it. */
 	private async openLevel() {
-		const file = this.levels[this.save.level % this.levels.length];
+		const file = this.levels[this.current % this.levels.length];
 		const request = levelRequest(file);
 
 		if (this.levelResource !== request.id) {
@@ -65,7 +70,7 @@ export class App implements DomActions {
 
 		this.buildGame();
 		const level = this.resources.getJson<LevelData>(request.id);
-		this.dom.show(new MainComponent(this.save.level + 1, levelTitle(level)));
+		this.dom.show(new MainComponent(this.current + 1, levelTitle(level)));
 	}
 
 	private buildGame() {
@@ -81,8 +86,11 @@ export class App implements DomActions {
 				onCoins: amount => this.addCoins(amount),
 				onEnd: won => {
 					if (won) {
-						this.save.level++;
-						writeSave(this.save);
+						this.current++;
+						if (this.current > this.save.level) {
+							this.save.level = this.current;
+							writeSave(this.save);
+						}
 					}
 				},
 			},
@@ -123,7 +131,7 @@ export class App implements DomActions {
 
 	play() {
 		if (!this.game || this.game.phase !== "idle") return;
-		const ui = this.dom.show(new GameComponent(this.save.level + 1));
+		const ui = this.dom.show(new GameComponent(this.current + 1));
 		this.game.start(ui);
 	}
 
@@ -132,6 +140,23 @@ export class App implements DomActions {
 	}
 
 	closeShop() {
+		void this.openLevel();
+	}
+
+	openLevels() {
+		// Every level reached so far, plus the not yet reached ones (locked),
+		// at least up to the end of the level files and of the grid row.
+		const count = Math.ceil(Math.max(this.save.level + 2, this.levels.length) / LEVELS_PER_ROW) * LEVELS_PER_ROW;
+		const items = Array.from({ length: count }, (_, index) => ({
+			index,
+			state: index < this.save.level ? "done" as const : index === this.save.level ? "current" as const : "locked" as const,
+		}));
+		this.dom.show(new LevelsComponent(items));
+	}
+
+	selectLevel(index: number) {
+		if (index < 0 || index > this.save.level) return;
+		this.current = index;
 		void this.openLevel();
 	}
 
