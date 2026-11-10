@@ -127,7 +127,9 @@ export class Player extends Entity {
 		}
 
 		if (this.position.y > 0) {
-			this.velocity.y += GRAVITY * game.abilities.gravity * dt;
+			// The lighter gravity of the skin only lengthens its own jump, not the
+			// jump pads (their distance depends on the run speed only).
+			this.velocity.y += GRAVITY * (this.hopping ? game.abilities.gravity : 1) * dt;
 			this.position.y += this.velocity.y * dt;
 			if (!this.hopping) this.spin = Math.min(0.5, this.spin + dt * 2);
 			if (this.position.y > 0) return;

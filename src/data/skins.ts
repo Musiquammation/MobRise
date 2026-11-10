@@ -75,7 +75,7 @@ const MAX_COINS = 1;
 export type SkinAbilities = {
 	/** Vertical speed of the automatic jump when the ground ends (0 = none). */
 	hop: number;
-	/** Multiplier of the gravity while a running player is in the air. */
+	/** Multiplier of the gravity during the automatic jump (not on jump pads). */
 	gravity: number;
 	/** Probability in [0, 1] that a new player has a shield. */
 	shieldChance: number;
