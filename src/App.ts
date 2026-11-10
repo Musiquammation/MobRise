@@ -3,15 +3,15 @@ import { createResourceManager, type ResourceRequest } from "./resources/Resourc
 import { CORE_MODELS, HAT_MODELS, LEVEL_INDEX, levelRequest } from "./resources/assets";
 import {
 	createDomHandler, DomHandler, GameComponent, LevelsComponent, LoadingComponent, MainComponent, ShopComponent,
-	type DomActions,
+	type DomActions, type ShopStat,
 } from "./DomHandler";
 import { Game, roundTenth } from "./game/Game";
 import { InputHandler } from "./game/InputHandler";
 import { renderSkinThumbnails } from "./game/skinThumbnails";
 import { loadSave, writeSave, type SaveData } from "./data/save";
-import { getSkin, SKINS } from "./data/skins";
+import { airTime, getSkin, skinAbilities, skinPower, SKINS, type Skin } from "./data/skins";
 import type { LevelData, LevelIndex } from "./data/Level";
-import { t } from "./i18n";
+import { locale, t } from "./i18n";
 
 /** Columns of the level grid (#levels ol in style.css). */
 const LEVELS_PER_ROW = 4;
@@ -124,6 +124,8 @@ export class App implements DomActions {
 			thumbnail: this.thumbnails[skin.id] ?? "",
 			owned: this.save.owned.includes(skin.id),
 			equipped: this.save.skin === skin.id,
+			stats: skinStats(skin),
+			power: Math.round(skinPower(skin.stats)),
 		}));
 	}
 
@@ -185,6 +187,22 @@ export class App implements DomActions {
 		this.buildGame();
 		this.play();
 	}
+}
+
+const number = (digits: number) => new Intl.NumberFormat(locale, {
+	minimumFractionDigits: digits, maximumFractionDigits: digits,
+});
+const seconds = number(2), whole = number(0), factor = number(1);
+
+/** Lines of the stats panel of the shop. */
+function skinStats(skin: Skin): ShopStat[] {
+	const a = skinAbilities(skin.stats);
+	return [
+		{ id: "flight", level: skin.stats.flight, value: `${seconds.format(airTime(a))} s` },
+		{ id: "shield", level: skin.stats.shield, value: `${whole.format(a.shieldChance * 100)} %` },
+		{ id: "speed", level: skin.stats.speed, value: `+${whole.format((a.speed - 1) * 100)} %` },
+		{ id: "coins", level: skin.stats.coins, value: `×${factor.format(a.coins)}` },
+	];
 }
 
 /** Translated name of a level (its `name` is a key of `levels` in src/i18n/locales). */

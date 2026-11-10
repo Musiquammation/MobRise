@@ -7,8 +7,7 @@ import type { Player } from "./Player";
 export abstract class Hazard extends Entity {
 	onPlayerHit(player: Player, game: Game) {
 		const push = this.knockback(player);
-		player.die(push.x, push.y, push.z);
-		game.markCrowdDirty();
+		if (player.hurt(push.x, push.y, push.z)) game.markCrowdDirty();
 	}
 
 	/** Velocity given to a player killed by this hazard. */

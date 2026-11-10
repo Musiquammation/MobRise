@@ -33,8 +33,10 @@ export class GameComponent {
 	/** Change of the crowd at the last gate, and a key that changes on every gate. */
 	gateDelta = 0;
 	gateKey = 0;
-	/** Coins earned during this level. */
+	/** Coins earned during this level (with the skin bonus once won). */
 	earned = 0;
+	/** Coin multiplier of the skin, applied when the level is won (1 = none). */
+	multiplier = 1;
 	/** Screen position of the crowd counter. */
 	bubble = { x: 0, y: 0, visible: false };
 	/** Screen position of the cannon crosshair. */
@@ -43,16 +45,35 @@ export class GameComponent {
 	constructor(public levelNumber: number) {}
 }
 
+/** One line of the stats panel of a skin. */
+export type ShopStat = {
+	/** Key of `shop.stats` / `shop.hints` in the locales. */
+	id: "flight" | "shield" | "speed" | "coins";
+	/** In [0, 100]: length of the bar. */
+	level: number;
+	/** What it does in game ("0.6 s", "45 %"...). */
+	value: string;
+};
+
 export type ShopItem = {
 	skin: Skin;
 	thumbnail: string;
 	owned: boolean;
 	equipped: boolean;
+	stats: ShopStat[];
+	/** Average of the stats, in [0, 100]. */
+	power: number;
 };
 
 export class ShopComponent {
 	readonly panel = "shop" as const;
+	/** Skin whose stats are shown in the side panel. */
+	selected: string | null = null;
 	constructor(public items: ShopItem[]) {}
+
+	get selectedItem(): ShopItem | null {
+		return this.items.find(i => i.skin.id === this.selected) ?? null;
+	}
 }
 
 export type LevelItem = {

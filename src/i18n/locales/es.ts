@@ -20,6 +20,20 @@ export default {
 		equipped: "Equipado",
 		equip: "Equipar",
 		back: "Volver",
+		close: "Cerrar",
+		stats: {
+			flight: "Vuelo",
+			shield: "Escudo",
+			speed: "Velocidad",
+			coins: "Monedas",
+		},
+		hints: {
+			flight: "Salta solo cuando se acaba el suelo, más alto y más lejos.",
+			shield: "Probabilidad de que cada corredor tenga un escudo que bloquea un golpe.",
+			speed: "Corre y esquiva más rápido.",
+			coins: "Multiplica las monedas ganadas al superar el nivel.",
+		},
+		power: "Media",
 	},
 	skins: {
 		blue: "Azul",
@@ -29,6 +43,9 @@ export default {
 		party: "Fiesta",
 		ninja: "Ninja",
 		king: "Rey",
+		wizard: "Mago",
+		viking: "Vikingo",
+		angel: "Ángel",
 	},
 	levels: {
 		welcome: "¡Bienvenido!",

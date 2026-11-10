@@ -20,6 +20,20 @@ export default {
 		equipped: "Ausgerüstet",
 		equip: "Ausrüsten",
 		back: "Zurück",
+		close: "Schließen",
+		stats: {
+			flight: "Flug",
+			shield: "Schild",
+			speed: "Tempo",
+			coins: "Münzen",
+		},
+		hints: {
+			flight: "Springt von selbst, wenn der Boden endet, höher und weiter.",
+			shield: "Chance, dass jeder Läufer einen Schild bekommt, der einen Treffer abwehrt.",
+			speed: "Läuft und weicht schneller aus.",
+			coins: "Vervielfacht die verdienten Münzen, wenn das Level geschafft ist.",
+		},
+		power: "Durchschnitt",
 	},
 	skins: {
 		blue: "Blau",
@@ -29,6 +43,9 @@ export default {
 		party: "Party",
 		ninja: "Ninja",
 		king: "König",
+		wizard: "Zauberer",
+		viking: "Wikinger",
+		angel: "Engel",
 	},
 	levels: {
 		welcome: "Willkommen!",
