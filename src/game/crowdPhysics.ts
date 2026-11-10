@@ -16,6 +16,8 @@ export type CrowdBody = {
 	velocity: Vec2Like;
 	/** Position at the start of the step (internal). */
 	prev: Vec2Like;
+	/** Own attraction point, replaces the shared center when set (fights). */
+	target?: Vec2Like | null;
 };
 
 /** Attraction toward the center: acceleration as a function of the distance. */
@@ -76,7 +78,8 @@ export function stepCrowd(bodies: readonly CrowdBody[], cx: number, cz: number, 
 		b.prev.x = p.x;
 		b.prev.z = p.z;
 
-		const dx = cx - p.x, dz = cz - p.z;
+		const t = b.target;
+		const dx = (t ? t.x : cx) - p.x, dz = (t ? t.z : cz) - p.z;
 		const d = Math.hypot(dx, dz);
 		if (d > 1e-6) {
 			const a = o.force(d);

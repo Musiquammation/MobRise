@@ -12,13 +12,17 @@
     { "z": 12, "x": -2, "width": 4, "type": "add", "value": 5 },
     { "z": 12, "x": 2, "width": 4, "type": "mul", "value": 2 },
     { "z": 40, "x": -2, "width": 4, "type": "add", "value": 10 },
-    { "z": 40, "x": 2, "width": 4, "type": "add", "value": -3 },
+    { "z": 40, "x": 2, "width": 4, "type": "pct", "value": -25 },
     { "z": 95, "x": -2, "width": 4, "type": "mul", "value": 2 },
     { "z": 95, "x": 2, "width": 4, "type": "add", "value": 8 },
     { "z": 150, "x": -2, "width": 4, "type": "add", "value": 15 },
     { "z": 150, "x": 2, "width": 4, "type": "pct", "value": 60 },
+    { "z": 170, "x": -2.0, "width": 4, "type": "pct", "value": 30 },
+    { "z": 170, "x": 2.0, "width": 4, "type": "add", "value": 10 },
     { "z": 235, "x": -2, "width": 4, "type": "add", "value": 20 },
-    { "z": 235, "x": 2, "width": 4, "type": "mul", "value": 0.5 }
+    { "z": 235, "x": 2, "width": 4, "type": "pct", "value": -50 },
+    { "z": 268, "x": -2.0, "width": 4, "type": "pct", "value": 50 },
+    { "z": 268, "x": 2.0, "width": 4, "type": "pct", "value": -20 }
   ],
   "spikes": [],
   "spikeFields": [

@@ -18,6 +18,8 @@ export class Enemy extends Entity {
 	state: EnemyState = "idle";
 	readonly velocity = new THREE.Vector3();
 	readonly prev = new THREE.Vector3();
+	/** Opponent aimed at during a fight (crowdPhysics pulls toward it). */
+	target: THREE.Vector3 | null = null;
 	yaw = Math.PI; // facing the incoming crowd
 	spin = 0;
 	scale = 1;
@@ -43,7 +45,9 @@ export class Enemy extends Entity {
 	frame(game: Game, dt: number) {
 		switch (this.state) {
 		case "run": {
-			const dx = this.velocity.x, dz = this.velocity.z;
+			const t = this.target;
+			const dx = t ? t.x - this.position.x : this.velocity.x;
+			const dz = t ? t.z - this.position.z : this.velocity.z;
 			if (dx * dx + dz * dz > 0.25) {
 				let diff = Math.atan2(-dx, -dz) - this.yaw;
 				diff = Math.atan2(Math.sin(diff), Math.cos(diff));

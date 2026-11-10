@@ -21,6 +21,8 @@ export class Player extends Entity {
 	readonly velocity = new THREE.Vector3();
 	/** Used by crowdPhysics. */
 	readonly prev = new THREE.Vector3();
+	/** Opponent aimed at during a fight (crowdPhysics pulls toward it). */
+	target: THREE.Vector3 | null = null;
 	/** Facing angle around Y (0 = running direction). */
 	yaw = 0;
 	/** Tumble angle while flying. */
@@ -80,8 +82,9 @@ export class Player extends Entity {
 	}
 
 	private run(game: Game, dt: number) {
-		// Moved by crowdPhysics: only look where it is going.
-		this.turnToward(this.velocity.x, this.velocity.z - game.speed, dt);
+		// Moved by crowdPhysics: only look where it is going (or at the aimed enemy).
+		if (this.target) this.turnToward(this.target.x - this.position.x, this.target.z - this.position.z, dt);
+		else this.turnToward(this.velocity.x, this.velocity.z - game.speed, dt);
 
 		if (this.position.y > 0) {
 			this.velocity.y += GRAVITY * dt;

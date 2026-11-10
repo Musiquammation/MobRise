@@ -13,15 +13,19 @@
     { "z": 12, "x": -2, "width": 4, "type": "mul", "value": 2 },
     { "z": 12, "x": 2, "width": 4, "type": "add", "value": 8 },
     { "z": 48, "x": -2, "width": 4, "type": "add", "value": 15 },
-    { "z": 48, "x": 2, "width": 4, "type": "add", "value": -5 },
+    { "z": 48, "x": 2, "width": 4, "type": "pct", "value": -20 },
     { "z": 105, "x": -2, "width": 4, "type": "mul", "value": 2 },
     { "z": 105, "x": 2, "width": 4, "type": "add", "value": 12 },
     { "z": 160, "x": -2, "width": 4, "type": "mul", "value": 3 },
     { "z": 160, "x": 2, "width": 4, "type": "add", "value": 25 },
+    { "z": 172, "x": -2.0, "width": 4, "type": "pct", "value": 40 },
+    { "z": 172, "x": 2.0, "width": 4, "type": "add", "value": 15 },
     { "z": 240, "x": -2, "width": 4, "type": "add", "value": 30 },
-    { "z": 240, "x": 2, "width": 4, "type": "mul", "value": 0.5 },
+    { "z": 240, "x": 2, "width": 4, "type": "pct", "value": -40 },
     { "z": 300, "x": -2, "width": 4, "type": "pct", "value": 80 },
-    { "z": 300, "x": 2, "width": 4, "type": "add", "value": 40 }
+    { "z": 300, "x": 2, "width": 4, "type": "add", "value": 40 },
+    { "z": 312, "x": -2.0, "width": 4, "type": "pct", "value": 60 },
+    { "z": 312, "x": 2.0, "width": 4, "type": "pct", "value": -30 }
   ],
   "spikes": [
     { "z": 25, "speed": 5 }
