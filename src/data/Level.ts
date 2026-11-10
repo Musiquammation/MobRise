@@ -54,8 +54,16 @@ export type LevelData = {
 		/** Radii of the elliptic loop. */
 		rx: number;
 		ry: number;
-		/** Turns per second. */
+		/** Turns (or swings) per second. */
 		speed: number;
+		/** Trajectory of the boxes (see game/boxPath.ts). Default: "ellipse". */
+		path?: "ellipse" | "figure8" | "row" | "pendulum";
+		/** Distance between two boxes for "row" and "pendulum". */
+		spacing?: number;
+		/** Sideways swing of the whole pattern (amplitude). */
+		sway?: number;
+		/** Turns per second of the sway. */
+		swaySpeed?: number;
 	};
 };
 

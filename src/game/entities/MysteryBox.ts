@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { Entity } from "../Entity";
 import type { Game } from "../Game";
+import type { BoxPath } from "../boxPath";
 
 const BUMP_TIME = 0.3;
 const COIN_TIME = 0.7;
@@ -11,8 +12,8 @@ const HIT_COLORS: Record<string, THREE.ColorRepresentation> = {
 };
 
 /**
- * "?" box of the cannon phase. Every box follows the same elliptic loop,
- * evenly spaced along it.
+ * "?" box of the cannon phase. Moves along a trajectory that depends on the
+ * level (see boxPath).
  */
 export class MysteryBox extends Entity {
 	private readonly object = new THREE.Group();
@@ -27,13 +28,7 @@ export class MysteryBox extends Entity {
 	constructor(
 		boxModel: THREE.Object3D,
 		coinModel: THREE.Object3D,
-		private readonly center: THREE.Vector3,
-		private readonly rx: number,
-		private readonly ry: number,
-		/** Turns per second. */
-		private readonly speed: number,
-		/** Position along the loop, in [0, 1). */
-		private readonly phase: number,
+		private readonly path: BoxPath,
 	) {
 		super();
 		this.box = boxModel.clone();
@@ -73,12 +68,7 @@ export class MysteryBox extends Entity {
 	}
 
 	frame(game: Game, dt: number) {
-		const a = (game.time * this.speed + this.phase) * Math.PI * 2;
-		this.position.set(
-			this.center.x + Math.cos(a) * this.rx,
-			this.center.y + Math.sin(a) * this.ry,
-			this.center.z,
-		);
+		this.path(game.time, this.position);
 		this.bumpT = Math.max(0, this.bumpT - dt);
 		this.coinT += dt;
 	}

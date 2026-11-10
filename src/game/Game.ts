@@ -19,6 +19,7 @@ import { Multiplication } from "./entities/gates/Multiplication";
 import { Percentage } from "./entities/gates/Percentage";
 import { Cannon } from "./entities/Cannon";
 import { MysteryBox } from "./entities/MysteryBox";
+import { boxPath, boxPathExtent } from "./boxPath";
 import { DEFAULT_CROWD_OPTIONS, FORCES, stepCrowd, type CrowdOptions, type ForceName } from "./crowdPhysics";
 import type { LevelData } from "../data/Level";
 import type { Skin } from "../data/skins";
@@ -38,8 +39,8 @@ const EDGE_OVERSHOOT = 2.5;
  * attraction: speed = gain * distance (1/s), capped. Moves everyone the same
  * way, so the crowd keeps its shape.
  */
-const SLIDE_GAIN = 7;
-const SLIDE_MAX_SPEED = 14;
+const SLIDE_GAIN = 8;
+const SLIDE_MAX_SPEED = 16;
 /** Attraction used while walking to the cannon (constant: everyone walks). */
 const GATHER_FORCE = () => 56;
 
@@ -244,7 +245,7 @@ export class Game extends GameLayer {
 		this.aimPoint.copy(this.boxCenter);
 		for (let i = 0; i < c.boxes; i++) {
 			this.entities.add("box", new MysteryBox(
-				model("mystery_box"), model("coin"), this.boxCenter, c.rx, c.ry, c.speed, i / c.boxes,
+				model("mystery_box"), model("coin"), boxPath(c, this.boxCenter, i),
 			));
 		}
 
@@ -553,8 +554,8 @@ export class Game extends GameLayer {
 		this.aimPress = presses;
 		(this.aimPrev ??= new THREE.Vector3()).set(x, y, 0);
 
-		const c = this.level.cannon;
-		const mx = c.rx + 3, my = c.ry + 3;
+		const extent = boxPathExtent(this.level.cannon);
+		const mx = extent.x + 3, my = extent.y + 3;
 		this.aimPoint.x = Math.max(this.boxCenter.x - mx, Math.min(this.boxCenter.x + mx, this.aimPoint.x));
 		this.aimPoint.y = Math.max(0.5, Math.min(this.boxCenter.y + my, this.aimPoint.y));
 		this.aimPoint.z = this.boxCenter.z;
