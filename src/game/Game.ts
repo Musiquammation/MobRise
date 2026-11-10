@@ -48,6 +48,8 @@ const ENEMY_TRIGGER = 13;
 /** Distance between the centers of a player and an enemy that kills both. */
 const ENEMY_CONTACT = 0.42;
 const ENEMY_COLOR = "#e11d2a";
+/** How fast the crowd stops for a fight / gets back to its speed (units/s²). */
+const FIGHT_BRAKE = 25;
 /** Default vertical speed given by a jump pad. */
 const JUMP_POWER = 10;
 
@@ -100,6 +102,20 @@ export function roundTenth(v: number) {
 	return Math.round(v * 10) / 10;
 }
 
+/** Position of the entity of `list` closest to `from` (x / z), or null when empty. */
+function nearest(from: THREE.Vector3, list: readonly { position: THREE.Vector3 }[]): THREE.Vector3 | null {
+	let best: THREE.Vector3 | null = null, bestD = Infinity;
+	for (const e of list) {
+		const dx = e.position.x - from.x, dz = e.position.z - from.z;
+		const d = dx * dx + dz * dz;
+		if (d < bestD) {
+			bestD = d;
+			best = e.position;
+		}
+	}
+	return best;
+}
+
 export class Game extends GameLayer {
 	readonly entities = new EntityContainer({
 		onCreate: e => {
@@ -120,6 +136,8 @@ export class Game extends GameLayer {
 	time = 0;
 	/** Current forward speed of the crowd. */
 	speed = 0;
+	/** Enemies are charging: the crowd stops and each player aims at an opponent. */
+	fighting = false;
 
 	readonly cannon: Cannon;
 	/** Center of the "?" boxes loop. */
@@ -357,6 +375,8 @@ export class Game extends GameLayer {
 
 			const runners = zone.enemies.filter(e => e.state === "run");
 			if (this.phase === "run" && this.crowd.length > 0) {
+				// Each enemy charges the closest player.
+				for (const e of runners) e.target = nearest(e.position, this.crowd);
 				stepCrowd(runners, this.crowdX, this.centerZ, dt, this.enemyOptions);
 			} else {
 				for (const e of runners) e.velocity.set(0, 0, 0);
@@ -364,6 +384,14 @@ export class Game extends GameLayer {
 			// Left far behind the crowd: gone.
 			for (const e of runners) if (e.position.z > this.centerZ + 10) e.kill();
 		}
+
+		// While enemies charge, the crowd stops and each player aims at the closest one.
+		const fighters = this.phase === "run" ? this.entities.get("enemy").filter(e => e.state === "run") : [];
+		const wasFighting = this.fighting;
+		this.fighting = fighters.length > 0 && this.crowd.length > 0;
+		for (const p of this.crowd) p.target = this.fighting ? nearest(p.position, fighters) : null;
+		// Fight over: the crowd resumes from where it stands.
+		if (wasFighting && !this.fighting) this.centerX = this.crowdX;
 
 		// Fights: each enemy touching a player kills it and dies.
 		if (this.phase !== "run") return;
@@ -524,7 +552,11 @@ export class Game extends GameLayer {
 		this.time += dt;
 
 		if (this.phase === "run") {
-			this.followPointer();
+			// Fighting: the crowd brakes and the pointer no longer steers it.
+			if (!this.fighting) this.followPointer();
+			const wanted = this.fighting ? 0 : this.level.speed;
+			const step = FIGHT_BRAKE * dt;
+			this.speed += Math.max(-step, Math.min(step, wanted - this.speed));
 			this.centerZ -= this.speed * dt;
 			if (-this.centerZ >= this.level.length) this.startCannon();
 		}
@@ -583,9 +615,18 @@ export class Game extends GameLayer {
 				p.position.z -= this.speed * dt;
 			}
 			stepCrowd(this.crowd, this.centerX, this.centerZ, dt, this.crowdOptions);
-			let sum = 0;
-			for (const p of this.crowd) sum += p.position.x;
+			let sum = 0, sumZ = 0;
+			for (const p of this.crowd) {
+				sum += p.position.x;
+				sumZ += p.position.z;
+			}
 			this.crowdX = sum / this.crowd.length;
+			// Players charging their targets move the crowd: the center (camera,
+			// triggers...) follows them so they are not pulled back afterward.
+			if (this.fighting) {
+				this.centerX = this.crowdX;
+				this.centerZ = Math.min(this.centerZ, sumZ / this.crowd.length);
+			}
 		}
 
 		if (this.phase === "cannon") {
@@ -616,6 +657,7 @@ export class Game extends GameLayer {
 	private end(won: boolean) {
 		this.phase = won ? "won" : "lost";
 		this.speed = 0;
+		this.fighting = false;
 		this.callbacks.onEnd(won);
 		this.syncUi();
 	}
