@@ -14,6 +14,10 @@ export default {
 		next: "Weiter",
 		lost: "Verloren",
 		retry: "Nochmal",
+		pause: "Pause",
+		paused: "Pause",
+		resume: "Weiter",
+		quit: "Menü",
 	},
 	shop: {
 		title: "Skins",

@@ -14,6 +14,10 @@ export default {
 		next: "Siguiente",
 		lost: "Perdido",
 		retry: "Reintentar",
+		pause: "Pausa",
+		paused: "Pausa",
+		resume: "Continuar",
+		quit: "Menú",
 	},
 	shop: {
 		title: "Aspectos",

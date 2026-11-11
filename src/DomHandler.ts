@@ -22,6 +22,8 @@ export class MainComponent {
 export class GameComponent {
 	readonly panel = "game" as const;
 	phase: GamePhase = "run";
+	/** The game is frozen and the pause panel is shown. */
+	paused = false;
 	/** Players in the crowd (or left to shoot during the cannon phase). */
 	count = 0;
 	/** Distance done, in [0, 1]. */
@@ -101,6 +103,9 @@ export interface DomActions {
 	equip(skinId: string): void;
 	next(): void;
 	retry(): void;
+	pause(): void;
+	resume(): void;
+	quit(): void;
 }
 
 // Kept outside the reactive store: Alpine would otherwise wrap the whole
@@ -137,6 +142,9 @@ export class DomHandler {
 	equip(id: string) { actions?.equip(id); }
 	next() { actions?.next(); }
 	retry() { actions?.retry(); }
+	pause() { actions?.pause(); }
+	resume() { actions?.resume(); }
+	quit() { actions?.quit(); }
 }
 
 /** Registers the DomHandler in Alpine, starts Alpine and returns the reactive handler. */

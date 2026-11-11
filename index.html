@@ -59,6 +59,11 @@
 			</template>
 			<i x-show="p.aim.visible" :style="`left:${p.aim.x}px;top:${p.aim.y}px`"></i>
 
+			<button data-pause x-show="(p.phase === 'run' || p.phase === 'cannon') && !p.paused"
+				@pointerdown.stop @click="$store.dom.pause()" :aria-label="$t('game.pause')">
+				<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="5" height="16" rx="1.5"/><rect x="14" y="4" width="5" height="16" rx="1.5"/></svg>
+			</button>
+
 			<aside x-show="p.phase === 'cannon'">
 				<span x-html="$t('game.shots', { n: `<b>${p.count}</b>` })"></span>
 				<span x-show="p.combo > 1" x-text="'×' + p.combo"></span>
@@ -67,6 +72,11 @@
 				<em x-show="k > 0" x-text="'+' + p.gain.toFixed(1)"></em>
 			</template>
 
+			<article x-show="p.paused" x-transition data-pause @pointerdown.stop>
+				<h2 x-text="$t('game.paused')"></h2>
+				<button @click="$store.dom.resume()" x-text="$t('game.resume')"></button>
+				<button data-quit @click="$store.dom.quit()" x-text="$t('game.quit')"></button>
+			</article>
 			<article x-show="p.phase === 'won'" x-transition>
 				<h2 x-text="$t('game.level', { n: p.levelNumber })"></h2>
 				<p>+<b x-text="p.earned.toFixed(1)"></b><small x-show="p.multiplier > 1" x-text="'×' + p.multiplier.toLocaleString(document.documentElement.lang, { maximumFractionDigits: 2 })"></small></p>
