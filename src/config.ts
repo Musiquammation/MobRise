@@ -1,2 +1,2 @@
 /** Shows debug overlays (FPS counter…). */
-export const DEBUG = true;
+export const DEBUG = false;
