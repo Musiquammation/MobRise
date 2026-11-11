@@ -1,0 +1,42 @@
+{
+  "name": "bossIntro",
+  "width": 8,
+  "length": 260,
+  "speed": 9,
+  "start": 24,
+  "holes": [
+    { "x": 0, "z": 70, "width": 3, "depth": 5 },
+    { "x": -3, "z": 140, "width": 2, "depth": 6 },
+    { "x": 3, "z": 140, "width": 2, "depth": 6 }
+  ],
+  "gates": [
+    { "z": 8, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 8, "x": 2, "width": 4, "type": "add", "value": 15 },
+    { "z": 50, "x": -2, "width": 4, "type": "add", "value": 20 },
+    { "z": 50, "x": 2, "width": 4, "type": "pct", "value": 50 },
+    { "z": 110, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 110, "x": 2, "width": 4, "type": "add", "value": 25 },
+    { "z": 170, "x": -2, "width": 4, "type": "pct", "value": 60 },
+    { "z": 170, "x": 2, "width": 4, "type": "add", "value": 30 },
+    { "z": 215, "x": -2, "width": 4, "type": "pct", "value": 28 },
+    { "z": 215, "x": 2, "width": 4, "type": "add", "value": 39 }
+  ],
+  "spikes": [],
+  "spikeFields": [
+    { "x": -2.5, "z": 30.75, "width": 3, "depth": 1.5 },
+    { "x": 2.5, "z": 38.75, "width": 3, "depth": 1.5 }
+  ],
+  "saws": [],
+  "archers": [
+    { "z": 95, "side": 1, "interval": 2.0 }
+  ],
+  "enemies": [
+    { "x": 0, "z": 100, "count": 12 },
+    { "x": 0, "z": 160, "count": 18 }
+  ],
+  "jumps": [],
+  "bosses": [
+    { "x": 0, "z": 240, "hp": 30 }
+  ],
+  "cannon": { "boxes": 5, "distance": 24, "height": 6.5, "rx": 3, "ry": 0.8, "speed": 0.12, "path": "row", "spacing": 2.4 }
+}

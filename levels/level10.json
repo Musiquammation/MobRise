@@ -1,0 +1,47 @@
+{
+  "name": "archerAlley",
+  "width": 8,
+  "length": 300,
+  "speed": 9,
+  "start": 23,
+  "holes": [
+    { "x": 0, "z": 80, "width": 4, "depth": 5 },
+    { "x": -3, "z": 160, "width": 2, "depth": 8 },
+    { "x": 3, "z": 165, "width": 2, "depth": 8 }
+  ],
+  "gates": [
+    { "z": 8, "x": -2, "width": 4, "type": "add", "value": 10 },
+    { "z": 8, "x": 2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 55, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 55, "x": 2, "width": 4, "type": "pct", "value": 50 },
+    { "z": 120, "x": -2, "width": 4, "type": "add", "value": 20 },
+    { "z": 120, "x": 2, "width": 4, "type": "pct", "value": 60 },
+    { "z": 190, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 190, "x": 2, "width": 4, "type": "add", "value": 25 },
+    { "z": 292, "x": -2, "width": 4, "type": "add", "value": 36 },
+    { "z": 292, "x": 2, "width": 4, "type": "pct", "value": 22 }
+  ],
+  "spikes": [],
+  "spikeFields": [
+    { "x": 0, "z": 225.75, "width": 3, "depth": 1.5 }
+  ],
+  "saws": [],
+  "archers": [
+    { "z": 35, "side": 1, "interval": 2.0 },
+    { "z": 40, "side": -1, "interval": 2.0, "offset": 0.5 },
+    { "z": 100, "side": -1, "interval": 1.8 },
+    { "z": 140, "side": 1, "interval": 1.8 },
+    { "z": 145, "side": -1, "interval": 1.8, "offset": 0.5 },
+    { "z": 205, "side": 1, "interval": 1.7 },
+    { "z": 235, "side": -1, "interval": 1.7 },
+    { "z": 265, "side": 1, "interval": 1.6 },
+    { "z": 270, "side": -1, "interval": 1.6, "offset": 0.5 }
+  ],
+  "enemies": [
+    { "x": 0, "z": 110, "count": 12 },
+    { "x": 0, "z": 180, "count": 20 },
+    { "x": 0, "z": 282, "count": 25 }
+  ],
+  "jumps": [],
+  "cannon": { "boxes": 5, "distance": 26, "height": 7.5, "rx": 4, "ry": 1.5, "speed": 0.12, "path": "ellipse" }
+}

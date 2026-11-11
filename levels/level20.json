@@ -1,0 +1,63 @@
+{
+  "name": "storm",
+  "width": 8,
+  "length": 470,
+  "speed": 10,
+  "start": 25,
+  "holes": [
+    { "x": 3, "z": 32, "width": 2, "depth": 22 },
+    { "x": -3, "z": 87, "width": 2, "depth": 22 },
+    { "x": 0, "z": 174, "width": 8, "depth": 5 },
+    { "x": 3, "z": 180, "width": 2, "depth": 10 },
+    { "x": -3, "z": 302, "width": 2, "depth": 28 },
+    { "x": 3, "z": 362, "width": 2, "depth": 18 }
+  ],
+  "gates": [
+    { "z": 12, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 12, "x": 2, "width": 4, "type": "add", "value": 20 },
+    { "z": 70, "x": -2, "width": 4, "type": "pct", "value": 50 },
+    { "z": 70, "x": 2, "width": 4, "type": "add", "value": 25 },
+    { "z": 125, "x": -2, "width": 4, "type": "set", "value": 60 },
+    { "z": 125, "x": 2, "width": 4, "type": "add", "value": 15 },
+    { "z": 200, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 200, "x": 2, "width": 4, "type": "pct", "value": 60 },
+    { "z": 285, "x": -2, "width": 4, "type": "pct", "value": 50 },
+    { "z": 285, "x": 2, "width": 4, "type": "add", "value": 40 },
+    { "z": 345, "x": -2, "width": 4, "type": "set", "value": 150 },
+    { "z": 345, "x": 2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 395, "x": -2, "width": 4, "type": "pct", "value": 35 },
+    { "z": 395, "x": 2, "width": 4, "type": "add", "value": 45 }
+  ],
+  "spikes": [],
+  "spikeFields": [
+    { "x": 2.75, "z": 223.5, "width": 2.5, "depth": 3 },
+    { "x": -2.75, "z": 235.5, "width": 2.5, "depth": 3 }
+  ],
+  "archers": [
+    { "z": 40, "side": 1, "interval": 1.0 },
+    { "z": 230, "side": -1, "interval": 0.9 },
+    { "z": 315, "side": 1, "interval": 1.4 }
+  ],
+  "enemies": [
+    { "x": 0, "z": 140, "count": 20 },
+    { "x": 0, "z": 265, "count": 30 },
+    { "x": 0, "z": 410, "count": 40 }
+  ],
+  "jumps": [
+    { "x": 0, "z": 172, "width": 8 }
+  ],
+  "winds": [
+    { "z": 30, "depth": 25, "strength": 2.5 },
+    { "z": 85, "depth": 25, "strength": -3 },
+    { "z": 135, "depth": 15, "strength": 2 },
+    { "z": 165, "depth": 22, "strength": 3 },
+    { "z": 220, "depth": 10, "strength": 3.5 },
+    { "z": 232, "depth": 10, "strength": -3.5 },
+    { "z": 300, "depth": 30, "strength": -2 },
+    { "z": 360, "depth": 20, "strength": 3.5 }
+  ],
+  "bosses": [
+    { "x": 0, "z": 445, "hp": 120 }
+  ],
+  "cannon": { "boxes": 6, "distance": 28, "height": 8, "rx": 2.5, "ry": 1.5, "speed": 0.15, "path": "figure8" }
+}

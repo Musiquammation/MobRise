@@ -1,0 +1,43 @@
+{
+  "name": "spikeDance",
+  "width": 8,
+  "length": 340,
+  "speed": 9,
+  "start": 24,
+  "holes": [],
+  "gates": [
+    { "z": 8, "x": -2, "width": 4, "type": "add", "value": 10 },
+    { "z": 8, "x": 2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 55, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 55, "x": 2, "width": 4, "type": "pct", "value": 60 },
+    { "z": 110, "x": -2, "width": 4, "type": "add", "value": 20 },
+    { "z": 110, "x": 2, "width": 4, "type": "pct", "value": 50 },
+    { "z": 180, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 180, "x": 2, "width": 4, "type": "add", "value": 25 },
+    { "z": 245, "x": -2, "width": 4, "type": "pct", "value": 50 },
+    { "z": 245, "x": 2, "width": 4, "type": "add", "value": 30 },
+    { "z": 322, "x": -2, "width": 4, "type": "add", "value": 45 },
+    { "z": 322, "x": 2, "width": 4, "type": "pct", "value": 22 }
+  ],
+  "spikes": [],
+  "spikeFields": [
+    { "x": -2.5, "z": 70.75, "width": 3, "depth": 1.5 },
+    { "x": 2.5, "z": 77.75, "width": 3, "depth": 1.5 },
+    { "x": -2.5, "z": 84.75, "width": 3, "depth": 1.5 },
+    { "x": 2.5, "z": 91.75, "width": 3, "depth": 1.5 },
+    { "x": 2, "z": 262.625, "width": 4, "depth": 1.25 },
+    { "x": -2, "z": 268.625, "width": 4, "depth": 1.25 },
+    { "x": 2, "z": 274.625, "width": 4, "depth": 1.25 },
+    { "x": -2, "z": 280.625, "width": 4, "depth": 1.25 }
+  ],
+  "saws": [],
+  "archers": [],
+  "enemies": [
+    { "x": 0, "z": 100, "count": 12 },
+    { "x": 0, "z": 168, "count": 20 },
+    { "x": 0, "z": 230, "count": 25 },
+    { "x": 0, "z": 312, "count": 30 }
+  ],
+  "jumps": [],
+  "cannon": { "boxes": 6, "distance": 28, "height": 8, "rx": 2.5, "ry": 1.5, "speed": 0.15, "path": "figure8" }
+}

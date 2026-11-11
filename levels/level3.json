@@ -1,0 +1,48 @@
+{
+  "name": "mindTheHole",
+  "width": 8,
+  "length": 200,
+  "speed": 9,
+  "start": 21,
+  "holes": [
+    { "x": 0, "z": 18, "width": 3, "depth": 5 },
+    { "x": 0, "z": 40, "width": 3, "depth": 5 },
+    { "x": 0, "z": 66, "width": 3, "depth": 5 },
+    { "x": -3, "z": 76, "width": 2, "depth": 5 },
+    { "x": 3, "z": 76, "width": 2, "depth": 5 },
+    { "x": 0, "z": 106, "width": 4, "depth": 5 },
+    { "x": 0, "z": 141, "width": 3, "depth": 5 },
+    { "x": 3, "z": 141, "width": 2, "depth": 5 },
+    { "x": 0, "z": 150, "width": 3, "depth": 5 },
+    { "x": -3, "z": 150, "width": 2, "depth": 5 }
+  ],
+  "gates": [
+    { "z": 8, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 8, "x": 2, "width": 4, "type": "add", "value": 10 },
+    { "z": 30, "x": -2, "width": 4, "type": "add", "value": 10 },
+    { "z": 30, "x": 2, "width": 4, "type": "add", "value": 20 },
+    { "z": 88, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 88, "x": 2, "width": 4, "type": "add", "value": 15 },
+    { "z": 96, "x": -2, "width": 4, "type": "add", "value": -5 },
+    { "z": 96, "x": 2, "width": 4, "type": "add", "value": -10 },
+    { "z": 131, "x": -2, "width": 4, "type": "add", "value": 20 },
+    { "z": 131, "x": 2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 196, "x": -2, "width": 4, "type": "add", "value": 38 },
+    { "z": 196, "x": 2, "width": 4, "type": "pct", "value": 30 }
+  ],
+  "spikes": [],
+  "spikeFields": [
+    { "x": -2.5, "z": 162.75, "width": 3, "depth": 1.5 },
+    { "x": 2.5, "z": 171.75, "width": 3, "depth": 1.5 },
+    { "x": 0, "z": 180.75, "width": 3, "depth": 1.5 }
+  ],
+  "saws": [],
+  "archers": [],
+  "enemies": [
+    { "x": 0, "z": 54, "count": 8 },
+    { "x": 0, "z": 120, "count": 15 },
+    { "x": 0, "z": 190, "count": 20 }
+  ],
+  "jumps": [],
+  "cannon": { "boxes": 5, "distance": 24, "height": 6.5, "rx": 3, "ry": 0.8, "speed": 0.12, "path": "row", "spacing": 2.4 }
+}

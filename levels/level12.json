@@ -1,0 +1,55 @@
+{
+  "name": "crossfire",
+  "width": 8,
+  "length": 380,
+  "speed": 9.5,
+  "start": 30,
+  "holes": [
+    { "x": 0, "z": 30, "width": 3, "depth": 5 },
+    { "x": -3, "z": 145, "width": 2, "depth": 10 },
+    { "x": 3, "z": 160, "width": 2, "depth": 10 },
+    { "x": 0, "z": 300, "width": 4, "depth": 6 }
+  ],
+  "gates": [
+    { "z": 8, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 8, "x": 2, "width": 4, "type": "add", "value": 15 },
+    { "z": 60, "x": -2, "width": 4, "type": "add", "value": 20 },
+    { "z": 60, "x": 2, "width": 4, "type": "pct", "value": 50 },
+    { "z": 130, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 130, "x": 2, "width": 4, "type": "pct", "value": 60 },
+    { "z": 200, "x": -2, "width": 4, "type": "pct", "value": 50 },
+    { "z": 200, "x": 2, "width": 4, "type": "add", "value": 30 },
+    { "z": 275, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 275, "x": 2, "width": 4, "type": "add", "value": 40 },
+    { "z": 372, "x": -2, "width": 4, "type": "add", "value": 38 },
+    { "z": 372, "x": 2, "width": 4, "type": "pct", "value": 15 }
+  ],
+  "spikes": [],
+  "spikeFields": [
+    { "x": -2.5, "z": 85.75, "width": 3, "depth": 1.5 },
+    { "x": 2.5, "z": 92.75, "width": 3, "depth": 1.5 },
+    { "x": 2, "z": 320.625, "width": 4, "depth": 1.25 },
+    { "x": -2, "z": 326.625, "width": 4, "depth": 1.25 },
+    { "x": 2, "z": 332.625, "width": 4, "depth": 1.25 }
+  ],
+  "saws": [],
+  "archers": [
+    { "z": 45, "side": 1, "interval": 1.6 },
+    { "z": 100, "side": -1, "interval": 1.5 },
+    { "z": 150, "side": 1, "interval": 1.4 },
+    { "z": 155, "side": -1, "interval": 1.4, "offset": 0.5 },
+    { "z": 230, "side": 1, "interval": 1.4 },
+    { "z": 290, "side": -1, "interval": 1.3 },
+    { "z": 325, "side": 1, "interval": 1.3 },
+    { "z": 330, "side": -1, "interval": 1.3, "offset": 0.5 },
+    { "z": 350, "side": 1, "interval": 1.3, "offset": 0.25 }
+  ],
+  "enemies": [
+    { "x": 0, "z": 115, "count": 15 },
+    { "x": 0, "z": 185, "count": 22 },
+    { "x": 0, "z": 262, "count": 30 },
+    { "x": 0, "z": 360, "count": 35 }
+  ],
+  "jumps": [],
+  "cannon": { "boxes": 6, "distance": 28, "height": 8, "rx": 2, "ry": 1.2, "speed": 0.18, "path": "pendulum", "spacing": 2.6 }
+}

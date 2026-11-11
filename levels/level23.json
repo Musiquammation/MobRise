@@ -1,0 +1,53 @@
+{
+  "name": "leapfrog",
+  "width": 8,
+  "length": 460,
+  "speed": 10,
+  "start": 52,
+  "holes": [
+    { "x": -2, "z": 30, "width": 4, "depth": 4 },
+    { "x": 2, "z": 44, "width": 4, "depth": 4 },
+    { "x": -2, "z": 80, "width": 4, "depth": 4 },
+    { "x": 2, "z": 89, "width": 4, "depth": 4 },
+    { "x": -2, "z": 98, "width": 4, "depth": 4 },
+    { "x": 2, "z": 107, "width": 4, "depth": 4 },
+    { "x": -2, "z": 116, "width": 4, "depth": 4 },
+    { "x": 2, "z": 125, "width": 4, "depth": 4 },
+    { "x": -1.75, "z": 180, "width": 4.5, "depth": 4 },
+    { "x": 1.75, "z": 189, "width": 4.5, "depth": 4 },
+    { "x": -1.75, "z": 198, "width": 4.5, "depth": 4 },
+    { "x": 1.75, "z": 207, "width": 4.5, "depth": 4 },
+    { "x": -1.75, "z": 216, "width": 4.5, "depth": 4 },
+    { "x": 1.75, "z": 225, "width": 4.5, "depth": 4 },
+    { "x": -1.75, "z": 234, "width": 4.5, "depth": 4 },
+    { "x": -1.5, "z": 320, "width": 5, "depth": 4 },
+    { "x": 1.5, "z": 329, "width": 5, "depth": 4 },
+    { "x": -1.5, "z": 338, "width": 5, "depth": 4 },
+    { "x": 1.5, "z": 347, "width": 5, "depth": 4 },
+    { "x": -1.5, "z": 356, "width": 5, "depth": 4 },
+    { "x": 1.5, "z": 365, "width": 5, "depth": 4 },
+    { "x": -1.5, "z": 374, "width": 5, "depth": 4 }
+  ],
+  "gates": [
+    { "z": 12, "x": -2, "width": 4, "type": "add", "value": 10 },
+    { "z": 12, "x": 2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 65, "x": -2, "width": 4, "type": "pct", "value": 50 },
+    { "z": 65, "x": 2, "width": 4, "type": "add", "value": 15 },
+    { "z": 160, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 160, "x": 2, "width": 4, "type": "add", "value": 25 },
+    { "z": 270, "x": -2, "width": 4, "type": "pct", "value": 40 },
+    { "z": 270, "x": 2, "width": 4, "type": "add", "value": 30 },
+    { "z": 400, "x": -2, "width": 4, "type": "add", "value": 43 },
+    { "z": 400, "x": 2, "width": 4, "type": "pct", "value": 15 }
+  ],
+  "spikes": [],
+  "archers": [
+    { "z": 255, "side": 1, "interval": 1 }
+  ],
+  "enemies": [
+    { "x": 0, "z": 140, "count": 20 },
+    { "x": 0, "z": 295, "count": 30 },
+    { "x": 0, "z": 425, "count": 45 }
+  ],
+  "cannon": { "boxes": 6, "distance": 28, "height": 8, "rx": 3, "ry": 1.5, "speed": 0.15, "path": "figure8" }
+}

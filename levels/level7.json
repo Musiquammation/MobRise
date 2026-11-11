@@ -1,0 +1,51 @@
+{
+  "name": "spikeField",
+  "width": 8,
+  "length": 360,
+  "speed": 9,
+  "start": 11,
+  "holes": [],
+  "gates": [
+    { "z": 12, "x": -2, "width": 4, "type": "add", "value": 10 },
+    { "z": 12, "x": 2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 85, "x": -2, "width": 4, "type": "pct", "value": 50 },
+    { "z": 85, "x": 2, "width": 4, "type": "add", "value": 10 },
+    { "z": 115, "x": -2, "width": 4, "type": "pct", "value": 60 },
+    { "z": 115, "x": 2, "width": 4, "type": "add", "value": 20 },
+    { "z": 130, "x": -2, "width": 4, "type": "pct", "value": -20 },
+    { "z": 130, "x": 2, "width": 4, "type": "add", "value": -10 },
+    { "z": 195, "x": -2, "width": 4, "type": "pct", "value": 40 },
+    { "z": 195, "x": 2, "width": 4, "type": "add", "value": 15 },
+    { "z": 290, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 290, "x": 2, "width": 4, "type": "pct", "value": 50 },
+    { "z": 332, "x": -2, "width": 4, "type": "add", "value": 50 },
+    { "z": 332, "x": 2, "width": 4, "type": "mul", "value": 3 },
+    { "z": 352, "x": -2, "width": 4, "type": "add", "value": 47 },
+    { "z": 352, "x": 2, "width": 4, "type": "pct", "value": 20 }
+  ],
+  "spikes": [],
+  "spikeFields": [
+    { "x": -2.5, "z": 25.75, "width": 3, "depth": 1.5 },
+    { "x": 2.5, "z": 40.75, "width": 3, "depth": 1.5 },
+    { "x": 0, "z": 55.75, "width": 3, "depth": 1.5 },
+    { "x": 0, "z": 71, "width": 4, "depth": 2 },
+    { "x": 0, "z": 100.75, "width": 4, "depth": 1.5 },
+    { "x": -2.5, "z": 258.75, "width": 3, "depth": 1.5 },
+    { "x": 2.5, "z": 264.75, "width": 3, "depth": 1.5 },
+    { "x": -2.5, "z": 270.75, "width": 3, "depth": 1.5 },
+    { "x": 2.5, "z": 276.75, "width": 3, "depth": 1.5 },
+    { "x": -2, "z": 305.625, "width": 4, "depth": 1.25 },
+    { "x": 2, "z": 311.625, "width": 4, "depth": 1.25 },
+    { "x": -2, "z": 317.625, "width": 4, "depth": 1.25 },
+    { "x": 2, "z": 323.625, "width": 4, "depth": 1.25 }
+  ],
+  "saws": [],
+  "archers": [],
+  "enemies": [
+    { "x": 0, "z": 142, "count": 15 },
+    { "x": 0, "z": 244, "count": 5 },
+    { "x": 0, "z": 340, "count": 30 }
+  ],
+  "jumps": [],
+  "cannon": { "boxes": 5, "distance": 26, "height": 7, "rx": 5, "ry": 2, "speed": 0.1, "path": "figure8" }
+}

@@ -1,0 +1,43 @@
+{
+  "name": "firstArchers",
+  "width": 8,
+  "length": 240,
+  "speed": 9,
+  "start": 21,
+  "holes": [
+    { "x": 0, "z": 70, "width": 3, "depth": 5 },
+    { "x": -3, "z": 150, "width": 2, "depth": 6 },
+    { "x": 3, "z": 150, "width": 2, "depth": 6 }
+  ],
+  "gates": [
+    { "z": 8, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 8, "x": 2, "width": 4, "type": "add", "value": 10 },
+    { "z": 45, "x": -2, "width": 4, "type": "add", "value": 15 },
+    { "z": 45, "x": 2, "width": 4, "type": "pct", "value": 50 },
+    { "z": 110, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 110, "x": 2, "width": 4, "type": "add", "value": 20 },
+    { "z": 175, "x": -2, "width": 4, "type": "pct", "value": 60 },
+    { "z": 175, "x": 2, "width": 4, "type": "add", "value": 25 },
+    { "z": 232, "x": -2, "width": 4, "type": "add", "value": 37 },
+    { "z": 232, "x": 2, "width": 4, "type": "pct", "value": 30 }
+  ],
+  "spikes": [],
+  "spikeFields": [
+    { "x": -2.5, "z": 195.75, "width": 3, "depth": 1.5 },
+    { "x": 2.5, "z": 205.75, "width": 3, "depth": 1.5 }
+  ],
+  "saws": [],
+  "archers": [
+    { "z": 30, "side": 1, "interval": 2.4 },
+    { "z": 90, "side": -1, "interval": 2.2 },
+    { "z": 130, "side": 1, "interval": 2.0 },
+    { "z": 185, "side": -1, "interval": 2.0 },
+    { "z": 215, "side": 1, "interval": 1.9 }
+  ],
+  "enemies": [
+    { "x": 0, "z": 100, "count": 10 },
+    { "x": 0, "z": 165, "count": 18 }
+  ],
+  "jumps": [],
+  "cannon": { "boxes": 5, "distance": 26, "height": 7.5, "rx": 4, "ry": 0.7, "speed": 0.16, "path": "pendulum", "spacing": 2.8 }
+}

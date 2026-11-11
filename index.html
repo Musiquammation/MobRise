@@ -1,12 +1,170 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MobRise</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+	<meta name="theme-color" content="#8fd0f7">
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<title>MobRise</title>
+	<link rel="icon" type="image/png" href="icon.png">
+	<link rel="apple-touch-icon" href="icon.png">
+	<script src="env.js"></script>
+  <script type="module" crossorigin src="./assets/index-ptHtMjeb.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-C9vT20P4.css">
 </head>
-<body>
-<h1>MobRise</h1>
-<p><a href="privacy.html">Privacy Policy</a></p>
+<body x-data>
+	<canvas></canvas>
+
+	<header x-cloak x-show="!$store.dom.is('loading')">
+		<output x-text="$store.dom.coins.toFixed(1)"></output>
+	</header>
+
+	<template x-if="$store.dom.is('loading')">
+		<section id="loading" x-data="{ get p() { return $store.dom.panel } }">
+			<h1>MobRise</h1>
+			<progress :value="p.progress" max="1"></progress>
+		</section>
+	</template>
+
+	<template x-if="$store.dom.is('main')">
+		<section id="main" x-data="{ get p() { return $store.dom.panel } }" @click="$store.dom.play()">
+			<h1>MobRise</h1>
+			<p x-html="$t('main.level', { n: `<b>${p.levelNumber}</b>` })"></p>
+			<small x-text="p.levelName"></small>
+			<nav>
+				<button x-text="$t('main.play')"></button>
+				<div>
+					<button @click.stop="$store.dom.openLevels()">
+						<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="9" height="9" rx="2.5"/><rect x="13" y="2" width="9" height="9" rx="2.5"/><rect x="2" y="13" width="9" height="9" rx="2.5"/><rect x="13" y="13" width="9" height="9" rx="2.5"/></svg>
+						<span x-text="$t('main.levels')"></span>
+					</button>
+					<button @click.stop="$store.dom.openShop()">
+						<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 2 2 6l3 5 2-1v12h10V10l2 1 3-5-6-4c-.5 2-2 3-4 3S8.5 4 8 2Z"/></svg>
+						<span x-text="$t('main.skins')"></span>
+					</button>
+				</div>
+			</nav>
+		</section>
+	</template>
+
+	<template x-if="$store.dom.is('game')">
+		<section id="game" x-data="{ get p() { return $store.dom.panel } }">
+			<progress :value="p.progress" max="1" x-show="p.phase === 'run'"></progress>
+			<p x-show="p.phase === 'cannon'" x-html="$t('game.aim')"></p>
+
+			<output x-show="p.bubble.visible" :style="`left:${p.bubble.x}px;top:${p.bubble.y}px`" x-text="p.count"></output>
+			<template x-for="k in [p.gateKey]" :key="k">
+				<mark x-show="k > 0 && p.bubble.visible" :class="p.gateDelta >= 0 ? 'up' : 'down'"
+					:style="`left:${p.bubble.x}px;top:${p.bubble.y}px`"
+					x-text="(p.gateDelta >= 0 ? '+' : '−') + Math.abs(p.gateDelta)"></mark>
+			</template>
+			<i x-show="p.aim.visible" :style="`left:${p.aim.x}px;top:${p.aim.y}px`"></i>
+
+			<button data-pause x-show="(p.phase === 'run' || p.phase === 'cannon') && !p.paused"
+				@pointerdown.stop @click="$store.dom.pause()" :aria-label="$t('game.pause')">
+				<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="5" height="16" rx="1.5"/><rect x="14" y="4" width="5" height="16" rx="1.5"/></svg>
+			</button>
+
+			<aside x-show="p.phase === 'cannon'">
+				<span x-html="$t('game.shots', { n: `<b>${p.count}</b>` })"></span>
+				<span x-show="p.combo > 1" x-text="'×' + p.combo"></span>
+			</aside>
+			<template x-for="k in [p.gainKey]" :key="k">
+				<em x-show="k > 0" x-text="'+' + p.gain.toFixed(1)"></em>
+			</template>
+
+			<article x-show="p.paused" x-transition data-pause @pointerdown.stop>
+				<h2 x-text="$t('game.paused')"></h2>
+				<button @click="$store.dom.resume()" x-text="$t('game.resume')"></button>
+				<button data-quit @click="$store.dom.quit()" x-text="$t('game.quit')"></button>
+			</article>
+			<article x-show="p.phase === 'won'" x-transition>
+				<h2 x-text="$t('game.level', { n: p.levelNumber })"></h2>
+				<p>+<b x-text="p.earned.toFixed(1)"></b><small x-show="p.multiplier > 1" x-text="'×' + p.multiplier.toLocaleString(document.documentElement.lang, { maximumFractionDigits: 2 })"></small></p>
+				<button @click="$store.dom.next()" x-text="$t('game.next')"></button>
+			</article>
+			<article x-show="p.phase === 'lost'" x-transition data-lost>
+				<h2 x-text="$t('game.lost')"></h2>
+				<button @click="$store.dom.retry()" x-text="$t('game.retry')"></button>
+			</article>
+		</section>
+	</template>
+
+	<template x-if="$store.dom.is('shop')">
+		<section id="shop" x-data="{ get p() { return $store.dom.panel } }">
+			<h2 x-text="$t('shop.title')"></h2>
+			<ul>
+				<template x-for="item in p.items" :key="item.skin.id">
+					<li :aria-current="item.equipped" :data-selected="p.selected === item.skin.id"
+						@click="p.selected = item.skin.id">
+						<img :src="item.thumbnail" :style="item.thumbnail ? '' : 'visibility:hidden'" :alt="$t('skins.' + item.skin.id)">
+						<h3 x-text="$t('skins.' + item.skin.id)"></h3>
+						<button
+							:disabled="item.equipped || (!item.owned && $store.dom.coins < item.skin.price)"
+							:data-price="item.owned ? null : item.skin.price"
+							@click.stop="item.owned ? $store.dom.equip(item.skin.id) : $store.dom.buy(item.skin.id)"
+							x-text="item.equipped ? $t('shop.equipped') : item.owned ? $t('shop.equip') : item.skin.price"
+						></button>
+					</li>
+				</template>
+			</ul>
+			<button @click="$store.dom.closeShop()" x-text="$t('shop.back')"></button>
+
+			<div x-show="p.selectedItem" x-transition.opacity @click="p.selected = null"></div>
+			<aside x-show="p.selectedItem" x-transition:enter-start="closed" x-transition:leave-end="closed">
+				<template x-if="p.selectedItem">
+					<div x-data="{ get item() { return p.selectedItem } }">
+						<button data-close @click="p.selected = null" :aria-label="$t('shop.close')">×</button>
+						<img :src="item.thumbnail" :style="item.thumbnail ? '' : 'visibility:hidden'" :alt="$t('skins.' + item.skin.id)">
+						<h3 x-text="$t('skins.' + item.skin.id)"></h3>
+						<p data-power>
+							<span x-text="$t('shop.power')"></span>
+							<b x-text="item.power"></b>
+						</p>
+						<dl>
+							<template x-for="stat in item.stats" :key="stat.id">
+								<div :data-stat="stat.id">
+									<dt x-text="$t('shop.stats.' + stat.id)"></dt>
+									<dd x-text="stat.value"></dd>
+									<meter min="0" max="100" :value="stat.level"></meter>
+									<small x-text="$t('shop.hints.' + stat.id)"></small>
+								</div>
+							</template>
+						</dl>
+						<button
+							:disabled="item.equipped || (!item.owned && $store.dom.coins < item.skin.price)"
+							:data-price="item.owned ? null : item.skin.price"
+							@click="item.owned ? $store.dom.equip(item.skin.id) : $store.dom.buy(item.skin.id)"
+							x-text="item.equipped ? $t('shop.equipped') : item.owned ? $t('shop.equip') : item.skin.price"
+						></button>
+					</div>
+				</template>
+			</aside>
+		</section>
+	</template>
+	<template x-if="$store.dom.is('levels')">
+		<section id="levels" x-data="{ get p() { return $store.dom.panel } }">
+			<h2 x-text="$t('main.levels')"></h2>
+			<ol>
+				<template x-for="item in p.items" :key="item.index">
+					<li>
+						<button
+							:data-state="item.state"
+							:disabled="item.state === 'locked'"
+							:aria-label="$t('game.level', { n: item.index + 1 })"
+							@click="$store.dom.selectLevel(item.index)"
+							x-init="item.state === 'current' && $nextTick(() => $el.scrollIntoView({ block: 'center' }))"
+						>
+							<span x-show="item.state !== 'locked'" x-text="item.index + 1"></span>
+							<svg x-show="item.state === 'locked'" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3h1a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h1Zm3 0h4V7a2 2 0 0 0-4 0v3Z"/></svg>
+							<i x-show="item.state === 'done'"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></i>
+						</button>
+					</li>
+				</template>
+			</ol>
+			<button @click="$store.dom.closeShop()" x-text="$t('shop.back')"></button>
+		</section>
+	</template>
 </body>
 </html>

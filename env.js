@@ -1,5 +1,5 @@
 // Deployment environment, loaded before the game by index.html.
 // gh-pages version of public/env.js: the game lives under /MobRise/.
 // The version is updated by scripts/gh-pages.sh at each deploy.
-window.MOBRISE_ENV = { base: "/MobRise/", version: "?" };
+window.MOBRISE_ENV = { base: "/MobRise/", version: "0.1.0 (6aadf55, 2026-11-11)" };
 console.log("MobRise " + window.MOBRISE_ENV.version);
