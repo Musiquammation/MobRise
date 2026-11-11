@@ -1,0 +1,49 @@
+{
+  "name": "breeze",
+  "width": 8,
+  "length": 320,
+  "speed": 9.5,
+  "start": 36,
+  "holes": [
+    { "x": -3, "z": 40, "width": 2, "depth": 10 },
+    { "x": 3, "z": 100, "width": 2, "depth": 10 },
+    { "x": -3, "z": 165, "width": 2, "depth": 12 },
+    { "x": 3, "z": 240, "width": 2, "depth": 12 }
+  ],
+  "gates": [
+    { "z": 8, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 8, "x": 2, "width": 4, "type": "add", "value": 15 },
+    { "z": 60, "x": -2, "width": 4, "type": "add", "value": 20 },
+    { "z": 60, "x": 2, "width": 4, "type": "pct", "value": 50 },
+    { "z": 130, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 130, "x": 2, "width": 4, "type": "pct", "value": 60 },
+    { "z": 200, "x": -2, "width": 4, "type": "pct", "value": 50 },
+    { "z": 200, "x": 2, "width": 4, "type": "add", "value": 30 },
+    { "z": 312, "x": -2, "width": 4, "type": "add", "value": 41 },
+    { "z": 312, "x": 2, "width": 4, "type": "pct", "value": 22 }
+  ],
+  "spikes": [],
+  "spikeFields": [
+    { "x": 0, "z": 215.75, "width": 3, "depth": 1.5 },
+    { "x": -2, "z": 270.75, "width": 4, "depth": 1.5, "period": 5.5 },
+    { "x": 2, "z": 270.75, "width": 4, "depth": 1.5, "period": 5.5, "offset": 0.5 }
+  ],
+  "saws": [],
+  "archers": [
+    { "z": 180, "side": 1, "interval": 1.8 }
+  ],
+  "enemies": [
+    { "x": 0, "z": 120, "count": 15 },
+    { "x": 0, "z": 190, "count": 22 },
+    { "x": 0, "z": 300, "count": 30 }
+  ],
+  "jumps": [],
+  "winds": [
+    { "z": 30, "depth": 20, "strength": 1.5 },
+    { "z": 90, "depth": 20, "strength": -1.5 },
+    { "z": 155, "depth": 25, "strength": 2 },
+    { "z": 230, "depth": 25, "strength": -2 },
+    { "z": 280, "depth": 15, "strength": 1.5 }
+  ],
+  "cannon": { "boxes": 5, "distance": 26, "height": 7.5, "rx": 4, "ry": 1.5, "speed": 0.12, "path": "ellipse" }
+}

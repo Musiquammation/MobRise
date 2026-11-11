@@ -1,0 +1,53 @@
+{
+  "name": "firstJumps",
+  "width": 8,
+  "length": 340,
+  "speed": 10,
+  "start": 26,
+  "holes": [
+    { "x": 0, "z": 50, "width": 8, "depth": 7 },
+    { "x": 0, "z": 120, "width": 8, "depth": 7 },
+    { "x": 0, "z": 200, "width": 8, "depth": 8 },
+    { "x": 0, "z": 280, "width": 8, "depth": 8 }
+  ],
+  "gates": [
+    { "z": 8, "x": -2, "width": 4, "type": "add", "value": 15 },
+    { "z": 8, "x": 2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 80, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 80, "x": 2, "width": 4, "type": "pct", "value": 50 },
+    { "z": 150, "x": -2, "width": 4, "type": "add", "value": 25 },
+    { "z": 150, "x": 2, "width": 4, "type": "pct", "value": 60 },
+    { "z": 225, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 225, "x": 2, "width": 4, "type": "add", "value": 30 },
+    { "z": 332, "x": -2, "width": 4, "type": "add", "value": 34 },
+    { "z": 332, "x": 2, "width": 4, "type": "pct", "value": 20 }
+  ],
+  "spikes": [],
+  "spikeFields": [
+    { "x": -2.5, "z": 95.75, "width": 3, "depth": 1.5 },
+    { "x": 2.5, "z": 103.75, "width": 3, "depth": 1.5 },
+    { "x": -2, "z": 240.75, "width": 4, "depth": 1.5, "period": 5 },
+    { "x": 2, "z": 240.75, "width": 4, "depth": 1.5, "period": 5, "offset": 0.5 }
+  ],
+  "saws": [],
+  "archers": [
+    { "z": 160, "side": 1, "interval": 1.7 }
+  ],
+  "enemies": [
+    { "x": 0, "z": 140, "count": 15 },
+    { "x": 0, "z": 215, "count": 25 },
+    { "x": 0, "z": 320, "count": 30 }
+  ],
+  "jumps": [
+    { "x": 0, "z": 48, "width": 8 },
+    { "x": 0, "z": 118, "width": 8 },
+    { "x": 0, "z": 198, "width": 8 },
+    { "x": 0, "z": 278, "width": 8 }
+  ],
+  "boosts": [
+    { "x": 0, "z": 30, "width": 8 },
+    { "x": 0, "z": 185, "width": 8 },
+    { "x": -2, "z": 265, "width": 4 }
+  ],
+  "cannon": { "boxes": 6, "distance": 28, "height": 8, "rx": 2, "ry": 1.2, "speed": 0.15, "path": "row", "spacing": 2.4, "sway": 1.5, "swaySpeed": 0.08 }
+}

@@ -68,6 +68,17 @@ const en = {
 		leapfrog: "Leapfrog",
 		fullSpeed: "Full speed",
 		joinUs: "Join us!",
+		bridges: "Narrow bridges",
+		spikeIntro: "Sharp start",
+		slowBlink: "Up and down",
+		spikeDance: "Spike dance",
+		firstArchers: "First archers",
+		archerAlley: "Archer alley",
+		crossfire: "Crossfire",
+		bossIntro: "The first giant",
+		giantPath: "Giant's path",
+		breeze: "Light breeze",
+		firstJumps: "First jumps",
 	},
 };
 

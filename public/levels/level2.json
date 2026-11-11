@@ -3,7 +3,7 @@
   "width": 8,
   "length": 160,
   "speed": 8.5,
-  "start": 10,
+  "start": 19,
   "holes": [
     { "x": 3, "z": 18, "width": 2, "depth": 5 },
     { "x": -3, "z": 28, "width": 2, "depth": 5 },
@@ -25,8 +25,8 @@
     { "z": 78, "x": 2, "width": 4, "type": "add", "value": -10 },
     { "z": 120, "x": -2, "width": 4, "type": "add", "value": 15 },
     { "z": 120, "x": 2, "width": 4, "type": "mul", "value": 2 },
-    { "z": 156, "x": -2, "width": 4, "type": "mul", "value": 2 },
-    { "z": 156, "x": 2, "width": 4, "type": "add", "value": 20 }
+    { "z": 156, "x": -2, "width": 4, "type": "add", "value": 35 },
+    { "z": 156, "x": 2, "width": 4, "type": "pct", "value": 30 }
   ],
   "spikes": [],
   "spikeFields": [],

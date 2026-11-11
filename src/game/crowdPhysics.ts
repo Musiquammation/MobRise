@@ -18,6 +18,8 @@ export type CrowdBody = {
 	prev: Vec2Like;
 	/** Own attraction point, replaces the shared center when set (fights). */
 	target?: Vec2Like | null;
+	/** Cannot move sideways (x stays the same during the step). */
+	lockX?: boolean;
 };
 
 /** Attraction toward the center: acceleration as a function of the distance. */
@@ -95,6 +97,7 @@ export function stepCrowd(bodies: readonly CrowdBody[], cx: number, cz: number, 
 			v.x *= o.maxSpeed / s;
 			v.z *= o.maxSpeed / s;
 		}
+		if (b.lockX) v.x = 0;
 		p.x += v.x * dt;
 		p.z += v.z * dt;
 	}
@@ -125,6 +128,7 @@ export function stepCrowd(bodies: readonly CrowdBody[], cx: number, cz: number, 
 					if (!list) continue;
 					for (const j of list) {
 						if (j <= i) continue;
+						const lockI = bodies[i].lockX, lockJ = bodies[j].lockX;
 						const pj = bodies[j].position;
 						let dx = pj.x - pi.x, dz = pj.z - pi.z;
 						let d2 = dx * dx + dz * dz;
@@ -138,9 +142,11 @@ export function stepCrowd(bodies: readonly CrowdBody[], cx: number, cz: number, 
 						}
 						const d = Math.sqrt(d2);
 						const push = (diameter - d) / 2 / d;
-						pi.x -= dx * push;
+						// A locked body leaves the whole sideways push to the other one.
+						const sx = lockI || lockJ ? (lockI && lockJ ? 0 : 2) : 1;
+						if (!lockI) pi.x -= dx * push * sx;
 						pi.z -= dz * push;
-						pj.x += dx * push;
+						if (!lockJ) pj.x += dx * push * sx;
 						pj.z += dz * push;
 					}
 				}
@@ -150,7 +156,8 @@ export function stepCrowd(bodies: readonly CrowdBody[], cx: number, cz: number, 
 		// Walls.
 		for (const b of bodies) {
 			const p = b.position;
-			if (p.x < o.minX) p.x = o.minX;
+			if (b.lockX) p.x = b.prev.x;
+			else if (p.x < o.minX) p.x = o.minX;
 			else if (p.x > o.maxX) p.x = o.maxX;
 			if (o.minZ !== undefined && p.z < o.minZ) p.z = o.minZ;
 		}

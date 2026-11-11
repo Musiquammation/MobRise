@@ -19,7 +19,7 @@ const CONTACT = 0.3;
 /** Damage per second dealt by each player hitting the boss. */
 const PLAYER_DPS = 1.5;
 /** The fight starts when the crowd is this close. */
-const TRIGGER = 13;
+const TRIGGER = 8;
 /** Time the sword is raised before a swing (warning). */
 const WINDUP = 0.5;
 /** Duration of the swing animation. */

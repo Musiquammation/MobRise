@@ -20,13 +20,13 @@
     { "z": 68, "x": 2, "width": 4, "type": "add", "value": 15 },
     { "z": 118, "x": -2, "width": 4, "type": "mul", "value": 2 },
     { "z": 118, "x": 2, "width": 4, "type": "add", "value": 20 },
-    { "z": 152, "x": -2, "width": 4, "type": "add", "value": 30 },
-    { "z": 152, "x": 2, "width": 4, "type": "mul", "value": 2 }
+    { "z": 152, "x": -2, "width": 4, "type": "add", "value": 42 },
+    { "z": 152, "x": 2, "width": 4, "type": "pct", "value": 65 }
   ],
   "spikes": [],
   "spikeFields": [
-    { "x": -2.5, "z": 46, "width": 3, "depth": 3 },
-    { "x": 0, "z": 163, "width": 2, "depth": 2 }
+    { "x": -2.5, "z": 47.125, "width": 3, "depth": 0.75 },
+    { "x": 0, "z": 163.75, "width": 2, "depth": 0.5 }
   ],
   "saws": [],
   "archers": [

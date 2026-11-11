@@ -1,0 +1,52 @@
+{
+  "name": "giantPath",
+  "width": 8,
+  "length": 340,
+  "speed": 9.5,
+  "start": 21,
+  "holes": [
+    { "x": 0, "z": 25, "width": 3, "depth": 5 },
+    { "x": -3, "z": 140, "width": 2, "depth": 10 },
+    { "x": 3, "z": 140, "width": 2, "depth": 10 }
+  ],
+  "gates": [
+    { "z": 8, "x": -2, "width": 4, "type": "add", "value": 15 },
+    { "z": 8, "x": 2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 55, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 55, "x": 2, "width": 4, "type": "pct", "value": 50 },
+    { "z": 120, "x": -2, "width": 4, "type": "add", "value": 25 },
+    { "z": 120, "x": 2, "width": 4, "type": "pct", "value": 60 },
+    { "z": 190, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 190, "x": 2, "width": 4, "type": "add", "value": 30 },
+    { "z": 260, "x": -2, "width": 4, "type": "pct", "value": 50 },
+    { "z": 260, "x": 2, "width": 4, "type": "add", "value": 40 },
+    { "z": 290, "x": -2, "width": 4, "type": "add", "value": 42 },
+    { "z": 290, "x": 2, "width": 4, "type": "pct", "value": 22 }
+  ],
+  "spikes": [],
+  "spikeFields": [
+    { "x": -2, "z": 75.75, "width": 4, "depth": 1.5, "period": 5.5 },
+    { "x": 2, "z": 75.75, "width": 4, "depth": 1.5, "period": 5.5, "offset": 0.5 },
+    { "x": -2.5, "z": 160.75, "width": 3, "depth": 1.5 },
+    { "x": 2.5, "z": 168.75, "width": 3, "depth": 1.5 },
+    { "x": -2, "z": 215.75, "width": 4, "depth": 1.5, "period": 5 },
+    { "x": 2, "z": 215.75, "width": 4, "depth": 1.5, "period": 5, "offset": 0.5 }
+  ],
+  "saws": [],
+  "archers": [
+    { "z": 90, "side": -1, "interval": 1.7 },
+    { "z": 150, "side": 1, "interval": 1.6 },
+    { "z": 230, "side": -1, "interval": 1.6 },
+    { "z": 235, "side": 1, "interval": 1.6, "offset": 0.5 }
+  ],
+  "enemies": [
+    { "x": 0, "z": 105, "count": 15 },
+    { "x": 0, "z": 178, "count": 22 },
+    { "x": 0, "z": 250, "count": 30 }
+  ],
+  "jumps": [],
+  "bosses": [
+    { "x": 0, "z": 320, "hp": 50 }
+  ],
+  "cannon": { "boxes": 6, "distance": 28, "height": 8, "rx": 2.5, "ry": 1.5, "speed": 0.15, "path": "figure8" }
+}

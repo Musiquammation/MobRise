@@ -51,7 +51,7 @@ const SLIDE_MAX_SPEED = 16;
 const GATHER_FORCE = () => 56;
 
 /** Enemies start charging when the crowd is this close. */
-const ENEMY_TRIGGER = 13;
+const ENEMY_TRIGGER = 8;
 /** Distance between the centers of a player and an enemy that kills both. */
 const ENEMY_CONTACT = 0.42;
 const ENEMY_COLOR = "#e11d2a";
@@ -751,10 +751,16 @@ export class Game extends GameLayer {
 	/** Moves the crowd (attraction + collisions) and the players walking to the cannon. */
 	private stepCrowds(dt: number) {
 		if (this.crowd.length > 0) {
+			// Players on blinking spikes cannot move sideways.
+			const blinking = this.entities.get("hazard").filter((h): h is Spikes => h instanceof Spikes && h.isBlinking());
+			for (const p of this.crowd)
+				p.lockX = blinking.some(s => s.covers(p.position.x, p.position.z));
+
 			// Slide sideways, but only until the crowd touches a wall (then the
 			// attraction squeezes it, pushing harder would only make it shake).
 			let left = Infinity, right = -Infinity;
 			for (const p of this.crowd) {
+				if (p.lockX) continue;
 				left = Math.min(left, p.position.x);
 				right = Math.max(right, p.position.x);
 			}
@@ -764,7 +770,7 @@ export class Game extends GameLayer {
 				? Math.min(speed * dt, Math.max(0, this.crowdOptions.maxX - right))
 				: Math.max(speed * dt, Math.min(0, this.crowdOptions.minX - left));
 			for (const p of this.crowd) {
-				p.position.x += slide;
+				if (!p.lockX) p.position.x += slide;
 				p.position.z -= this.speed * dt;
 			}
 			stepCrowd(this.crowd, this.centerX, this.centerZ, dt, this.crowdOptions);
@@ -785,6 +791,7 @@ export class Game extends GameLayer {
 
 		if (this.phase === "cannon") {
 			const walkers = this.entities.get("player").filter(p => p.state === "gather");
+			for (const p of walkers) p.lockX = false;
 			const e = this.cannon.entry;
 			stepCrowd(walkers, e.x, e.z, dt, this.gatherOptions);
 		}

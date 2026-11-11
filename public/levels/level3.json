@@ -3,7 +3,7 @@
   "width": 8,
   "length": 200,
   "speed": 9,
-  "start": 12,
+  "start": 21,
   "holes": [
     { "x": 0, "z": 18, "width": 3, "depth": 5 },
     { "x": 0, "z": 40, "width": 3, "depth": 5 },
@@ -27,14 +27,14 @@
     { "z": 96, "x": 2, "width": 4, "type": "add", "value": -10 },
     { "z": 131, "x": -2, "width": 4, "type": "add", "value": 20 },
     { "z": 131, "x": 2, "width": 4, "type": "mul", "value": 2 },
-    { "z": 196, "x": -2, "width": 4, "type": "mul", "value": 2 },
-    { "z": 196, "x": 2, "width": 4, "type": "add", "value": 25 }
+    { "z": 196, "x": -2, "width": 4, "type": "add", "value": 38 },
+    { "z": 196, "x": 2, "width": 4, "type": "pct", "value": 30 }
   ],
   "spikes": [],
   "spikeFields": [
-    { "x": -2.5, "z": 162, "width": 3, "depth": 3 },
-    { "x": 2.5, "z": 171, "width": 3, "depth": 3 },
-    { "x": 0, "z": 180, "width": 3, "depth": 3 }
+    { "x": -2.5, "z": 162.75, "width": 3, "depth": 1.5 },
+    { "x": 2.5, "z": 171.75, "width": 3, "depth": 1.5 },
+    { "x": 0, "z": 180.75, "width": 3, "depth": 1.5 }
   ],
   "saws": [],
   "archers": [],

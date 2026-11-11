@@ -1,61 +1,43 @@
 {
-  "name": "speedRamp",
+  "name": "firstArchers",
   "width": 8,
-  "length": 440,
-  "speed": 11,
-  "start": 25,
+  "length": 240,
+  "speed": 9,
+  "start": 21,
   "holes": [
-    { "x": 0, "z": 31.8, "width": 8, "depth": 13 },
-    { "x": -2.25, "z": 72, "width": 3.5, "depth": 6 },
-    { "x": 2.25, "z": 85, "width": 3.5, "depth": 6 },
-    { "x": -2.25, "z": 98, "width": 3.5, "depth": 6 },
-    { "x": 2.25, "z": 111, "width": 3.5, "depth": 6 },
-    { "x": -2.25, "z": 210, "width": 3.5, "depth": 10 },
-    { "x": 2.25, "z": 226, "width": 3.5, "depth": 10 },
-    { "x": -2.25, "z": 242, "width": 3.5, "depth": 10 },
-    { "x": 0, "z": 252, "width": 1.5, "depth": 4 },
-    { "x": 0, "z": 386.8, "width": 8, "depth": 13 }
+    { "x": 0, "z": 70, "width": 3, "depth": 5 },
+    { "x": -3, "z": 150, "width": 2, "depth": 6 },
+    { "x": 3, "z": 150, "width": 2, "depth": 6 }
   ],
   "gates": [
-    { "z": 12, "x": -2, "width": 4, "type": "add", "value": 15 },
-    { "z": 12, "x": 2, "width": 4, "type": "mul", "value": 2 },
-    { "z": 55, "x": -2, "width": 4, "type": "pct", "value": 50 },
-    { "z": 55, "x": 2, "width": 4, "type": "add", "value": 20 },
-    { "z": 185, "x": -2, "width": 4, "type": "mul", "value": 2 },
-    { "z": 185, "x": 2, "width": 4, "type": "pct", "value": 40 },
-    { "z": 290, "x": -2, "width": 4, "type": "add", "value": 40 },
-    { "z": 290, "x": 2, "width": 4, "type": "mul", "value": 2 },
-    { "z": 360, "x": -2, "width": 4, "type": "set", "value": 120 },
-    { "z": 360, "x": 2, "width": 4, "type": "pct", "value": 50 },
-    { "z": 425, "x": -2, "width": 4, "type": "add", "value": 50 },
-    { "z": 425, "x": 2, "width": 4, "type": "pct", "value": 40 }
+    { "z": 8, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 8, "x": 2, "width": 4, "type": "add", "value": 10 },
+    { "z": 45, "x": -2, "width": 4, "type": "add", "value": 15 },
+    { "z": 45, "x": 2, "width": 4, "type": "pct", "value": 50 },
+    { "z": 110, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 110, "x": 2, "width": 4, "type": "add", "value": 20 },
+    { "z": 175, "x": -2, "width": 4, "type": "pct", "value": 60 },
+    { "z": 175, "x": 2, "width": 4, "type": "add", "value": 25 },
+    { "z": 232, "x": -2, "width": 4, "type": "add", "value": 37 },
+    { "z": 232, "x": 2, "width": 4, "type": "pct", "value": 30 }
   ],
   "spikes": [],
   "spikeFields": [
-    { "x": 2, "z": 130, "width": 4, "depth": 3 },
-    { "x": -2, "z": 138, "width": 4, "depth": 3 },
-    { "x": 2, "z": 146, "width": 4, "depth": 3 },
-    { "x": -2, "z": 154, "width": 4, "depth": 3 },
-    { "x": -2, "z": 310, "width": 4, "depth": 3, "period": 1.4 },
-    { "x": 2, "z": 310, "width": 4, "depth": 3, "period": 1.4, "offset": 0.5 },
-    { "x": -2, "z": 322, "width": 4, "depth": 3, "period": 1.4, "offset": 0.5 },
-    { "x": 2, "z": 322, "width": 4, "depth": 3, "period": 1.4 }
+    { "x": -2.5, "z": 195.75, "width": 3, "depth": 1.5 },
+    { "x": 2.5, "z": 205.75, "width": 3, "depth": 1.5 }
   ],
-  "saws": [
-    { "x": 0, "z": 272, "axis": "x", "length": 6, "speed": 7 }
-  ],
+  "saws": [],
   "archers": [
-    { "z": 265, "side": 1, "interval": 0.8 },
-    { "z": 275, "side": -1, "interval": 0.8, "offset": 0.5 }
+    { "z": 30, "side": 1, "interval": 2.4 },
+    { "z": 90, "side": -1, "interval": 2.2 },
+    { "z": 130, "side": 1, "interval": 2.0 },
+    { "z": 185, "side": -1, "interval": 2.0 },
+    { "z": 215, "side": 1, "interval": 1.9 }
   ],
   "enemies": [
-    { "x": 0, "z": 170, "count": 25 },
-    { "x": 0, "z": 340, "count": 40 },
-    { "x": 0, "z": 410, "count": 45 }
+    { "x": 0, "z": 100, "count": 10 },
+    { "x": 0, "z": 165, "count": 18 }
   ],
-  "jumps": [
-    { "x": 0, "z": 30, "width": 8, "power": 14 },
-    { "x": 0, "z": 385, "width": 8, "power": 14 }
-  ],
-  "cannon": { "boxes": 6, "distance": 28, "height": 8, "rx": 2.5, "ry": 1.5, "speed": 0.18, "path": "ellipse" }
+  "jumps": [],
+  "cannon": { "boxes": 5, "distance": 26, "height": 7.5, "rx": 4, "ry": 0.7, "speed": 0.16, "path": "pendulum", "spacing": 2.8 }
 }

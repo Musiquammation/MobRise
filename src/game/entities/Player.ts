@@ -25,6 +25,8 @@ export class Player extends Entity {
 	readonly prev = new THREE.Vector3();
 	/** Opponent aimed at during a fight (crowdPhysics pulls toward it). */
 	target: THREE.Vector3 | null = null;
+	/** On blinking spikes: cannot move sideways (crowdPhysics). */
+	lockX = false;
 	/** Facing angle around Y (0 = running direction). */
 	yaw = 0;
 	/** Tumble angle while flying. */

@@ -1,55 +1,58 @@
 {
-  "name": "windyRoad",
+  "name": "spikeDance",
   "width": 8,
-  "length": 400,
-  "speed": 9.5,
-  "start": 20,
-  "holes": [
-    { "x": 3, "z": 57, "width": 2, "depth": 14 },
-    { "x": -3, "z": 102, "width": 2, "depth": 16 },
-    { "x": -3, "z": 217, "width": 2, "depth": 18 },
-    { "x": 3, "z": 277, "width": 2, "depth": 10 },
-    { "x": -3, "z": 292, "width": 2, "depth": 10 }
-  ],
+  "length": 340,
+  "speed": 9,
+  "start": 24,
+  "holes": [],
   "gates": [
-    { "z": 12, "x": -2, "width": 4, "type": "add", "value": 10 },
-    { "z": 12, "x": 2, "width": 4, "type": "mul", "value": 2 },
-    { "z": 85, "x": -2, "width": 4, "type": "pct", "value": 50 },
-    { "z": 85, "x": 2, "width": 4, "type": "add", "value": 15 },
-    { "z": 112, "x": -2, "width": 4, "type": "add", "value": 10 },
-    { "z": 112, "x": 2, "width": 4, "type": "mul", "value": 2 },
-    { "z": 195, "x": -2, "width": 4, "type": "pct", "value": 40 },
-    { "z": 195, "x": 2, "width": 4, "type": "add", "value": 20 },
-    { "z": 320, "x": -2, "width": 4, "type": "add", "value": 40 },
-    { "z": 320, "x": 2, "width": 4, "type": "mul", "value": 2 },
-    { "z": 385, "x": -2, "width": 4, "type": "pct", "value": 50 },
-    { "z": 385, "x": 2, "width": 4, "type": "add", "value": 30 }
+    { "z": 8, "x": -2, "width": 4, "type": "add", "value": 10 },
+    { "z": 8, "x": 2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 55, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 55, "x": 2, "width": 4, "type": "pct", "value": 60 },
+    { "z": 110, "x": -2, "width": 4, "type": "add", "value": 20 },
+    { "z": 110, "x": 2, "width": 4, "type": "pct", "value": 50 },
+    { "z": 180, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 180, "x": 2, "width": 4, "type": "add", "value": 25 },
+    { "z": 245, "x": -2, "width": 4, "type": "pct", "value": 50 },
+    { "z": 245, "x": 2, "width": 4, "type": "add", "value": 30 },
+    { "z": 322, "x": -2, "width": 4, "type": "add", "value": 45 },
+    { "z": 322, "x": 2, "width": 4, "type": "pct", "value": 22 }
   ],
   "spikes": [],
   "spikeFields": [
-    { "x": 2.5, "z": 165, "width": 3, "depth": 3 },
-    { "x": -3, "z": 170, "width": 2, "depth": 3 },
-    { "x": 2.5, "z": 177, "width": 3, "depth": 3 },
-    { "x": -2, "z": 340, "width": 4, "depth": 3, "period": 2 },
-    { "x": 2, "z": 340, "width": 4, "depth": 3, "period": 2, "offset": 0.5 }
+    { "x": -2, "z": 25.75, "width": 4, "depth": 1.5, "period": 5.5 },
+    { "x": 2, "z": 25.75, "width": 4, "depth": 1.5, "period": 5.5, "offset": 0.5 },
+    { "x": -2, "z": 40.75, "width": 4, "depth": 1.5, "period": 5.5 },
+    { "x": 2, "z": 40.75, "width": 4, "depth": 1.5, "period": 5.5, "offset": 0.5 },
+    { "x": -2.5, "z": 70.75, "width": 3, "depth": 1.5 },
+    { "x": 2.5, "z": 77.75, "width": 3, "depth": 1.5 },
+    { "x": -2.5, "z": 84.75, "width": 3, "depth": 1.5 },
+    { "x": 2.5, "z": 91.75, "width": 3, "depth": 1.5 },
+    { "x": -2, "z": 125.75, "width": 4, "depth": 1.5, "period": 5 },
+    { "x": 2, "z": 125.75, "width": 4, "depth": 1.5, "period": 5, "offset": 0.5 },
+    { "x": -2, "z": 140.75, "width": 4, "depth": 1.5, "period": 5 },
+    { "x": 2, "z": 140.75, "width": 4, "depth": 1.5, "period": 5, "offset": 0.5 },
+    { "x": 0, "z": 158.75, "width": 8, "depth": 1.5, "period": 6 },
+    { "x": -2, "z": 195.75, "width": 4, "depth": 1.5, "period": 4.5 },
+    { "x": 2, "z": 195.75, "width": 4, "depth": 1.5, "period": 4.5, "offset": 0.5 },
+    { "x": -2, "z": 212.75, "width": 4, "depth": 1.5, "period": 4.5 },
+    { "x": 2, "z": 212.75, "width": 4, "depth": 1.5, "period": 4.5, "offset": 0.5 },
+    { "x": 2, "z": 262.625, "width": 4, "depth": 1.25 },
+    { "x": -2, "z": 268.625, "width": 4, "depth": 1.25 },
+    { "x": 2, "z": 274.625, "width": 4, "depth": 1.25 },
+    { "x": -2, "z": 280.625, "width": 4, "depth": 1.25 },
+    { "x": -2, "z": 298.75, "width": 4, "depth": 1.5, "period": 4.5 },
+    { "x": 2, "z": 298.75, "width": 4, "depth": 1.5, "period": 4.5, "offset": 0.5 }
   ],
-  "archers": [
-    { "z": 225, "side": 1, "interval": 1.2 }
-  ],
+  "saws": [],
+  "archers": [],
   "enemies": [
-    { "x": 0, "z": 140, "count": 15 },
-    { "x": 0, "z": 255, "count": 25 },
-    { "x": 0, "z": 370, "count": 35 }
+    { "x": 0, "z": 100, "count": 12 },
+    { "x": 0, "z": 168, "count": 20 },
+    { "x": 0, "z": 230, "count": 25 },
+    { "x": 0, "z": 312, "count": 30 }
   ],
-  "winds": [
-    { "z": 25, "depth": 15, "strength": 1.5 },
-    { "z": 55, "depth": 16, "strength": 2 },
-    { "z": 100, "depth": 18, "strength": -2.5 },
-    { "z": 160, "depth": 22, "strength": 2.5 },
-    { "z": 215, "depth": 20, "strength": -3 },
-    { "z": 275, "depth": 12, "strength": 3 },
-    { "z": 290, "depth": 12, "strength": -3 },
-    { "z": 335, "depth": 18, "strength": 2 }
-  ],
-  "cannon": { "boxes": 5, "distance": 26, "height": 7.5, "rx": 4, "ry": 1.5, "speed": 0.12, "path": "ellipse" }
+  "jumps": [],
+  "cannon": { "boxes": 6, "distance": 28, "height": 8, "rx": 2.5, "ry": 1.5, "speed": 0.15, "path": "figure8" }
 }
