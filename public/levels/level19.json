@@ -8,8 +8,7 @@
     { "x": 3, "z": 57, "width": 2, "depth": 14 },
     { "x": -3, "z": 102, "width": 2, "depth": 16 },
     { "x": -3, "z": 217, "width": 2, "depth": 18 },
-    { "x": 3, "z": 277, "width": 2, "depth": 10 },
-    { "x": -3, "z": 292, "width": 2, "depth": 10 }
+    { "x": 3, "z": 280, "width": 2, "depth": 12 }
   ],
   "gates": [
     { "z": 12, "x": -2, "width": 4, "type": "add", "value": 10 },
@@ -31,23 +30,19 @@
     { "x": -3, "z": 170.75, "width": 2, "depth": 1.5 },
     { "x": 2.5, "z": 177.75, "width": 3, "depth": 1.5 }
   ],
-  "archers": [
-    { "z": 225, "side": 1, "interval": 1.2 }
-  ],
+  "archers": [],
   "enemies": [
     { "x": 0, "z": 140, "count": 15 },
     { "x": 0, "z": 255, "count": 25 },
     { "x": 0, "z": 370, "count": 35 }
   ],
   "winds": [
-    { "z": 25, "depth": 15, "strength": 1.5 },
-    { "z": 55, "depth": 16, "strength": 2 },
-    { "z": 100, "depth": 18, "strength": -2.5 },
-    { "z": 160, "depth": 22, "strength": 2.5 },
-    { "z": 215, "depth": 20, "strength": -3 },
-    { "z": 275, "depth": 12, "strength": 3 },
-    { "z": 290, "depth": 12, "strength": -3 },
-    { "z": 335, "depth": 18, "strength": 2 }
+    { "z": 30, "depth": 14, "strength": 1.2 },
+    { "z": 55, "depth": 16, "strength": 1.5 },
+    { "z": 100, "depth": 18, "strength": -1.8 },
+    { "z": 215, "depth": 20, "strength": -2 },
+    { "z": 278, "depth": 14, "strength": 2.2 },
+    { "z": 335, "depth": 18, "strength": 1.5 }
   ],
   "cannon": { "boxes": 5, "distance": 26, "height": 7.5, "rx": 4, "ry": 1.5, "speed": 0.12, "path": "ellipse" }
 }

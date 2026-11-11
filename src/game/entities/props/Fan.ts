@@ -4,6 +4,9 @@ import type { Game } from "../../Game";
 
 const STREAKS = 26;
 const FAN_RADIUS = 1.3;
+/** Beyond this distance from the crowd, the fan is hidden and not animated. */
+const ACTIVE_RANGE = 140;
+const dummy = new THREE.Object3D();
 
 /**
  * Giant fan next to the track: blows the crowd sideways while it is in
@@ -12,7 +15,7 @@ const FAN_RADIUS = 1.3;
 export class Fan extends Entity {
 	private readonly object = new THREE.Group();
 	private readonly blades = new THREE.Group();
-	private readonly streaks: THREE.Mesh[] = [];
+	private readonly streaks: THREE.InstancedMesh;
 	private readonly seeds: { z: number; y: number; phase: number }[] = [];
 	private readonly disposables: { dispose(): void }[] = [];
 	/** World z range of the wind. */
@@ -60,13 +63,14 @@ export class Fan extends Entity {
 		const streakMat = new THREE.MeshBasicMaterial({
 			color: "#ffffff", transparent: true, opacity: 0.45, depthWrite: false, side: THREE.DoubleSide,
 		});
-		this.disposables.push(streakGeo, streakMat);
-		for (let i = 0; i < STREAKS; i++) {
-			const s = new THREE.Mesh(streakGeo, streakMat);
-			this.streaks.push(s);
+		// One instanced mesh: a single draw call for all the streaks.
+		this.streaks = new THREE.InstancedMesh(streakGeo, streakMat, STREAKS);
+		this.streaks.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+		this.streaks.frustumCulled = false;
+		this.disposables.push(streakGeo, streakMat, this.streaks);
+		for (let i = 0; i < STREAKS; i++)
 			this.seeds.push({ z: Math.random() * depth, y: 0.3 + Math.random() * 1.4, phase: Math.random() });
-			this.object.add(s);
-		}
+		this.object.add(this.streaks);
 	}
 
 	getObject() {
@@ -79,6 +83,9 @@ export class Fan extends Entity {
 	}
 
 	frame(game: Game, dt: number) {
+		const visible = Math.abs(this.position.z - game.crowdCenter().z) < ACTIVE_RANGE;
+		this.object.visible = visible;
+		if (!visible) return;
 		this.blades.rotation.x += dt * 18 * this.dir;
 		// Streaks fly across the track, from the fan to the other side.
 		const span = this.trackWidth + 2;
@@ -87,8 +94,11 @@ export class Fan extends Entity {
 			const seed = this.seeds[i];
 			const t = (game.time * speed / span + seed.phase) % 1;
 			const x = this.dir * (-span / 2 + t * span);
-			this.streaks[i].position.set(x - this.position.x, seed.y, -this.depth / 2 + seed.z);
+			dummy.position.set(x - this.position.x, seed.y, -this.depth / 2 + seed.z);
+			dummy.updateMatrix();
+			this.streaks.setMatrixAt(i, dummy.matrix);
 		}
+		this.streaks.instanceMatrix.needsUpdate = true;
 	}
 
 	dispose() {

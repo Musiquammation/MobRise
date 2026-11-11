@@ -73,8 +73,6 @@ const BOOST_DECEL = 10;
 /** Distance between the centers of a player and a recruit that makes it join. */
 const RECRUIT_CONTACT = 0.5;
 const RECRUIT_COLOR = "#a3a3a3";
-/** Out of the wind, the drift it caused fades at this rate (1/s). */
-const WIND_RECOVER = 1.5;
 
 type EnemyZone = {
 	/** World z of the zone. */
@@ -207,13 +205,11 @@ export class Game extends GameLayer {
 	private crowdDirty = false;
 	/** Point every player of the crowd is attracted to (moved by the finger). */
 	private centerX = 0;
-	/** Invisible target moved by the finger's delta (centerX = pointerX + windDrift). */
+	/** Invisible target moved by the finger's delta and blown by the fans. */
 	private pointerX = 0;
 	/** Pointer screen position at the previous frame (relative steering). */
 	private steerPrev: THREE.Vector3 | null = null;
 	private steerPress = -1;
-	/** How far the fans have blown the attraction point (back to 0 out of the wind). */
-	private windDrift = 0;
 	private centerZ = 0;
 	/** Average x of the crowd (followed by the camera). */
 	private crowdX = 0;
@@ -554,7 +550,7 @@ export class Game extends GameLayer {
 		// Fight over: the crowd resumes from where it stands.
 		if (wasFighting && !this.fighting) {
 			this.centerX = this.crowdX;
-			this.pointerX = this.crowdX - this.windDrift;
+			this.pointerX = this.crowdX;
 		}
 
 		// Fights: each enemy touching a player kills it and dies.
@@ -784,20 +780,18 @@ export class Game extends GameLayer {
 			this.steerPrev = null;
 		}
 
-		// Fans blow the attraction point away: the finger has to follow against
-		// the wind. Out of the wind, the crowd gently comes back under the finger.
+		// Fans blow the target itself: swiping against the wind always moves the
+		// crowd back (the push never piles up beyond the track edge).
 		let wind = 0;
 		for (const e of this.entities.get("prop")) if (e instanceof Fan) wind += e.pushAt(this.centerZ);
-		if (wind !== 0) this.windDrift += wind * dt;
-		else this.windDrift *= Math.exp(-WIND_RECOVER * dt);
+		this.pointerX += wind * dt;
 		const w = this.level.width;
-		this.windDrift = Math.max(-w, Math.min(w, this.windDrift));
 
 		const limit = w / 2 - PLAYER_HALF + EDGE_OVERSHOOT;
 		// The target stops at its x limit: swiping further does not pile up.
 		const targetLimit = w / 2 - PLAYER_HALF + TARGET_OVERSHOOT;
 		this.pointerX = Math.max(-targetLimit, Math.min(targetLimit, this.pointerX));
-		this.centerX =Math.max(-limit, Math.min(limit, this.pointerX + this.windDrift));
+		this.centerX = Math.max(-limit, Math.min(limit, this.pointerX));
 	}
 
 	/** Moves the crowd (attraction + collisions) and the players walking to the cannon. */
