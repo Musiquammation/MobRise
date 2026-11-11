@@ -1,7 +1,7 @@
 /** Deployment environment, set by public/env.js (which differs on gh-pages). */
 declare global {
 	interface Window {
-		MOBRISE_ENV?: { base?: string; version?: string };
+		MOBRISE_ENV?: { base?: string; version?: string; debug?: boolean };
 	}
 }
 
@@ -12,3 +12,6 @@ export const BASE = (window.MOBRISE_ENV?.base ?? "/").replace(/\/?$/, "/");
 export function url(path: string): string {
 	return BASE + path.replace(/^\//, "");
 }
+
+/** false when env.js turns the debug overlays off (gh-pages), whatever config.ts says. */
+export const DEBUG_ALLOWED = window.MOBRISE_ENV?.debug !== false;
