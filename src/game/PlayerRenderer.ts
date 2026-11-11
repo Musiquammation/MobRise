@@ -20,6 +20,29 @@ const bubbleMaterial = new THREE.MeshStandardMaterial({
 	transparent: true, opacity: 0.3, depthWrite: false, roughness: 0.1,
 });
 
+/** Soft round shadow drawn under each body standing on the ground. */
+const shadowGeometry = new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2);
+let shadowMaterial: THREE.MeshBasicMaterial | null = null;
+function getShadowMaterial() {
+	if (shadowMaterial) return shadowMaterial;
+	const canvas = document.createElement("canvas");
+	canvas.width = canvas.height = 64;
+	const ctx = canvas.getContext("2d")!;
+	const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+	gradient.addColorStop(0, "rgba(20,30,60,0.55)");
+	gradient.addColorStop(0.55, "rgba(20,30,60,0.32)");
+	gradient.addColorStop(1, "rgba(20,30,60,0)");
+	ctx.fillStyle = gradient;
+	ctx.fillRect(0, 0, 64, 64);
+	const texture = new THREE.CanvasTexture(canvas);
+	shadowMaterial = new THREE.MeshBasicMaterial({ map: texture, transparent: true, depthWrite: false, fog: true });
+	return shadowMaterial;
+}
+const SHADOW_Y = 0.025;
+const SHADOW_SIZE = 0.95;
+/** Height at which the shadow has vanished. */
+const SHADOW_FADE = 5;
+
 /** Height of the top of the player's head (hats are placed there). */
 const HEAD_TOP = 1.07;
 
@@ -39,8 +62,15 @@ export class PlayerRenderer {
 	private readonly owned: { dispose(): void }[] = [];
 	/** Shield bubbles, only drawn for the bodies that have one. */
 	private readonly bubbles: THREE.InstancedMesh;
+	private readonly shadows: THREE.InstancedMesh;
 
 	constructor(resources: ResourceManager, skin: Pick<Skin, "color" | "hat">, private readonly capacity: number) {
+		this.shadows = new THREE.InstancedMesh(shadowGeometry, getShadowMaterial(), capacity);
+		this.shadows.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+		this.shadows.frustumCulled = false;
+		this.shadows.count = 0;
+		this.shadows.renderOrder = -1;
+		this.group.add(this.shadows);
 		this.addModel(resources.getModel("player").scene, skin, 0);
 		if (skin.hat) this.addModel(resources.getModel(skin.hat).scene, skin, HEAD_TOP);
 		this.bubbles = new THREE.InstancedMesh(bubbleGeometry, bubbleMaterial, capacity);
@@ -51,9 +81,10 @@ export class PlayerRenderer {
 		this.group.add(this.bubbles);
 	}
 
-	update(players: readonly RenderedBody[], time: number) {
+	/** `ground(x, z)`: whether there is floor there (draws the shadows; none without it). */
+	update(players: readonly RenderedBody[], time: number, ground?: (x: number, z: number) => boolean) {
 		const n = Math.min(players.length, this.capacity);
-		let shields = 0;
+		let shields = 0, shadows = 0;
 		for (let i = 0; i < n; i++) {
 			const p = players[i];
 			let bob = 0, sway = 0;
@@ -74,7 +105,17 @@ export class PlayerRenderer {
 				matrix.compose(pos, quat, scale);
 				this.bubbles.setMatrixAt(shields++, matrix);
 			}
+			if (ground && p.position.y > -0.1 && p.position.y < SHADOW_FADE && ground(p.position.x, p.position.z)) {
+				const size = SHADOW_SIZE * p.scale * (1 - p.position.y / SHADOW_FADE * 0.6);
+				quat.identity();
+				pos.set(p.position.x, SHADOW_Y, p.position.z);
+				scale.set(size, 1, size);
+				matrix.compose(pos, quat, scale);
+				this.shadows.setMatrixAt(shadows++, matrix);
+			}
 		}
+		this.shadows.count = shadows;
+		this.shadows.instanceMatrix.needsUpdate = true;
 		this.bubbles.count = shields;
 		this.bubbles.instanceMatrix.needsUpdate = true;
 		for (const mesh of this.meshes) {
@@ -87,6 +128,7 @@ export class PlayerRenderer {
 		for (const o of this.owned) o.dispose();
 		for (const m of this.meshes) m.dispose();
 		this.bubbles.dispose();
+		this.shadows.dispose();
 	}
 
 	private addModel(scene: THREE.Object3D, skin: Pick<Skin, "color" | "hat">, offsetY: number) {

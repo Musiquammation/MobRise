@@ -6,6 +6,9 @@ import type { InputHandler } from "./InputHandler";
 export abstract class GameLayer {
 	readonly camera: Camera;
 	protected readonly scene = new THREE.Scene();
+	protected readonly hemi = new THREE.HemisphereLight("#ffffff", "#7b8aa6", 1.8);
+	protected readonly sun = new THREE.DirectionalLight("#ffffff", 1.6);
+	protected readonly fill = new THREE.DirectionalLight("#fff4e0", 1.1);
 
 	constructor(
 		protected readonly renderer: THREE.WebGLRenderer,
@@ -17,14 +20,12 @@ export abstract class GameLayer {
 		this.scene.background = new THREE.Color("#8fd0f7");
 		this.scene.fog = new THREE.Fog("#8fd0f7", 45, 130);
 
-		this.scene.add(new THREE.HemisphereLight("#ffffff", "#7b8aa6", 1.8));
-		const sun = new THREE.DirectionalLight("#ffffff", 1.6);
-		sun.position.set(6, 12, 4);
-		this.scene.add(sun);
+		this.scene.add(this.hemi);
+		this.sun.position.set(6, 12, 4);
+		this.scene.add(this.sun);
 		// Front light: lights the faces looking at the camera (the "?" boxes).
-		const fill = new THREE.DirectionalLight("#fff4e0", 1.1);
-		fill.position.set(-3, 5, 10);
-		this.scene.add(fill);
+		this.fill.position.set(-3, 5, 10);
+		this.scene.add(this.fill);
 	}
 
 	/** Advances the game by dt seconds and renders it. */

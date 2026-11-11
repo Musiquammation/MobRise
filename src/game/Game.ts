@@ -3,6 +3,8 @@ import { GameLayer } from "./GameLayer";
 import { EntityContainer } from "./EntityContainer";
 import { handleCollision } from "./handleCollision";
 import { PlayerRenderer } from "./PlayerRenderer";
+import { Scenery } from "./Scenery";
+import { levelTheme } from "./themes";
 import type { InputHandler } from "./InputHandler";
 import type { Entity } from "./Entity";
 import { Player } from "./entities/Player";
@@ -182,6 +184,9 @@ export class Game extends GameLayer {
 
 	private readonly floor: Floor;
 	private playerRenderer: PlayerRenderer;
+	private readonly scenery: Scenery;
+	/** Whether there is floor at (x, z): where the shadows are drawn. */
+	private readonly ground = (x: number, z: number) => this.floor.isSupported(x, z);
 	private readonly enemyRenderer: PlayerRenderer;
 	private readonly enemyZones: EnemyZone[] = [];
 	private readonly enemyOptions: CrowdOptions;
@@ -246,8 +251,13 @@ export class Game extends GameLayer {
 		this.recruitRenderer = new PlayerRenderer(resources, { color: RECRUIT_COLOR, hat: null }, MAX_PLAYERS);
 		this.scene.add(this.recruitRenderer.group);
 
-		this.floor = new Floor(level);
+		const theme = levelTheme(level);
+		this.floor = new Floor(level, theme);
 		this.entities.add("platform", this.floor);
+
+		this.scenery = new Scenery(level, this.floor, theme);
+		this.scene.add(this.scenery.group);
+		this.applyTheme();
 
 		const model = (id: string) => resources.getModel(id).scene;
 
@@ -338,7 +348,27 @@ export class Game extends GameLayer {
 		this.scene.add(this.playerRenderer.group);
 	}
 
+	resize(width: number, height: number) {
+		super.resize(width, height);
+		this.scenery.setAspect(width / height);
+	}
+
+	/** Lights and fog matching the scenery. */
+	private applyTheme() {
+		const t = this.scenery.theme;
+		const fog = this.scene.fog as THREE.Fog;
+		fog.color.set(t.skyHorizon);
+		fog.near = 50;
+		fog.far = 150;
+		(this.scene.background as THREE.Color).set(t.skyHorizon);
+		this.hemi.color.set(t.hemiSky);
+		this.hemi.groundColor.set(t.hemiGround);
+		this.sun.color.set(t.sunLight);
+	}
+
 	dispose() {
+		this.scene.remove(this.scenery.group);
+		this.scenery.dispose();
 		this.entities.clear();
 		this.scene.remove(this.playerRenderer.group);
 		this.playerRenderer.dispose();
@@ -835,12 +865,13 @@ export class Game extends GameLayer {
 
 	protected gameUpdate(dt: number) {
 		for (const e of this.entities.iterate()) e.update();
-		this.playerRenderer.update(this.entities.get("player"), this.time);
-		this.enemyRenderer.update(this.entities.get("enemy"), this.time);
-		this.recruitRenderer.update(this.entities.get("recruit"), this.time);
+		this.playerRenderer.update(this.entities.get("player"), this.time, this.ground);
+		this.enemyRenderer.update(this.entities.get("enemy"), this.time, this.ground);
+		this.recruitRenderer.update(this.entities.get("recruit"), this.time, this.ground);
 		for (const zone of this.enemyZones) this.updateEnemyLabel(zone);
 		for (const zone of this.recruitZones) updateGroupLabel(zone.label, zone.recruits.filter(r => r.isAlive()));
 		this.updateCamera(dt);
+		this.scenery.update(this.camera.get(), this.time, dt);
 		this.syncUi();
 	}
 
