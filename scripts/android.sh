@@ -34,6 +34,9 @@ npm run build
 echo "==> Capacitor synchronization"
 npx cap sync android
 
+echo "==> Android icons"
+scripts/gen-icons.sh
+
 echo "==> Android debug build"
 (cd android && ./gradlew assembleDebug)
 
