@@ -44,6 +44,9 @@ body {
 	user-select: none;
 	-webkit-user-select: none;
 	-webkit-tap-highlight-color: transparent;
+	/* iOS: no long-press callout/magnifier while steering the crowd. */
+	-webkit-touch-callout: none;
+	-webkit-text-size-adjust: 100%;
 }
 
 body > canvas {
