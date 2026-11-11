@@ -10,15 +10,38 @@ export type RenderedBody = {
 	readonly yaw: number;
 	readonly spin: number;
 	readonly scale: number;
-	/** Draws a bubble around the body (skin ability). */
+	/** Holds a shield (skin ability). */
 	readonly shield?: boolean;
+	/** Seconds of protection left after the shield was used (the shield blinks). */
+	readonly grace?: number;
 };
 
-const bubbleGeometry = new THREE.IcosahedronGeometry(0.62, 2).translate(0, 0.55, 0);
+/** Upright kite shield, held on the left side of the body. */
+function makeShieldGeometry() {
+	const w = 0.26, top = 0.3, mid = -0.05, bottom = -0.36;
+	const shape = new THREE.Shape();
+	shape.moveTo(-w, top - 0.05);
+	shape.quadraticCurveTo(0, top + 0.06, w, top - 0.05);
+	shape.lineTo(w, mid);
+	shape.quadraticCurveTo(w * 0.85, bottom * 0.7, 0, bottom);
+	shape.quadraticCurveTo(-w * 0.85, bottom * 0.7, -w, mid);
+	shape.closePath();
+	const geometry = new THREE.ExtrudeGeometry(shape, {
+		depth: 0.04, bevelEnabled: true, bevelThickness: 0.02, bevelSize: 0.025, bevelSegments: 2, curveSegments: 8,
+	});
+	geometry.translate(0, 0, -0.02);
+	// Face turned outward-forward, on the left of the body.
+	geometry.rotateY(-Math.PI / 2 + 0.6);
+	geometry.translate(-0.4, 0.55, -0.1);
+	return geometry;
+}
+const bubbleGeometry = makeShieldGeometry();
 const bubbleMaterial = new THREE.MeshStandardMaterial({
-	color: "#7dd3fc", emissive: "#38bdf8", emissiveIntensity: 0.35,
-	transparent: true, opacity: 0.3, depthWrite: false, roughness: 0.1,
+	color: "#93c5fd", emissive: "#38bdf8", emissiveIntensity: 0.45,
+	metalness: 0.5, roughness: 0.3, transparent: true, opacity: 0.9,
 });
+/** Blink period of the shield while it protects after a hit. */
+const BLINK = 0.12;
 
 /** Soft round shadow drawn under each body standing on the ground. */
 const shadowGeometry = new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2);
@@ -99,9 +122,11 @@ export class PlayerRenderer {
 			scale.setScalar(p.scale);
 			matrix.compose(pos, quat, scale);
 			for (const mesh of this.meshes) mesh.setMatrixAt(i, matrix);
-			if (p.shield) {
+			const blinking = !p.shield && (p.grace ?? 0) > 0;
+			if (p.shield || (blinking && Math.floor(p.grace! / BLINK) % 2 === 0)) {
 				// Upright, without the tumble.
-				quat.identity();
+				euler.set(0, p.yaw, 0);
+				quat.setFromEuler(euler);
 				matrix.compose(pos, quat, scale);
 				this.bubbles.setMatrixAt(shields++, matrix);
 			}

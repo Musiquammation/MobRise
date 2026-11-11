@@ -51,6 +51,8 @@ export class Boss extends Entity {
 	private readonly disposables: { dispose(): void }[] = [];
 	private yaw = Math.PI; // faces the incoming crowd
 	private timer = 0;
+	/** The crowd reached the sword at least once (the swings have started). */
+	private engaged = false;
 	/** Time since the last swing (animation). */
 	private sinceSwing = Infinity;
 	private flash = 0;
@@ -165,8 +167,8 @@ export class Boss extends Entity {
 		if (this.state === "idle") {
 			if (game.phase === "run" && game.crowdSize() > 0 && this.position.z - crowd.z > -TRIGGER) {
 				this.state = "fight";
-				// First swing comes a bit later: the crowd has to reach the boss.
-				this.timer = -0.6;
+				this.timer = 0;
+				this.engaged = false;
 			}
 			return;
 		}
@@ -214,6 +216,13 @@ export class Boss extends Entity {
 			}
 		}
 
+		// The swings start once the crowd is within reach: the first one comes
+		// right after a wind-up, then one every `interval`.
+		if (!this.engaged) {
+			if (near.length === 0) return;
+			this.engaged = true;
+			this.timer = Math.max(0, this.interval - WINDUP);
+		}
 		this.timer += dt;
 		if (this.timer >= this.interval) {
 			this.timer -= this.interval;

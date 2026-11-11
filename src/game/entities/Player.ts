@@ -15,7 +15,7 @@ export const GRAVITY = -24;
 /** Duration of the death animation. */
 const DEATH_TIME = 0.45;
 /** Invulnerability after a shield breaks (so the same hazard does not hit twice). */
-const SHIELD_GRACE = 0.6;
+const SHIELD_GRACE = 1;
 
 export class Player extends Entity {
 	state: PlayerState = "run";
@@ -114,10 +114,10 @@ export class Player extends Entity {
 	}
 
 	private run(game: Game, dt: number) {
+		if (this.grace > 0) this.grace = Math.max(0, this.grace - dt);
 		// Moved by crowdPhysics: only look where it is going (or at the aimed enemy).
 		if (this.target) this.turnToward(this.target.x - this.position.x, this.target.z - this.position.z, dt);
 		else this.turnToward(this.velocity.x, this.velocity.z - game.speed, dt);
-		if (this.grace > 0) this.grace -= dt;
 
 		const supported = game.isSupported(this.position.x, this.position.z);
 		// The ground ends: jump by themselves (skin ability).

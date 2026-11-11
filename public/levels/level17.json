@@ -19,7 +19,7 @@
     { "z": 195, "x": -2, "width": 4, "type": "add", "value": 60 },
     { "z": 195, "x": 2, "width": 4, "type": "mul", "value": 2 },
     { "z": 222, "x": -2, "width": 4, "type": "add", "value": -200 },
-    { "z": 222, "x": 2, "width": 4, "type": "set", "value": 20 },
+    { "z": 222, "x": 2, "width": 4, "type": "set", "value": 25 },
     { "z": 362, "x": -2.667, "width": 2.667, "type": "set", "value": 50 },
     { "z": 362, "x": 0, "width": 2.667, "type": "add", "value": 20 },
     { "z": 362, "x": 2.667, "width": 2.667, "type": "pct", "value": 30 },
