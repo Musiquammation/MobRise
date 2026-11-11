@@ -41,6 +41,12 @@ const PLAYER_HALF = 0.22;
  */
 const EDGE_OVERSHOOT = 2.5;
 /**
+ * X limit of the invisible target moved by the finger, past the edge of the
+ * track. Small: swiping further than the edge does not pile up, coming back
+ * moves the crowd right away.
+ */
+const TARGET_OVERSHOOT = 0.5;
+/**
  * Sideways slide of the whole crowd toward the pointer, on top of the
  * attraction: speed = gain * distance (1/s), capped. Moves everyone the same
  * way, so the crowd keeps its shape.
@@ -196,8 +202,11 @@ export class Game extends GameLayer {
 	private crowdDirty = false;
 	/** Point every player of the crowd is attracted to (moved by the finger). */
 	private centerX = 0;
-	/** Track x under the finger (centerX = pointerX + windDrift). */
+	/** Invisible target moved by the finger's delta (centerX = pointerX + windDrift). */
 	private pointerX = 0;
+	/** Pointer screen position at the previous frame (relative steering). */
+	private steerPrev: THREE.Vector3 | null = null;
+	private steerPress = -1;
 	/** How far the fans have blown the attraction point (back to 0 out of the wind). */
 	private windDrift = 0;
 	private centerZ = 0;
@@ -723,16 +732,26 @@ export class Game extends GameLayer {
 	}
 
 	/**
-	 * The crowd goes where the pointer is: the attraction point is the spot of
-	 * the ground under the finger / mouse (only its x matters, the crowd keeps
-	 * running forward). The walls keep the players on the track.
+	 * Relative steering: the finger moves an invisible target by the same
+	 * amount as itself (measured on the ground), the crowd does not jump under
+	 * the finger. Only x matters, the crowd keeps running forward. The walls
+	 * keep the players on the track.
 	 */
 	private steer(dt: number) {
-		const { x, y } = this.input;
-		if (x !== null && y !== null) {
-			ndc.set((x / window.innerWidth) * 2 - 1, -(y / window.innerHeight) * 2 + 1);
-			raycaster.setFromCamera(ndc, this.camera.get());
-			if (raycaster.ray.intersectPlane(groundPlane, hit)) this.pointerX = hit.x;
+		const { x, y, down, presses } = this.input;
+		const prev = this.steerPrev;
+		// A new touch (or a mouse moved without button) starts from where the target already is.
+		if (x !== null && y !== null && down) {
+			if (prev && presses === this.steerPress && prev.x !== x
+				&& this.pointerOnPlane(prev.x, prev.y, groundPlane, projected) && this.pointerOnPlane(x, prev.y, groundPlane, hit)) {
+				// Both points on the same screen row and with the current camera:
+				// a moving camera or a vertical swipe does not move the target.
+				this.pointerX += hit.x - projected.x;
+			}
+			this.steerPress = presses;
+			(this.steerPrev ??= new THREE.Vector3()).set(x, y, 0);
+		} else {
+			this.steerPrev = null;
 		}
 
 		// Fans blow the attraction point away: the finger has to follow against
@@ -745,7 +764,10 @@ export class Game extends GameLayer {
 		this.windDrift = Math.max(-w, Math.min(w, this.windDrift));
 
 		const limit = w / 2 - PLAYER_HALF + EDGE_OVERSHOOT;
-		this.centerX = Math.max(-limit, Math.min(limit, this.pointerX + this.windDrift));
+		// The target stops at its x limit: swiping further does not pile up.
+		const targetLimit = w / 2 - PLAYER_HALF + TARGET_OVERSHOOT;
+		this.pointerX = Math.max(-targetLimit, Math.min(targetLimit, this.pointerX));
+		this.centerX =Math.max(-limit, Math.min(limit, this.pointerX + this.windDrift));
 	}
 
 	/** Moves the crowd (attraction + collisions) and the players walking to the cannon. */
@@ -884,8 +906,8 @@ export class Game extends GameLayer {
 			if (ui.bubble.y !== by) ui.bubble.y = by;
 		}
 
-		// Crosshair of the cannon.
-		const showAim = this.phase === "cannon";
+		// Crosshair of the cannon (gone once there is nobody left to shoot).
+		const showAim = this.phase === "cannon" && count > 0;
 		if (ui.aim.visible !== showAim) ui.aim.visible = showAim;
 		if (showAim) {
 			projected.copy(this.aimPoint).project(this.camera.get());
