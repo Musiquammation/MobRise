@@ -10,7 +10,6 @@
     { "x": 0, "z": 174, "width": 8, "depth": 5 },
     { "x": 3, "z": 180, "width": 2, "depth": 10 },
     { "x": -3, "z": 302, "width": 2, "depth": 28 },
-    { "x": 0.5, "z": 308, "width": 3, "depth": 5 },
     { "x": 3, "z": 362, "width": 2, "depth": 18 }
   ],
   "gates": [
@@ -37,8 +36,7 @@
   "archers": [
     { "z": 40, "side": 1, "interval": 1.0 },
     { "z": 230, "side": -1, "interval": 0.9 },
-    { "z": 312, "side": 1, "interval": 0.9 },
-    { "z": 322, "side": -1, "interval": 0.9, "offset": 0.5 }
+    { "z": 315, "side": 1, "interval": 1.4 }
   ],
   "enemies": [
     { "x": 0, "z": 140, "count": 20 },
@@ -55,7 +53,7 @@
     { "z": 165, "depth": 22, "strength": 3 },
     { "z": 220, "depth": 10, "strength": 3.5 },
     { "z": 232, "depth": 10, "strength": -3.5 },
-    { "z": 300, "depth": 30, "strength": -3 },
+    { "z": 300, "depth": 30, "strength": -2 },
     { "z": 360, "depth": 20, "strength": 3.5 }
   ],
   "bosses": [
