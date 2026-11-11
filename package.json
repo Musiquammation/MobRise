@@ -13,6 +13,7 @@
     "android:open": "cap open android",
     "ios": "scripts/ios.sh",
     "ios:open": "scripts/ios.sh --open",
+    "gh-pages": "scripts/gh-pages.sh",
     "icons": "scripts/gen-icons.sh"
   },
   "dependencies": {

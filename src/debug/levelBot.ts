@@ -10,6 +10,7 @@ import * as THREE from "three";
 import { Game } from "../game/Game";
 import type { LevelData } from "../data/Level";
 import { SKINS } from "../data/skins";
+import { url } from "../env";
 
 const DT = 1 / 60;
 
@@ -112,7 +113,7 @@ export type BotResult = {
 };
 
 export async function loadLevel(file: string): Promise<LevelData> {
-	return (await fetch(`/levels/${file}`)).json();
+	return (await fetch(url(`levels/${file}`))).json();
 }
 
 export async function playLevel(file: string, o: BotOptions = {}): Promise<BotResult> {
@@ -173,7 +174,7 @@ export async function playLevel(file: string, o: BotOptions = {}): Promise<BotRe
 
 /** Plays every level of the index, one after the other (results in globalThis.botResults). */
 export async function playAll(o: BotOptions = {}, files?: string[]) {
-	files ??= await (await fetch("/levels/index.json")).json();
+	files ??= await (await fetch(url("levels/index.json"))).json();
 	const results: BotResult[] = (globalThis as any).botResults = [];
 	for (const f of files!) results.push(await playLevel(f, o));
 	return results;
