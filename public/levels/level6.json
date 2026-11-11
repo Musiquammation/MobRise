@@ -21,14 +21,7 @@
   "spikeFields": [
     { "x": -2.5, "z": 24.75, "width": 3, "depth": 1.5 },
     { "x": 2.5, "z": 34.75, "width": 3, "depth": 1.5 },
-    { "x": 0, "z": 45.75, "width": 8, "depth": 1.5, "period": 7 },
-    { "x": -2, "z": 80.75, "width": 4, "depth": 1.5, "period": 7 },
-    { "x": 2, "z": 80.75, "width": 4, "depth": 1.5, "period": 7, "offset": 0.5 },
     { "x": 0, "z": 135.75, "width": 3, "depth": 1.5 },
-    { "x": -2, "z": 150.75, "width": 4, "depth": 1.5, "period": 6.5 },
-    { "x": 2, "z": 150.75, "width": 4, "depth": 1.5, "period": 6.5, "offset": 0.5 },
-    { "x": -2, "z": 200.75, "width": 4, "depth": 1.5, "period": 6 },
-    { "x": 2, "z": 200.75, "width": 4, "depth": 1.5, "period": 6, "offset": 0.5 },
     { "x": -2.5, "z": 225.75, "width": 3, "depth": 1.5 },
     { "x": 2.5, "z": 233.75, "width": 3, "depth": 1.5 }
   ],

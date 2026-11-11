@@ -24,9 +24,7 @@
   "spikes": [],
   "spikeFields": [
     { "x": -2.5, "z": 30.75, "width": 3, "depth": 1.5 },
-    { "x": 2.5, "z": 38.75, "width": 3, "depth": 1.5 },
-    { "x": -2, "z": 185.75, "width": 4, "depth": 1.5, "period": 6 },
-    { "x": 2, "z": 185.75, "width": 4, "depth": 1.5, "period": 6, "offset": 0.5 }
+    { "x": 2.5, "z": 38.75, "width": 3, "depth": 1.5 }
   ],
   "saws": [],
   "archers": [

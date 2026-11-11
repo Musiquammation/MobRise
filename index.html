@@ -96,7 +96,7 @@
 				<template x-for="item in p.items" :key="item.skin.id">
 					<li :aria-current="item.equipped" :data-selected="p.selected === item.skin.id"
 						@click="p.selected = item.skin.id">
-						<img :src="item.thumbnail" :alt="$t('skins.' + item.skin.id)">
+						<img :src="item.thumbnail" :style="item.thumbnail ? '' : 'visibility:hidden'" :alt="$t('skins.' + item.skin.id)">
 						<h3 x-text="$t('skins.' + item.skin.id)"></h3>
 						<button
 							:disabled="item.equipped || (!item.owned && $store.dom.coins < item.skin.price)"
@@ -114,7 +114,7 @@
 				<template x-if="p.selectedItem">
 					<div x-data="{ get item() { return p.selectedItem } }">
 						<button data-close @click="p.selected = null" :aria-label="$t('shop.close')">×</button>
-						<img :src="item.thumbnail" :alt="$t('skins.' + item.skin.id)">
+						<img :src="item.thumbnail" :style="item.thumbnail ? '' : 'visibility:hidden'" :alt="$t('skins.' + item.skin.id)">
 						<h3 x-text="$t('skins.' + item.skin.id)"></h3>
 						<p data-power>
 							<span x-text="$t('shop.power')"></span>

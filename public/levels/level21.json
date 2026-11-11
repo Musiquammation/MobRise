@@ -5,8 +5,8 @@
   "speed": 10,
   "start": 26,
   "holes": [
-    { "x": 0, "z": 50, "width": 8, "depth": 7 },
-    { "x": 0, "z": 120, "width": 8, "depth": 7 },
+    { "x": 0, "z": 50, "width": 8, "depth": 5 },
+    { "x": 0, "z": 120, "width": 8, "depth": 5 },
     { "x": 0, "z": 200, "width": 8, "depth": 8 },
     { "x": 0, "z": 280, "width": 8, "depth": 8 }
   ],
@@ -25,9 +25,7 @@
   "spikes": [],
   "spikeFields": [
     { "x": -2.5, "z": 95.75, "width": 3, "depth": 1.5 },
-    { "x": 2.5, "z": 103.75, "width": 3, "depth": 1.5 },
-    { "x": -2, "z": 240.75, "width": 4, "depth": 1.5, "period": 5 },
-    { "x": 2, "z": 240.75, "width": 4, "depth": 1.5, "period": 5, "offset": 0.5 }
+    { "x": 2.5, "z": 103.75, "width": 3, "depth": 1.5 }
   ],
   "saws": [],
   "archers": [

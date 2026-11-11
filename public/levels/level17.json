@@ -29,11 +29,7 @@
   ],
   "spikes": [],
   "spikeFields": [
-    { "x": -2, "z": 45.75, "width": 4, "depth": 1.5, "period": 2 },
-    { "x": 2, "z": 45.75, "width": 4, "depth": 1.5, "period": 2, "offset": 0.5 },
     { "x": -3, "z": 155.75, "width": 2, "depth": 1.5 },
-    { "x": -2, "z": 270.75, "width": 4, "depth": 1.5, "period": 2.2 },
-    { "x": 2, "z": 270.75, "width": 4, "depth": 1.5, "period": 2.2, "offset": 0.5 },
     { "x": -2, "z": 405.625, "width": 4, "depth": 1.25 },
     { "x": 2, "z": 412.625, "width": 4, "depth": 1.25 },
     { "x": -2, "z": 419.625, "width": 4, "depth": 1.25 }

@@ -38,6 +38,8 @@ export class Spikes extends Hazard {
 		private readonly depth: number,
 		private readonly period = 0,
 		private readonly offset = 0,
+		/** Fraction of the cycle with the spikes up. */
+		private readonly up = 0.5,
 	) {
 		super();
 		// z = start (distance), the field spans [z, z + depth] → world [-z - depth, -z].
@@ -83,14 +85,14 @@ export class Spikes extends Hazard {
 		return this.object;
 	}
 
-	/** Position in the cycle, in [0, 1) (up during the first half). */
+	/** Position in the cycle, in [0, 1) (up during the first `up` part). */
 	private phase(time: number): number {
 		return ((time / this.period + this.offset) % 1 + 1) % 1;
 	}
 
 	private target(time: number): number {
 		if (this.period <= 0) return 1;
-		return this.phase(time) < 0.5 ? 1 : 0;
+		return this.phase(time) < this.up ? 1 : 0;
 	}
 
 	frame(game: Game, dt: number) {
@@ -103,7 +105,7 @@ export class Spikes extends Hazard {
 
 		if (this.period > 0) {
 			const t = this.phase(game.time);
-			this.warnStep = t < 0.5 ? -1 : Math.min(WARN_STEPS.length - 1, Math.floor((t - 0.5) * 2 * WARN_STEPS.length));
+			this.warnStep = t < this.up ? -1 : Math.min(WARN_STEPS.length - 1, Math.floor((t - this.up) / (1 - this.up) * WARN_STEPS.length));
 		}
 	}
 

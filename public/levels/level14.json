@@ -25,12 +25,8 @@
   ],
   "spikes": [],
   "spikeFields": [
-    { "x": -2, "z": 75.75, "width": 4, "depth": 1.5, "period": 5.5 },
-    { "x": 2, "z": 75.75, "width": 4, "depth": 1.5, "period": 5.5, "offset": 0.5 },
     { "x": -2.5, "z": 160.75, "width": 3, "depth": 1.5 },
-    { "x": 2.5, "z": 168.75, "width": 3, "depth": 1.5 },
-    { "x": -2, "z": 215.75, "width": 4, "depth": 1.5, "period": 5 },
-    { "x": 2, "z": 215.75, "width": 4, "depth": 1.5, "period": 5, "offset": 0.5 }
+    { "x": 2.5, "z": 168.75, "width": 3, "depth": 1.5 }
   ],
   "saws": [],
   "archers": [

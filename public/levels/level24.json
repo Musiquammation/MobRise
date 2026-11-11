@@ -32,9 +32,7 @@
   "spikeFields": [
     { "x": -2, "z": 170.625, "width": 4, "depth": 1.25 },
     { "x": 2, "z": 178.625, "width": 4, "depth": 1.25 },
-    { "x": -2, "z": 186.625, "width": 4, "depth": 1.25 },
-    { "x": -2, "z": 398.75, "width": 4, "depth": 1.5, "period": 2 },
-    { "x": 2, "z": 398.75, "width": 4, "depth": 1.5, "period": 2, "offset": 0.5 }
+    { "x": -2, "z": 186.625, "width": 4, "depth": 1.25 }
   ],
   "archers": [
     { "z": 225, "side": 1, "interval": 0.9 },

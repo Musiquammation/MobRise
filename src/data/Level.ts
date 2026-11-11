@@ -28,9 +28,11 @@ export type LevelData = {
 	spikes: { z: number; speed: number; offset?: number }[];
 	/**
 	 * Spike fields (x = center, z = start). With `period`, the spikes go up and
-	 * down (up during the first half of the cycle, `offset` in [0, 1) shifts it).
+	 * down (up during the first `up` part of the cycle, default 0.5; `offset`
+	 * in [0, 1) shifts it). No side by side blinking fields with alternating
+	 * offsets ("double spikes"): too frustrating, removed from all levels.
 	 */
-	spikeFields?: { x: number; z: number; width: number; depth: number; period?: number; offset?: number }[];
+	spikeFields?: { x: number; z: number; width: number; depth: number; period?: number; offset?: number; up?: number }[];
 	/**
 	 * Saw blades going back and forth along `axis` around (x, z), over `length`.
 	 * `speed` = average speed (units/s).

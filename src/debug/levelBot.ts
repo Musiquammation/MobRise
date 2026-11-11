@@ -60,7 +60,7 @@ function deepClone<T>(root: T, shared: Set<object>): T {
 
 type G = any;
 
-function makeGame(level: LevelData): G {
+export function makeGame(level: LevelData): G {
 	const renderer = { getSize: (v: THREE.Vector2) => v.set(800, 600), render() {} };
 	const input = { x: null, y: null, presses: 0, down: false, reset() {} };
 	const resources = { getModel: () => ({ scene: new THREE.Group() }) };
@@ -70,7 +70,7 @@ function makeGame(level: LevelData): G {
 	return game;
 }
 
-function cloneGame(game: G): G {
+export function cloneGame(game: G): G {
 	const shared = new Set<object>([game.scene, game.renderer, game.input, game.resources, game.camera, game.callbacks]);
 	const c = deepClone(game, shared);
 	// The container callbacks capture the original game: rebind them.
@@ -78,14 +78,14 @@ function cloneGame(game: G): G {
 	return c;
 }
 
-function advance(game: G, x: number, seconds: number) {
+export function advance(game: G, x: number, seconds: number) {
 	game.pointerX = x;
 	const n = Math.round(seconds / DT);
 	for (let i = 0; i < n && game.phase === "run"; i++) game.gameFrame(DT);
 }
 
 /** Players still alive (finished = everyone who reached the cannon). */
-function alive(game: G): number {
+export function alive(game: G): number {
 	if (game.phase === "run") return game.crowd.length;
 	if (game.phase === "cannon") return game.entities.get("player").filter((p: any) => p.state === "gather").length;
 	return 0;
@@ -177,4 +177,66 @@ export async function playAll(o: BotOptions = {}, files?: string[]) {
 	const results: BotResult[] = (globalThis as any).botResults = [];
 	for (const f of files!) results.push(await playLevel(f, o));
 	return results;
+}
+
+type Beam = { game: G; x: number; history: [number, number][] };
+
+/**
+ * Beam search: every `step` seconds, each kept state tries every pointer
+ * position; the best state of each lane (crowd x rounded) is kept. Finds
+ * sequences like "left for the hole, then right for the spikes".
+ */
+export async function playLevelBeam(file: string, o: BotOptions & { width?: number } = {}): Promise<BotResult> {
+	const level = await loadLevel(file);
+	const step = o.step ?? 0.4;
+	const w = level.width / 2;
+	const candidates = o.candidates ?? [-w - 2, -w + 1, -w + 2, -1, 0, 1, w - 2, w - 1, w + 2];
+	const start = makeGame(level);
+	const idle = Math.round((o.timeOffset ?? 0) / DT);
+	for (let i = 0; i < idle; i++) start.gameFrame(DT);
+	start.start(null);
+
+	let beams: Beam[] = [{ game: start, x: 0, history: [] }];
+	let finished: Beam[] = [];
+	let lastBest: Beam = beams[0];
+	while (beams.length > 0) {
+		lastBest = beams[0];
+		const next: Beam[] = [];
+		for (const b of beams) {
+			for (const cx of candidates) {
+				const g = cloneGame(b.game);
+				advance(g, cx, step);
+				const n = alive(g);
+				if (n === 0) continue;
+				const nb = { game: g, x: cx, history: [...b.history, [Math.round(-g.centerZ), n] as [number, number]] };
+				(g.phase === "run" ? next : finished).push(nb);
+			}
+		}
+		// Best state of each lane, then the best lanes.
+		const lanes = new Map<number, Beam>();
+		for (const b of next) {
+			const k = Math.round(b.game.crowdX * 1.5);
+			const cur = lanes.get(k);
+			if (!cur || alive(b.game) > alive(cur.game)) lanes.set(k, b);
+		}
+		beams = [...lanes.values()].sort((a, b) => alive(b.game) - alive(a.game)).slice(0, o.width ?? 8);
+		// Only keep finished runs that are better than every running one.
+		const z = beams[0] ? Math.round(-beams[0].game.centerZ) : level.length;
+		(globalThis as any).botProgress = { file, z, count: beams[0] ? alive(beams[0].game) : 0 };
+		await new Promise<void>(r => {
+			const c = new MessageChannel();
+			c.port1.onmessage = () => r();
+			c.port2.postMessage(0);
+		});
+	}
+	finished.sort((a, b) => alive(b.game) - alive(a.game));
+	const best = finished[0];
+	if (!best) {
+		const h = lastBest.history;
+		return { level: file, won: false, final: 0, trace: h.slice(-12), losses: [] };
+	}
+	const losses: [number, number][] = [];
+	for (let i = 1; i < best.history.length; i++)
+		if (best.history[i][1] < best.history[i - 1][1]) losses.push([best.history[i][0], best.history[i - 1][1] - best.history[i][1]]);
+	return { level: file, won: true, final: alive(best.game), trace: best.history.filter((_, i) => i % 3 === 0), losses };
 }

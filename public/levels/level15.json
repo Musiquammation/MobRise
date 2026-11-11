@@ -27,31 +27,25 @@
     { "z": 280, "x": 2, "width": 4, "type": "pct", "value": 80 },
     { "z": 335, "x": -2, "width": 4, "type": "add", "value": -30 },
     { "z": 335, "x": 2, "width": 4, "type": "pct", "value": -30 },
-    { "z": 425, "x": -2, "width": 4, "type": "pct", "value": 50 },
-    { "z": 425, "x": 2, "width": 4, "type": "mul", "value": 2 },
     { "z": 452, "x": -2, "width": 4, "type": "add", "value": 56 },
-    { "z": 452, "x": 2, "width": 4, "type": "pct", "value": 15 }
+    { "z": 452, "x": 2, "width": 4, "type": "pct", "value": 15 },
+    { "z": 452, "x": -2, "width": 4, "type": "pct", "value": 50 },
+    { "z": 452, "x": 2, "width": 4, "type": "mul", "value": 2 }
   ],
   "spikes": [],
   "spikeFields": [
     { "x": -2.5, "z": 35.75, "width": 3, "depth": 1.5 },
     { "x": 2.5, "z": 41.75, "width": 3, "depth": 1.5 },
-    { "x": -2, "z": 88.75, "width": 4, "depth": 1.5, "period": 4.5 },
-    { "x": 2, "z": 88.75, "width": 4, "depth": 1.5, "period": 4.5, "offset": 0.5 },
     { "x": -2.5, "z": 148.75, "width": 3, "depth": 1.5 },
     { "x": 2.5, "z": 154.75, "width": 3, "depth": 1.5 },
     { "x": -2.5, "z": 160.75, "width": 3, "depth": 1.5 },
     { "x": 2.5, "z": 166.75, "width": 3, "depth": 1.5 },
-    { "x": -2, "z": 245.75, "width": 4, "depth": 1.5, "period": 4 },
-    { "x": 2, "z": 245.75, "width": 4, "depth": 1.5, "period": 4, "offset": 0.5 },
-    { "x": -2, "z": 262.75, "width": 4, "depth": 1.5, "period": 4 },
-    { "x": 2, "z": 262.75, "width": 4, "depth": 1.5, "period": 4, "offset": 0.5 },
-    { "x": 2.0, "z": 372.625, "width": 4, "depth": 1.25 },
-    { "x": -2.0, "z": 378.625, "width": 4, "depth": 1.25 },
-    { "x": 2.0, "z": 384.625, "width": 4, "depth": 1.25 },
-    { "x": -2.0, "z": 390.625, "width": 4, "depth": 1.25 },
-    { "x": 2.0, "z": 396.625, "width": 4, "depth": 1.25 },
-    { "x": -2.0, "z": 402.625, "width": 4, "depth": 1.25 }
+    { "x": 2, "z": 372.625, "width": 4, "depth": 1.25 },
+    { "x": -2, "z": 378.625, "width": 4, "depth": 1.25 },
+    { "x": 2, "z": 384.625, "width": 4, "depth": 1.25 },
+    { "x": -2, "z": 390.625, "width": 4, "depth": 1.25 },
+    { "x": 2, "z": 396.625, "width": 4, "depth": 1.25 },
+    { "x": -2, "z": 402.625, "width": 4, "depth": 1.25 }
   ],
   "saws": [],
   "archers": [
@@ -68,9 +62,8 @@
   ],
   "enemies": [
     { "x": 0, "z": 105, "count": 15 },
-    { "x": 0, "z": 215, "count": 25 },
-    { "x": 0, "z": 350, "count": 35 },
-    { "x": 0, "z": 440, "count": 45 }
+    { "x": 0, "z": 215, "count": 15 },
+    { "x": 0, "z": 350, "count": 3 }
   ],
   "jumps": [],
   "bosses": [

@@ -52,11 +52,22 @@ export class App implements DomActions {
 	}
 
 	async boot() {
-		await this.loadWithScreen([...CORE_MODELS, ...HAT_MODELS, LEVEL_INDEX]);
+		// Only what the first screen needs: the rest loads in the background.
+		await this.loadWithScreen([...CORE_MODELS, ...hatRequests(getSkin(this.save.skin)), LEVEL_INDEX]);
 		this.levels = this.resources.getJson<LevelIndex>("levels");
-		this.thumbnails = renderSkinThumbnails(this.resources, SKINS);
 		await this.openLevel();
 		requestAnimationFrame(t => this.loop(t));
+		this.loadInBackground().catch(err => console.error(err));
+	}
+
+	/** Loads the other hats and renders the shop thumbnails without blocking the game. */
+	private async loadInBackground() {
+		await this.resources.load(HAT_MODELS);
+		await renderSkinThumbnails(this.resources, SKINS, (id, url) => {
+			this.thumbnails[id] = url;
+			const panel = this.dom.panel;
+			if (panel.panel === "shop") panel.items = this.shopItems();
+		});
 	}
 
 	/** Loads resources while the loading panel shows the progress. */
@@ -73,11 +84,15 @@ export class App implements DomActions {
 		const forced = import.meta.env.DEV ? new URLSearchParams(location.search).get("level") : null;
 		const file = forced ?? this.levels[this.current % this.levels.length];
 		const request = levelRequest(file);
+		// The hat of the skin may still be loading in the background.
+		const hats = hatRequests(getSkin(this.save.skin)).filter(h => !this.resources.has(h.id));
 
 		if (this.levelResource !== request.id) {
-			await this.loadWithScreen([request]);
+			await this.loadWithScreen([request, ...hats]);
 			if (this.levelResource) this.resources.release([this.levelResource]);
 			this.levelResource = request.id;
+		} else if (hats.length) {
+			await this.loadWithScreen(hats);
 		}
 
 		this.buildGame();
@@ -229,9 +244,17 @@ export class App implements DomActions {
 		if (!this.save.owned.includes(id)) return;
 		this.save.skin = id;
 		writeSave(this.save);
-		this.game?.setSkin(getSkin(id));
 		const panel = this.dom.panel;
 		if (panel.panel === "shop") panel.items = this.shopItems();
+		void this.applySkin(getSkin(id));
+	}
+
+	/** Shows the skin on the crowd once its hat is loaded. */
+	private async applySkin(skin: Skin) {
+		const hats = hatRequests(skin).filter(h => !this.resources.has(h.id));
+		if (hats.length) await this.resources.load(hats);
+		// Another skin may have been equipped meanwhile.
+		if (this.save.skin === skin.id) this.game?.setSkin(skin);
 	}
 
 	next() {
@@ -258,6 +281,11 @@ function skinStats(skin: Skin): ShopStat[] {
 		{ id: "speed", level: skin.stats.speed, value: `+${whole.format((a.speed - 1) * 100)} %` },
 		{ id: "coins", level: skin.stats.coins, value: `×${factor.format(a.coins)}` },
 	];
+}
+
+/** Request of the hat model of a skin (empty when it has none). */
+function hatRequests(skin: Skin): ResourceRequest[] {
+	return HAT_MODELS.filter(h => h.id === skin.hat);
 }
 
 /** Translated name of a level (its `name` is a key of `levels` in src/i18n/locales). */

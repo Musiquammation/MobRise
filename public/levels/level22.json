@@ -5,7 +5,7 @@
   "speed": 11,
   "start": 29,
   "holes": [
-    { "x": 0, "z": 31.8, "width": 8, "depth": 13 },
+    { "x": 0, "z": 31.8, "width": 8, "depth": 9.5 },
     { "x": -2.25, "z": 72, "width": 3.5, "depth": 6 },
     { "x": 2.25, "z": 85, "width": 3.5, "depth": 6 },
     { "x": -2.25, "z": 98, "width": 3.5, "depth": 6 },
@@ -14,7 +14,7 @@
     { "x": 2.25, "z": 226, "width": 3.5, "depth": 10 },
     { "x": -2.25, "z": 242, "width": 3.5, "depth": 10 },
     { "x": 0, "z": 252, "width": 1.5, "depth": 4 },
-    { "x": 0, "z": 386.8, "width": 8, "depth": 13 }
+    { "x": 0, "z": 386.8, "width": 8, "depth": 9.5 }
   ],
   "gates": [
     { "z": 12, "x": -2, "width": 4, "type": "add", "value": 15 },
@@ -35,11 +35,7 @@
     { "x": 2, "z": 130.75, "width": 4, "depth": 1.5 },
     { "x": -2, "z": 138.75, "width": 4, "depth": 1.5 },
     { "x": 2, "z": 146.75, "width": 4, "depth": 1.5 },
-    { "x": -2, "z": 154.75, "width": 4, "depth": 1.5 },
-    { "x": -2, "z": 310.75, "width": 4, "depth": 1.5, "period": 1.4 },
-    { "x": 2, "z": 310.75, "width": 4, "depth": 1.5, "period": 1.4, "offset": 0.5 },
-    { "x": -2, "z": 322.75, "width": 4, "depth": 1.5, "period": 1.4, "offset": 0.5 },
-    { "x": 2, "z": 322.75, "width": 4, "depth": 1.5, "period": 1.4 }
+    { "x": -2, "z": 154.75, "width": 4, "depth": 1.5 }
   ],
   "saws": [
     { "x": 0, "z": 272, "axis": "x", "length": 6, "speed": 7 }

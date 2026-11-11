@@ -6,7 +6,7 @@
   "start": 15,
   "holes": [
     { "x": -1, "z": 82, "width": 3, "depth": 8 },
-    { "x": 0, "z": 322, "width": 8, "depth": 6 }
+    { "x": 0, "z": 322, "width": 8, "depth": 5 }
   ],
   "gates": [
     { "z": 40, "x": -2, "width": 4, "type": "add", "value": 10 },

@@ -288,7 +288,7 @@ export class Game extends GameLayer {
 		}
 
 		for (const s of level.spikeFields ?? [])
-			this.entities.add("hazard", new Spikes(s.x, s.z, s.width, s.depth, s.period, s.offset));
+			this.entities.add("hazard", new Spikes(s.x, s.z, s.width, s.depth, s.period, s.offset, s.up));
 
 		for (const s of level.saws ?? [])
 			this.entities.add("hazard", new Saw(s.x, s.z, s.axis, s.length, s.speed, s.radius, s.offset));
