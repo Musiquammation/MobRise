@@ -14,6 +14,10 @@ export default {
 		next: "Próximo",
 		lost: "Perdeu",
 		retry: "Tentar de novo",
+		pause: "Pausa",
+		paused: "Pausa",
+		resume: "Continuar",
+		quit: "Menu",
 	},
 	shop: {
 		title: "Visuais",

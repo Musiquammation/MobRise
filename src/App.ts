@@ -12,6 +12,7 @@ import { loadSave, writeSave, type SaveData } from "./data/save";
 import { airTime, getSkin, skinAbilities, skinPower, SKINS, type Skin } from "./data/skins";
 import type { LevelData, LevelIndex } from "./data/Level";
 import { locale, t } from "./i18n";
+import { listenBackButton } from "./android";
 
 /** Columns of the level grid (#levels ol in style.css). */
 const LEVELS_PER_ROW = 4;
@@ -28,6 +29,8 @@ export class App implements DomActions {
 	/** Index of the level shown (<= save.level: lower when replaying an old level). */
 	private current = this.save.level;
 	private game: Game | null = null;
+	/** Reactive panel of the running game (null outside of a game). */
+	private ui: GameComponent | null = null;
 	private thumbnails: Record<string, string> = {};
 	private lastTime = 0;
 
@@ -39,6 +42,11 @@ export class App implements DomActions {
 
 		this.dom = createDomHandler(this);
 		this.dom.coins = this.save.coins;
+		listenBackButton(() => this.back());
+		// Leaving the app (home, app switcher, screen off) pauses the game.
+		document.addEventListener("visibilitychange", () => {
+			if (document.hidden) this.pause();
+		});
 		// Dev only: lets the console (and tests) inspect the running game.
 		if (import.meta.env.DEV) (window as unknown as { mobrise: unknown }).mobrise = this;
 	}
@@ -78,6 +86,7 @@ export class App implements DomActions {
 	}
 
 	private buildGame() {
+		this.ui = null;
 		this.game?.dispose();
 		this.input.reset();
 		this.game = new Game(
@@ -106,7 +115,8 @@ export class App implements DomActions {
 	private loop(time: number) {
 		const dt = Math.min(0.05, (time - this.lastTime) / 1000 || 0);
 		this.lastTime = time;
-		this.game?.step(dt);
+		if (this.ui?.paused) this.game?.render();
+		else this.game?.step(dt);
 		requestAnimationFrame(t => this.loop(t));
 	}
 
@@ -114,6 +124,28 @@ export class App implements DomActions {
 		const w = window.innerWidth, h = window.innerHeight;
 		this.renderer.setSize(w, h, false);
 		this.game?.resize(w, h);
+	}
+
+	/** Android back button: true when handled, false to leave the app. */
+	private back(): boolean {
+		switch (this.dom.panel.panel) {
+			case "game": {
+				const phase = this.game?.phase;
+				if (phase === "won") this.next();
+				else if (phase === "lost") this.quit();
+				else if (this.ui?.paused) this.resume();
+				else this.pause();
+				return true;
+			}
+			case "shop":
+			case "levels":
+				this.closeShop();
+				return true;
+			case "loading":
+				return true;
+			default:
+				return false;
+		}
 	}
 
 	private addCoins(amount: number) {
@@ -138,7 +170,26 @@ export class App implements DomActions {
 	play() {
 		if (!this.game || this.game.phase !== "idle") return;
 		const ui = this.dom.show(new GameComponent(this.current + 1));
+		this.ui = ui;
 		this.game.start(ui);
+	}
+
+	pause() {
+		const phase = this.game?.phase;
+		if (!this.ui || this.ui.paused || (phase !== "run" && phase !== "cannon")) return;
+		this.ui.paused = true;
+	}
+
+	resume() {
+		if (!this.ui?.paused) return;
+		// Forget the finger of the pause panel: it must not steer nor shoot.
+		this.input.reset();
+		this.ui.paused = false;
+	}
+
+	/** Leaves the game for the main menu of the same level. */
+	quit() {
+		void this.openLevel();
 	}
 
 	openShop() {

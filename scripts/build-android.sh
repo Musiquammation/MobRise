@@ -50,6 +50,9 @@ npm run build
 echo "==> Capacitor synchronization"
 npx cap sync android
 
+echo "==> Android icons"
+scripts/gen-icons.sh
+
 echo "==> Android AAB build"
 (cd android && ./gradlew bundleRelease)
 

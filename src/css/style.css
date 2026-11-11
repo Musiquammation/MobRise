@@ -832,3 +832,50 @@ progress::-moz-progress-bar {
 	pointer-events: none;
 	white-space: nowrap;
 }
+
+/* pause */
+#game > button[data-pause] {
+	position: absolute;
+	left: 12px;
+	top: calc(12px + var(--safe-top));
+	display: grid;
+	place-items: center;
+	width: 52px;
+	min-height: 0;
+	height: 52px;
+	padding: 0;
+	border-radius: 16px;
+}
+
+#game > button[data-pause] svg {
+	width: 24px;
+	height: 24px;
+	fill: #fff;
+	filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.3));
+}
+
+/* The shots counter goes under the pause button. */
+#game > aside {
+	top: calc(76px + var(--safe-top));
+}
+
+#game > article[data-pause] {
+	/* Above the HUD (crowd counter, crosshair, gains...), which is absolutely positioned. */
+	position: relative;
+	z-index: 5;
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	/* The last shadow dims the frozen game behind the panel. */
+	box-shadow: 0 8px 0 var(--ink), 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 100vmax rgba(29, 37, 64, 0.45);
+}
+
+#game > article[data-pause] h2 {
+	margin-bottom: 4px;
+}
+
+#game > article[data-pause] button[data-quit] {
+	--c: #8a94a8;
+	--c-light: #a7b1c2;
+	--c-dark: #6a7488;
+}

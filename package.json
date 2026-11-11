@@ -8,12 +8,14 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --host",
     "models": "node scripts/genModels.mjs",
-    "cap:sync": "npm run build && cap sync android",
+    "cap:sync": "npm run build && cap sync android && scripts/gen-icons.sh",
     "android": "npm run cap:sync && ANDROID_HOME=${ANDROID_HOME:-$HOME/Android/Sdk} JAVA_HOME=${JAVA_HOME_ANDROID:-/usr/lib/jvm/java-21-openjdk-amd64} cap run android --target ${ANDROID_SERIAL:-$(adb devices | awk 'NR==2{print $1}')}",
-    "android:open": "cap open android"
+    "android:open": "cap open android",
+    "icons": "scripts/gen-icons.sh"
   },
   "dependencies": {
     "@capacitor/android": "^8.6.0",
+    "@capacitor/app": "^8.1.2",
     "@capacitor/core": "^8.6.0",
     "@fontsource/lilita-one": "^5.3.0",
     "alpinejs": "^3.17.5",

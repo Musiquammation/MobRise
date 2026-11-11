@@ -19,6 +19,10 @@ const en = {
 		next: "Next",
 		lost: "Lost",
 		retry: "Retry",
+		pause: "Pause",
+		paused: "Paused",
+		resume: "Resume",
+		quit: "Menu",
 	},
 	shop: {
 		title: "Skins",

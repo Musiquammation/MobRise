@@ -7,7 +7,8 @@
 	<meta name="mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<title>MobRise</title>
-	<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22%3E%3Crect width=%2216%22 height=%2216%22 rx=%223%22 fill=%22%232f8cff%22/%3E%3Crect x=%225%22 y=%223%22 width=%226%22 height=%2210%22 fill=%22%23fff%22/%3E%3C/svg%3E">
+	<link rel="icon" type="image/png" href="/icon.png">
+	<link rel="apple-touch-icon" href="/icon.png">
 	<script type="module" src="/src/index.ts"></script>
 </head>
 <body x-data>
@@ -58,6 +59,11 @@
 			</template>
 			<i x-show="p.aim.visible" :style="`left:${p.aim.x}px;top:${p.aim.y}px`"></i>
 
+			<button data-pause x-show="(p.phase === 'run' || p.phase === 'cannon') && !p.paused"
+				@pointerdown.stop @click="$store.dom.pause()" :aria-label="$t('game.pause')">
+				<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="5" height="16" rx="1.5"/><rect x="14" y="4" width="5" height="16" rx="1.5"/></svg>
+			</button>
+
 			<aside x-show="p.phase === 'cannon'">
 				<span x-html="$t('game.shots', { n: `<b>${p.count}</b>` })"></span>
 				<span x-show="p.combo > 1" x-text="'×' + p.combo"></span>
@@ -66,6 +72,11 @@
 				<em x-show="k > 0" x-text="'+' + p.gain.toFixed(1)"></em>
 			</template>
 
+			<article x-show="p.paused" x-transition data-pause @pointerdown.stop>
+				<h2 x-text="$t('game.paused')"></h2>
+				<button @click="$store.dom.resume()" x-text="$t('game.resume')"></button>
+				<button data-quit @click="$store.dom.quit()" x-text="$t('game.quit')"></button>
+			</article>
 			<article x-show="p.phase === 'won'" x-transition>
 				<h2 x-text="$t('game.level', { n: p.levelNumber })"></h2>
 				<p>+<b x-text="p.earned.toFixed(1)"></b><small x-show="p.multiplier > 1" x-text="'×' + p.multiplier.toLocaleString(document.documentElement.lang, { maximumFractionDigits: 2 })"></small></p>

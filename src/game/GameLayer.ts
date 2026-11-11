@@ -32,6 +32,11 @@ export abstract class GameLayer {
 	step(dt: number) {
 		this.gameFrame(dt);
 		this.gameUpdate(dt);
+		this.render();
+	}
+
+	/** Draws the scene as it is, without advancing it (pause). */
+	render() {
 		this.renderer.render(this.scene, this.camera.get());
 	}
 
