@@ -5,11 +5,12 @@
  * Usage (browser console, vite dev server):
  *   const bot = await import("/src/debug/levelBot.ts");
  *   await bot.playLevel("level8.json", { timeOffset: 1.3 });
+ * Or headless, several levels in parallel: node scripts/levelTest.mjs 25-35
  */
 import * as THREE from "three";
 import { Game } from "../game/Game";
 import type { LevelData } from "../data/Level";
-import { SKINS } from "../data/skins";
+import { getSkin } from "../data/skins";
 import { url } from "../env";
 
 const DT = 1 / 60;
@@ -61,18 +62,23 @@ function deepClone<T>(root: T, shared: Set<object>): T {
 
 type G = any;
 
-export function makeGame(level: LevelData): G {
+export function makeGame(level: LevelData, skin = "blue"): G {
 	const renderer = { getSize: (v: THREE.Vector2) => v.set(800, 600), render() {} };
 	const input = { x: null, y: null, presses: 0, down: false, reset() {} };
 	const resources = { getModel: () => ({ scene: new THREE.Group() }) };
-	const game: G = new Game(renderer as any, input as any, resources as any, level, SKINS[0], {
+	const game: G = new Game(renderer as any, input as any, resources as any, level, getSkin(skin), {
 		onCoins() {}, onEnd() {},
 	});
 	return game;
 }
 
 export function cloneGame(game: G): G {
-	const shared = new Set<object>([game.scene, game.renderer, game.input, game.resources, game.camera, game.callbacks]);
+	// Rendering only or never changed after the construction: shared (much faster).
+	const shared = new Set<object>([
+		game.scene, game.renderer, game.input, game.resources, game.camera, game.callbacks,
+		game.level, game.floor, game.scenery, game.playerRenderer, game.enemyRenderer, game.recruitRenderer,
+		...game.enemyZones.map((z: any) => z.label), ...game.recruitZones.map((z: any) => z.label),
+	].filter(Boolean));
 	const c = deepClone(game, shared);
 	// The container callbacks capture the original game: rebind them.
 	c.entities.callbacks = { onCreate: (e: any) => e.onSummon(c), onDelete: (e: any) => e.onDeath(c) };
@@ -100,6 +106,8 @@ export type BotOptions = {
 	/** Look-ahead (seconds). */
 	horizon?: number;
 	candidates?: number[];
+	/** Id of the equipped skin (default "blue": no shield, no flight). */
+	skin?: string;
 };
 
 export type BotResult = {
@@ -121,7 +129,7 @@ export async function playLevel(file: string, o: BotOptions = {}): Promise<BotRe
 	const step = o.step ?? 0.3, horizon = o.horizon ?? 2.5;
 	const w = level.width / 2;
 	const candidates = o.candidates ?? [-w - 1.5, -w + 1, -w + 2.2, -1, 0, 1, w - 2.2, w - 1, w + 1.5];
-	const game = makeGame(level);
+	const game = makeGame(level, o.skin);
 	// Time spent in the menu.
 	const idle = Math.round((o.timeOffset ?? 0) / DT);
 	for (let i = 0; i < idle; i++) game.gameFrame(DT);
@@ -192,7 +200,7 @@ export async function playLevelBeam(file: string, o: BotOptions & { width?: numb
 	const step = o.step ?? 0.4;
 	const w = level.width / 2;
 	const candidates = o.candidates ?? [-w - 2, -w + 1, -w + 2, -1, 0, 1, w - 2, w - 1, w + 2];
-	const start = makeGame(level);
+	const start = makeGame(level, o.skin);
 	const idle = Math.round((o.timeOffset ?? 0) / DT);
 	for (let i = 0; i < idle; i++) start.gameFrame(DT);
 	start.start(null);

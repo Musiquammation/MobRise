@@ -105,7 +105,9 @@ export function stepCrowd(bodies: readonly CrowdBody[], cx: number, cz: number, 
 	// 2. Collisions (spatial hash, cell = one diameter).
 	const diameter = o.radius * 2;
 	const d2min = diameter * diameter;
-	for (const list of grid.values()) list.length = 0;
+	// Cleared (not only emptied): the crowd keeps moving to new cells, a map
+	// keeping them all would grow along the level and be walked every step.
+	grid.clear();
 	const cells = new Int32Array(n * 2);
 	for (let i = 0; i < n; i++) {
 		const p = bodies[i].position;
