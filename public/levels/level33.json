@@ -1,0 +1,43 @@
+{
+  "name": "gears",
+  "width": 8,
+  "length": 440,
+  "speed": 10,
+  "start": 35,
+  "holes": [],
+  "gates": [
+    { "z": 12, "x": -2, "width": 4, "type": "add", "value": 15 },
+    { "z": 12, "x": 2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 92, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 92, "x": 2, "width": 4, "type": "add", "value": 25 },
+    { "z": 285, "x": -2, "width": 4, "type": "add", "value": 30 },
+    { "z": 285, "x": 2, "width": 4, "type": "pct", "value": 40 },
+    { "z": 418, "x": -2, "width": 4, "type": "add", "value": 20 },
+    { "z": 418, "x": 2, "width": 4, "type": "pct", "value": 20 }
+  ],
+  "spikes": [],
+  "spikeFields": [
+    { "x": 0, "z": 127, "width": 8, "depth": 1.5, "group": "g1" },
+    { "x": 0, "z": 222, "width": 8, "depth": 1.5, "group": "g2" },
+    { "x": -2.0, "z": 236, "width": 4, "depth": 1.5 }
+  ],
+  "buttons": [
+    { "x": -3.0, "z": 115, "groups": ["g1"] },
+    { "x": 3.0, "z": 210, "groups": ["g2"] }
+  ],
+  "logs": [
+    { "x": -1.5, "z": 45, "angles": [0, 180], "speed": 70, "length": 2.5 },
+    { "x": 1.5, "z": 62, "angles": [90, 270], "speed": -70, "length": 2.5 },
+    { "x": 1.8, "z": 150, "angles": [0, 120, 240], "speed": 55, "length": 2.6 },
+    { "x": -2, "z": 258, "angles": [0], "speed": 100, "length": 2.2 },
+    { "x": -1.6, "z": 320, "angles": [0, 90, 180, 270], "speed": 40, "length": 2.6 }
+  ],
+  "walls": [
+    { "x": 0, "z": 352, "width": 8, "hp": 20 }
+  ],
+  "enemies": [
+    { "x": 0, "z": 180, "count": 30 },
+    { "x": 0, "z": 385, "count": 40 }
+  ],
+  "cannon": { "boxes": 6, "distance": 28, "height": 8, "rx": 2.5, "ry": 1.5, "speed": 0.2, "path": "ellipse" }
+}

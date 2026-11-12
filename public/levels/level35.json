@@ -1,0 +1,59 @@
+{
+  "name": "grandFinale",
+  "width": 8,
+  "length": 520,
+  "speed": 10,
+  "start": 40,
+  "holes": [],
+  "gates": [
+    { "z": 12, "x": -2, "width": 4, "type": "add", "value": 20 },
+    { "z": 12, "x": 2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 188, "x": -2, "width": 4, "type": "mul", "value": 3 },
+    { "z": 188, "x": 2, "width": 4, "type": "add", "value": 20 },
+    { "z": 345, "x": -2, "width": 4, "type": "add", "value": 30 },
+    { "z": 345, "x": 2, "width": 4, "type": "pct", "value": 40 },
+    { "z": 462, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 462, "x": 2, "width": 4, "type": "add", "value": 40 }
+  ],
+  "spikes": [],
+  "spikeFields": [
+    { "x": 0, "z": 46.75, "width": 8, "depth": 1.5, "group": "g1" },
+    { "x": 2.0, "z": 54.4, "width": 4, "depth": 1.5 },
+    { "x": 0, "z": 70.15, "width": 8, "depth": 1.5, "group": "g2" },
+    { "x": -2.0, "z": 77.8, "width": 4, "depth": 1.5 },
+    { "x": 0, "z": 93.55, "width": 8, "depth": 1.5, "group": "g3" },
+    { "x": -2.0, "z": 101.2, "width": 4, "depth": 1.5 },
+    { "x": 0, "z": 116.95, "width": 8, "depth": 1.5, "group": "g4" },
+    { "x": 0, "z": 258, "width": 8, "depth": 1.5, "group": "g5" },
+    { "x": 0, "z": 300, "width": 8, "depth": 1.5, "group": "g6" },
+    { "x": -2.0, "z": 312, "width": 4, "depth": 1.5, "period": 1.5 },
+    { "x": 0, "z": 330, "width": 8, "depth": 1.5, "group": "g7" }
+  ],
+  "buttons": [
+    { "x": -3.0, "z": 40, "groups": ["g1"] },
+    { "x": 3.0, "z": 63.4, "groups": ["g2"] },
+    { "x": -3.0, "z": 86.8, "groups": ["g3"] },
+    { "x": 3.0, "z": 110.2, "groups": ["g4"] },
+    { "x": 3.0, "z": 250, "groups": ["g5"] },
+    { "x": -3.0, "z": 292, "groups": ["g6"] },
+    { "x": 3.0, "z": 322, "groups": ["g7"] }
+  ],
+  "logs": [
+    { "x": -1.8, "z": 140, "angles": [0, 120, 240], "speed": 60, "length": 2.6 },
+    { "x": -2, "z": 275, "angles": [0], "speed": 110, "length": 2.2 },
+    { "x": 1.6, "z": 405, "angles": [0, 90, 180, 270], "speed": 45, "length": 2.6 }
+  ],
+  "walls": [
+    { "x": -2, "z": 178, "width": 4, "hp": 25 },
+    { "x": 2, "z": 178, "width": 4, "hp": 10 },
+    { "x": 0, "z": 372, "width": 8, "hp": 30 }
+  ],
+  "enemies": [
+    { "x": 0, "z": 220, "count": 35 },
+    { "x": 0, "z": 440, "count": 40 }
+  ],
+  "bosses": [
+    { "x": 0, "z": 495, "hp": 150 }
+  ],
+  "cannon": { "boxes": 6, "distance": 28, "height": 8, "rx": 3, "ry": 1.5, "speed": 0.2, "path": "figure8" }
+}

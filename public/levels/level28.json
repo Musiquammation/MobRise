@@ -1,0 +1,50 @@
+{
+  "name": "quickPress",
+  "width": 8,
+  "length": 380,
+  "speed": 10,
+  "start": 25,
+  "holes": [],
+  "gates": [
+    { "z": 12, "x": -2, "width": 4, "type": "add", "value": 10 },
+    { "z": 12, "x": 2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 150, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 150, "x": 2, "width": 4, "type": "add", "value": 25 },
+    { "z": 310, "x": -2, "width": 4, "type": "add", "value": 30 },
+    { "z": 310, "x": 2, "width": 4, "type": "pct", "value": 40 },
+    { "z": 368, "x": -2, "width": 4, "type": "add", "value": 20 },
+    { "z": 368, "x": 2, "width": 4, "type": "pct", "value": 20 }
+  ],
+  "spikes": [],
+  "spikeFields": [
+    { "x": 0, "z": 46.75, "width": 8, "depth": 1.5, "group": "g1" },
+    { "x": -2.0, "z": 54.4, "width": 4, "depth": 1.5 },
+    { "x": 0, "z": 70.15, "width": 8, "depth": 1.5, "group": "g2" },
+    { "x": 2.0, "z": 77.8, "width": 4, "depth": 1.5 },
+    { "x": 0, "z": 93.55, "width": 8, "depth": 1.5, "group": "g3" },
+    { "x": -2.0, "z": 101.2, "width": 4, "depth": 1.5 },
+    { "x": 0, "z": 116.95, "width": 8, "depth": 1.5, "group": "g4" },
+    { "x": 0, "z": 211.75, "width": 8, "depth": 1.5, "group": "g5" },
+    { "x": 2.0, "z": 219.4, "width": 4, "depth": 1.5 },
+    { "x": 0, "z": 235.15, "width": 8, "depth": 1.5, "group": "g6" },
+    { "x": -2.0, "z": 242.8, "width": 4, "depth": 1.5 },
+    { "x": 0, "z": 258.55, "width": 8, "depth": 1.5, "group": "g7" },
+    { "x": 2.0, "z": 266.2, "width": 4, "depth": 1.5 },
+    { "x": 0, "z": 281.95, "width": 8, "depth": 1.5, "group": "g8" }
+  ],
+  "buttons": [
+    { "x": -3.0, "z": 40, "groups": ["g1"] },
+    { "x": 3.0, "z": 63.4, "groups": ["g2"] },
+    { "x": -3.0, "z": 86.8, "groups": ["g3"] },
+    { "x": 3.0, "z": 110.2, "groups": ["g4"] },
+    { "x": 3.0, "z": 205, "groups": ["g5"] },
+    { "x": -3.0, "z": 228.4, "groups": ["g6"] },
+    { "x": 3.0, "z": 251.8, "groups": ["g7"] },
+    { "x": -3.0, "z": 275.2, "groups": ["g8"] }
+  ],
+  "enemies": [
+    { "x": 0, "z": 180, "count": 30 },
+    { "x": 0, "z": 340, "count": 40 }
+  ],
+  "cannon": { "boxes": 6, "distance": 28, "height": 8, "rx": 2, "ry": 1.2, "speed": 0.2, "path": "pendulum", "spacing": 2.6 }
+}

@@ -1,0 +1,40 @@
+{
+  "name": "windmill",
+  "width": 8,
+  "length": 400,
+  "speed": 10,
+  "start": 30,
+  "holes": [],
+  "gates": [
+    { "z": 12, "x": -2, "width": 4, "type": "add", "value": 15 },
+    { "z": 12, "x": 2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 80, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 80, "x": 2, "width": 4, "type": "add", "value": 20 },
+    { "z": 250, "x": -2, "width": 4, "type": "add", "value": 25 },
+    { "z": 250, "x": 2, "width": 4, "type": "pct", "value": 40 },
+    { "z": 345, "x": -2, "width": 4, "type": "add", "value": 30 },
+    { "z": 345, "x": 2, "width": 4, "type": "pct", "value": 30 }
+  ],
+  "spikes": [],
+  "spikeFields": [
+    { "x": 0, "z": 202, "width": 8, "depth": 1.5, "group": "g1" }
+  ],
+  "buttons": [
+    { "x": -3.0, "z": 190, "groups": ["g1"] }
+  ],
+  "logs": [
+    { "x": -1.8, "z": 45, "angles": [0, 120, 240], "speed": 50, "length": 2.6 },
+    { "x": -2, "z": 112, "angles": [0], "speed": 120, "length": 2.2 },
+    { "x": 2, "z": 130, "angles": [180], "speed": -120, "length": 2.2 },
+    { "x": 2, "z": 222, "angles": [0, 180], "speed": 70, "length": 2.5 },
+    { "x": 1.6, "z": 285, "angles": [0, 180], "speed": 45, "length": 2.6 }
+  ],
+  "enemies": [
+    { "x": 0, "z": 160, "count": 25 },
+    { "x": 0, "z": 320, "count": 40 }
+  ],
+  "bosses": [
+    { "x": 0, "z": 375, "hp": 100 }
+  ],
+  "cannon": { "boxes": 6, "distance": 28, "height": 8, "rx": 2, "ry": 1.2, "speed": 0.15, "path": "row", "spacing": 2.4, "sway": 2, "swaySpeed": 0.08 }
+}

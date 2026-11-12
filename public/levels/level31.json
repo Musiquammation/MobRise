@@ -1,0 +1,52 @@
+{
+  "name": "chicane",
+  "width": 8,
+  "length": 420,
+  "speed": 10,
+  "start": 30,
+  "holes": [],
+  "gates": [
+    { "z": 12, "x": -2, "width": 4, "type": "add", "value": 15 },
+    { "z": 12, "x": 2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 145, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 145, "x": 2, "width": 4, "type": "add", "value": 25 },
+    { "z": 182, "x": -2, "width": 4, "type": "pct", "value": 50 },
+    { "z": 182, "x": 2, "width": 4, "type": "add", "value": 10 },
+    { "z": 320, "x": -2, "width": 4, "type": "add", "value": 30 },
+    { "z": 320, "x": 2, "width": 4, "type": "pct", "value": 40 }
+  ],
+  "spikes": [],
+  "spikeFields": [
+    { "x": 0, "z": 46.75, "width": 8, "depth": 1.5, "group": "g1" },
+    { "x": 2.0, "z": 54.4, "width": 4, "depth": 1.5 },
+    { "x": 0, "z": 70.15, "width": 8, "depth": 1.5, "group": "g2" },
+    { "x": -2.0, "z": 77.8, "width": 4, "depth": 1.5 },
+    { "x": 0, "z": 93.55, "width": 8, "depth": 1.5, "group": "g3" },
+    { "x": 2.0, "z": 101.2, "width": 4, "depth": 1.5 },
+    { "x": 0, "z": 116.95, "width": 8, "depth": 1.5, "group": "g4" },
+    { "x": 0, "z": 251.0, "width": 8, "depth": 1.5, "group": "g5" },
+    { "x": -2.0, "z": 257.8, "width": 4, "depth": 1.5 },
+    { "x": 0, "z": 271.8, "width": 8, "depth": 1.5, "group": "g6" },
+    { "x": 2.0, "z": 278.6, "width": 4, "depth": 1.5 },
+    { "x": 0, "z": 292.6, "width": 8, "depth": 1.5, "group": "g7" }
+  ],
+  "buttons": [
+    { "x": 3.0, "z": 40, "groups": ["g1"] },
+    { "x": -3.0, "z": 63.4, "groups": ["g2"] },
+    { "x": 3.0, "z": 86.8, "groups": ["g3"] },
+    { "x": -3.0, "z": 110.2, "groups": ["g4"] },
+    { "x": -3.0, "z": 245, "groups": ["g5"] },
+    { "x": 3.0, "z": 265.8, "groups": ["g6"] },
+    { "x": -3.0, "z": 286.6, "groups": ["g7"] }
+  ],
+  "walls": [
+    { "x": -2, "z": 172, "width": 4, "hp": 20 },
+    { "x": 2, "z": 172, "width": 4, "hp": 8 },
+    { "x": 0, "z": 350, "width": 8, "hp": 30 }
+  ],
+  "enemies": [
+    { "x": 0, "z": 215, "count": 30 },
+    { "x": 0, "z": 385, "count": 35 }
+  ],
+  "cannon": { "boxes": 6, "distance": 28, "height": 8, "rx": 3, "ry": 1.5, "speed": 0.17, "path": "figure8" }
+}

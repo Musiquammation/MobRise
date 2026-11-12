@@ -1,0 +1,35 @@
+{
+  "name": "spikedLog",
+  "width": 8,
+  "length": 340,
+  "speed": 10,
+  "start": 20,
+  "holes": [],
+  "gates": [
+    { "z": 12, "x": -2, "width": 4, "type": "add", "value": 10 },
+    { "z": 12, "x": 2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 85, "x": -2, "width": 4, "type": "add", "value": 15 },
+    { "z": 85, "x": 2, "width": 4, "type": "pct", "value": 50 },
+    { "z": 255, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 255, "x": 2, "width": 4, "type": "add", "value": 25 },
+    { "z": 320, "x": -2, "width": 4, "type": "add", "value": 20 },
+    { "z": 320, "x": 2, "width": 4, "type": "pct", "value": 25 }
+  ],
+  "spikes": [],
+  "spikeFields": [
+    { "x": 0, "z": 192, "width": 8, "depth": 1.5, "group": "g1" }
+  ],
+  "buttons": [
+    { "x": 3.0, "z": 180, "groups": ["g1"] }
+  ],
+  "logs": [
+    { "x": 0, "z": 50, "angles": [90], "speed": 60, "length": 3 },
+    { "x": -1.5, "z": 120, "angles": [0, 180], "speed": 60, "length": 2.6 },
+    { "x": 0, "z": 220, "angles": [0], "speed": -70, "length": 3.2 }
+  ],
+  "enemies": [
+    { "x": 0, "z": 150, "count": 20 },
+    { "x": 0, "z": 290, "count": 35 }
+  ],
+  "cannon": { "boxes": 6, "distance": 28, "height": 8, "rx": 3, "ry": 1.5, "speed": 0.15, "path": "figure8" }
+}

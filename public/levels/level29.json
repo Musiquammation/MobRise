@@ -1,0 +1,34 @@
+{
+  "name": "brickWall",
+  "width": 8,
+  "length": 360,
+  "speed": 10,
+  "start": 25,
+  "holes": [],
+  "gates": [
+    { "z": 12, "x": -2, "width": 4, "type": "add", "value": 10 },
+    { "z": 12, "x": 2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 50, "x": -2, "width": 4, "type": "add", "value": 5 },
+    { "z": 50, "x": 2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 140, "x": -2, "width": 4, "type": "add", "value": 20 },
+    { "z": 140, "x": 2, "width": 4, "type": "pct", "value": 50 },
+    { "z": 185, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 185, "x": 2, "width": 4, "type": "add", "value": 15 },
+    { "z": 290, "x": -2, "width": 4, "type": "add", "value": 30 },
+    { "z": 290, "x": 2, "width": 4, "type": "pct", "value": 30 }
+  ],
+  "spikes": [],
+  "walls": [
+    { "x": 2, "z": 40, "width": 4, "hp": 10 },
+    { "x": 0, "z": 115, "width": 8, "hp": 15 },
+    { "x": -2, "z": 175, "width": 4, "hp": 30 },
+    { "x": 2, "z": 175, "width": 4, "hp": 12 },
+    { "x": 0, "z": 260, "width": 8, "hp": 25 }
+  ],
+  "enemies": [
+    { "x": 0, "z": 85, "count": 15 },
+    { "x": 0, "z": 225, "count": 30 },
+    { "x": 0, "z": 330, "count": 30 }
+  ],
+  "cannon": { "boxes": 6, "distance": 28, "height": 8, "rx": 2.5, "ry": 1.5, "speed": 0.18, "path": "ellipse" }
+}

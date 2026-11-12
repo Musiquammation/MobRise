@@ -1,0 +1,45 @@
+{
+  "name": "demolition",
+  "width": 8,
+  "length": 440,
+  "speed": 10,
+  "start": 30,
+  "holes": [],
+  "gates": [
+    { "z": 12, "x": -2, "width": 4, "type": "add", "value": 20 },
+    { "z": 12, "x": 2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 80, "x": -2, "width": 4, "type": "mul", "value": 3 },
+    { "z": 80, "x": 2, "width": 4, "type": "add", "value": 15 },
+    { "z": 215, "x": -2, "width": 4, "type": "mul", "value": 2 },
+    { "z": 215, "x": 2, "width": 4, "type": "add", "value": 30 },
+    { "z": 375, "x": -2, "width": 4, "type": "add", "value": 25 },
+    { "z": 375, "x": 2, "width": 4, "type": "pct", "value": 30 }
+  ],
+  "spikes": [],
+  "spikeFields": [
+    { "x": 0, "z": 292, "width": 8, "depth": 1.5, "group": "g1" },
+    { "x": -2.0, "z": 305, "width": 4, "depth": 1.5 }
+  ],
+  "buttons": [
+    { "x": 3.0, "z": 280, "groups": ["g1"] }
+  ],
+  "logs": [
+    { "x": 0, "z": 150, "angles": [0], "speed": 80, "length": 3.2 }
+  ],
+  "walls": [
+    { "x": 0, "z": 40, "width": 8, "hp": 10 },
+    { "x": -2, "z": 70, "width": 4, "hp": 25 },
+    { "x": -2.6666666666666665, "z": 185, "width": 2.6666666666666665, "hp": 6 },
+    { "x": 0, "z": 185, "width": 2.6666666666666665, "hp": 40 },
+    { "x": 2.6666666666666665, "z": 185, "width": 2.6666666666666665, "hp": 6 },
+    { "x": 0, "z": 250, "width": 8, "hp": 40 }
+  ],
+  "enemies": [
+    { "x": 0, "z": 115, "count": 30 },
+    { "x": 0, "z": 340, "count": 40 }
+  ],
+  "bosses": [
+    { "x": 0, "z": 410, "hp": 120 }
+  ],
+  "cannon": { "boxes": 6, "distance": 28, "height": 8, "rx": 2, "ry": 1.2, "speed": 0.2, "path": "pendulum", "spacing": 2.6 }
+}
