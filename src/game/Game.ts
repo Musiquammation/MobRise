@@ -12,6 +12,9 @@ import { Floor, FLOOR_AFTER } from "./entities/platforms/Floor";
 import { SpikeBall } from "./entities/hazards/SpikeBall";
 import { Spikes } from "./entities/hazards/Spikes";
 import { Saw } from "./entities/hazards/Saw";
+import { SpikedLog } from "./entities/hazards/SpikedLog";
+import { Wall } from "./entities/hazards/Wall";
+import { Button, BUTTON_COLORS } from "./entities/Button";
 import { JumpPad } from "./entities/JumpPad";
 import { Archer } from "./entities/props/Archer";
 import { Enemy } from "./entities/enemies/Enemy";
@@ -289,8 +292,28 @@ export class Game extends GameLayer {
 			));
 		}
 
-		for (const s of level.spikeFields ?? [])
-			this.entities.add("hazard", new Spikes(s.x, s.z, s.width, s.depth, s.period, s.offset, s.up));
+		// Buttons and the spike fields they lower share a color (the first button listing the group).
+		const buttons = level.buttons ?? [];
+		const groupColor = new Map<string, string>();
+		buttons.forEach((b, i) => {
+			for (const g of b.groups) if (!groupColor.has(g)) groupColor.set(g, BUTTON_COLORS[i % BUTTON_COLORS.length]);
+		});
+		const groups = new Map<string, Spikes[]>();
+		for (const s of level.spikeFields ?? []) {
+			const field = new Spikes(s.x, s.z, s.width, s.depth, s.period, s.offset, s.up, s.group && groupColor.get(s.group));
+			if (s.group) groups.set(s.group, [...groups.get(s.group) ?? [], field]);
+			this.entities.add("hazard", field);
+		}
+		buttons.forEach((b, i) => {
+			const targets = b.groups.flatMap(g => groups.get(g) ?? []);
+			if (targets.length === 0) console.warn(`${level.name}: button z=${b.z} lowers no spike field`);
+			this.entities.add("button", new Button(b.x, b.z, b.radius ?? 0.8, BUTTON_COLORS[i % BUTTON_COLORS.length], targets));
+		});
+
+		for (const l of level.logs ?? [])
+			this.entities.add("hazard", new SpikedLog(l.x, l.z, l.length ?? 3, l.angles, l.speed ?? 90));
+
+		for (const w of level.walls ?? []) this.entities.add("hazard", new Wall(w.x, w.z, w.width, w.hp));
 
 		for (const s of level.saws ?? [])
 			this.entities.add("hazard", new Saw(s.x, s.z, s.axis, s.length, s.speed, s.radius, s.offset));
@@ -864,7 +887,7 @@ export class Game extends GameLayer {
 
 	private detectCollisions() {
 		const others: Entity[] = [];
-		for (const list of [this.entities.get("pad"), this.entities.get("boost"), this.entities.get("hazard"), this.entities.get("gate"), this.entities.get("box")])
+		for (const list of [this.entities.get("pad"), this.entities.get("boost"), this.entities.get("button"), this.entities.get("hazard"), this.entities.get("gate"), this.entities.get("box")])
 			for (const e of list) {
 				e.refreshHitbox();
 				others.push(e);

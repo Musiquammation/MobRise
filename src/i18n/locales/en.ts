@@ -90,6 +90,17 @@ const en = {
 		giantPath: "Giant's path",
 		breeze: "Light breeze",
 		firstJumps: "First jumps",
+		buttonIntro: "The button",
+		leftRight: "Left, right",
+		spikedLog: "The spiked log",
+		quickPress: "Quick, press!",
+		brickWall: "Brick wall",
+		windmill: "Windmill",
+		chicane: "Chicane",
+		demolition: "Demolition",
+		gears: "Gears",
+		rhythm: "Rhythm",
+		grandFinale: "Grand finale",
 	},
 };
 

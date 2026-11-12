@@ -32,7 +32,30 @@ export type LevelData = {
 	 * in [0, 1) shifts it). No side by side blinking fields with alternating
 	 * offsets ("double spikes"): too frustrating, removed from all levels.
 	 */
-	spikeFields?: { x: number; z: number; width: number; depth: number; period?: number; offset?: number; up?: number }[];
+	spikeFields?: {
+		x: number; z: number; width: number; depth: number; period?: number; offset?: number; up?: number;
+		/** Group name: the buttons listing it lower these spikes for good. */
+		group?: string;
+	}[];
+	/**
+	 * Round buttons on the floor (x, z = center). The first player stepping on
+	 * one presses it: the spike fields of its `groups` go down for good. The
+	 * button and its fields share a color.
+	 */
+	buttons?: { x: number; z: number; groups: string[]; radius?: number }[];
+	/**
+	 * Spiked logs: a central log at (x, z) turning on itself, with one spiked
+	 * log sticking out per angle (degrees, 0 = toward +x, counterclockwise seen
+	 * from above), `length` long (default 3). `speed` in degrees/s (default 90,
+	 * negative = clockwise). A player touching it dies (or loses its shield).
+	 */
+	logs?: { x: number; z: number; angles: number[]; speed?: number; length?: number }[];
+	/**
+	 * Brick walls (x = center, z = front). Each player running into one is
+	 * spent and removes 1 hp; at 0 the wall collapses. Narrower than the track
+	 * they can be avoided, full width they must be paid.
+	 */
+	walls?: { x: number; z: number; width: number; hp: number }[];
 	/**
 	 * Saw blades going back and forth along `axis` around (x, z), over `length`.
 	 * `speed` = average speed (units/s).

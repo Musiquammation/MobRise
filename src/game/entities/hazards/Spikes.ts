@@ -20,6 +20,9 @@ const matrix = new THREE.Matrix4();
 const PLATE_IDLE = new THREE.Color("#4b5563");
 const WARN_STEPS = [PLATE_IDLE, new THREE.Color("#5c1f1f"), new THREE.Color("#a12828"), new THREE.Color("#ff2a2a")];
 const WARN_GLOW = [0, 0.05, 0.25, 0.7];
+/** Plate once the spikes are down for good (button pressed): safe. */
+const PLATE_SAFE = new THREE.Color("#6b9a7a");
+const BORDER = 0.12;
 
 /** A field of spikes on the floor. Can go up and down periodically. */
 export class Spikes extends Hazard {
@@ -30,6 +33,9 @@ export class Spikes extends Hazard {
 	private raise = 1;
 	/** Warning step while down (index in WARN_STEPS), -1 when up. */
 	private warnStep = -1;
+	/** Down for good (its button was pressed). */
+	retracted = false;
+	private readonly border: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial> | null = null;
 
 	constructor(
 		x: number,
@@ -40,6 +46,8 @@ export class Spikes extends Hazard {
 		private readonly offset = 0,
 		/** Fraction of the cycle with the spikes up. */
 		private readonly up = 0.5,
+		/** Color of the button lowering this field (colored border), if any. */
+		linkColor?: string,
 	) {
 		super();
 		// z = start (distance), the field spans [z, z + depth] → world [-z - depth, -z].
@@ -68,11 +76,30 @@ export class Spikes extends Hazard {
 				this.spikes.setMatrixAt(i++, matrix);
 			}
 		this.object.add(this.spikes);
+
+		if (linkColor) {
+			// Frame around the plate, in the color of its button.
+			const parts: THREE.BufferGeometry[] = [];
+			const w = width + BORDER * 2, d = depth + BORDER * 2;
+			for (const sz of [-1, 1]) parts.push(new THREE.BoxGeometry(w, 0.07, BORDER).translate(0, 0, sz * (d - BORDER) / 2));
+			for (const sx of [-1, 1]) parts.push(new THREE.BoxGeometry(BORDER, 0.07, depth).translate(sx * (w - BORDER) / 2, 0, 0));
+			const geo = mergeBoxes(parts);
+			this.border = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({
+				color: linkColor, emissive: linkColor, emissiveIntensity: 0.35, roughness: 0.5,
+			}));
+			this.border.position.y = 0.035;
+			this.object.add(this.border);
+		}
+	}
+
+	/** Its button was pressed: the spikes go down and stay down. */
+	retract() {
+		this.retracted = true;
 	}
 
 	/** Spikes going up and down (the players on them cannot move sideways). */
 	isBlinking(): boolean {
-		return this.period > 0;
+		return this.period > 0 && !this.retracted;
 	}
 
 	/** Whether the point (x, z) is on the field. */
@@ -91,6 +118,7 @@ export class Spikes extends Hazard {
 	}
 
 	private target(time: number): number {
+		if (this.retracted) return 0;
 		if (this.period <= 0) return 1;
 		return this.phase(time) < this.up ? 1 : 0;
 	}
@@ -98,12 +126,12 @@ export class Spikes extends Hazard {
 	frame(game: Game, dt: number) {
 		const target = this.target(game.time);
 		// Fast up, slower down; a short warning before going up.
-		const warn = this.period > 0 && target === 0 && this.target(game.time + 0.35) === 1;
+		const warn = this.period > 0 && !this.retracted && target === 0 && this.target(game.time + 0.35) === 1;
 		const goal = warn ? 0.18 : target;
 		const rate = goal > this.raise ? 14 : 6;
 		this.raise += Math.sign(goal - this.raise) * Math.min(Math.abs(goal - this.raise), rate * dt);
 
-		if (this.period > 0) {
+		if (this.period > 0 && !this.retracted) {
 			const t = this.phase(game.time);
 			this.warnStep = t < this.up ? -1 : Math.min(WARN_STEPS.length - 1, Math.floor((t - this.up) / (1 - this.up) * WARN_STEPS.length));
 		}
@@ -122,7 +150,11 @@ export class Spikes extends Hazard {
 		super.update();
 		this.spikes.position.y = (this.raise - 1) * SPIKE_HEIGHT;
 		const m = this.plate.material;
-		if (this.period > 0) {
+		if (this.retracted) {
+			m.color.copy(PLATE_SAFE);
+			m.emissive.setRGB(0, 0, 0);
+			if (this.border) this.border.material.emissiveIntensity = 0;
+		} else if (this.period > 0) {
 			const step = this.warnStep < 0 ? WARN_STEPS.length - 1 : this.warnStep;
 			m.color.copy(WARN_STEPS[step]);
 			m.emissive.copy(WARN_STEPS[step]);
@@ -133,8 +165,26 @@ export class Spikes extends Hazard {
 	}
 
 	dispose() {
+		this.border?.geometry.dispose();
+		this.border?.material.dispose();
 		this.plate.geometry.dispose();
 		this.plate.material.dispose();
 		this.spikes.dispose();
 	}
+}
+
+/** Merges non-indexed copies of box geometries (positions and normals only). */
+function mergeBoxes(parts: THREE.BufferGeometry[]): THREE.BufferGeometry {
+	const pos: number[] = [], nor: number[] = [];
+	for (const p of parts) {
+		const g = p.toNonIndexed();
+		pos.push(...g.attributes.position.array);
+		nor.push(...g.attributes.normal.array);
+		g.dispose();
+		p.dispose();
+	}
+	const out = new THREE.BufferGeometry();
+	out.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
+	out.setAttribute("normal", new THREE.Float32BufferAttribute(nor, 3));
+	return out;
 }
