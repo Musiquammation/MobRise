@@ -87,7 +87,7 @@ It checks dimensions, ratios, weights and counts against the Play rules. Then **
 
 ### 6. Upload (only if asked)
 
-In the Play Console (Grow > Store presence > Main store listing): replace assets through "Ajouter des composants" > Importer. Use a distinct file name when replacing an asset, because the library keeps the old file under its original name. Never click save, send for review or publish without the user's explicit OK.
+Use the `push-android-presentation` skill: it uploads everything to the Play Console default listing in order and saves it as a draft.
 
 ## Design rules learned (keep them)
 
