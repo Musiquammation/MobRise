@@ -19,6 +19,13 @@ export default {
 		resume: "Reprendre",
 		quit: "Menu",
 	},
+	settings: {
+		title: "Paramètres",
+		music: "Musique",
+		sounds: "Sons",
+		ok: "OK",
+		credits: "Musique : « Riverside Ride » de Matthew Pablo (CC-BY 3.0) · Autres musiques et sons : OpenGameArt et Kenney (CC0)",
+	},
 	shop: {
 		title: "Skins",
 		equipped: "Équipé",

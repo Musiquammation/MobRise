@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { Entity } from "../Entity";
 import type { Game } from "../Game";
+import { audio } from "../../audio/audio";
 
 /**
  * - run:    in the crowd (moved by crowdPhysics: attraction + collisions)
@@ -80,6 +81,8 @@ export class Player extends Entity {
 		this.state = "dying";
 		this.deathTime = 0;
 		this.velocity.set(vx, vy, vz);
+		// Lower and lower along a burst of deaths.
+		audio.enqueue("pop", b => 1 - 0.3 * b, { detune: 0.08 });
 	}
 
 	/**
@@ -91,6 +94,7 @@ export class Player extends Entity {
 		if (this.shield) {
 			this.shield = false;
 			this.grace = SHIELD_GRACE;
+			audio.play("shield");
 			// Small hop to show the shield popped.
 			if (this.state === "run" && this.position.y <= 0.05) {
 				this.velocity.y = 4;
@@ -107,6 +111,7 @@ export class Player extends Entity {
 		if (this.state !== "run" || this.position.y > 0.05) return;
 		this.velocity.y = power;
 		this.position.y = 0.06;
+		audio.play("jump");
 	}
 
 	isAirborne(): boolean {

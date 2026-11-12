@@ -19,6 +19,13 @@ export default {
 		resume: "Riprendi",
 		quit: "Menu",
 	},
+	settings: {
+		title: "Impostazioni",
+		music: "Musica",
+		sounds: "Suoni",
+		ok: "OK",
+		credits: "Musica: «Riverside Ride» di Matthew Pablo (CC-BY 3.0) · Altra musica e suoni: OpenGameArt e Kenney (CC0)",
+	},
 	shop: {
 		title: "Skin",
 		equipped: "Equipaggiato",

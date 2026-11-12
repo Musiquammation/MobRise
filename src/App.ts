@@ -3,12 +3,14 @@ import { createResourceManager, type ResourceRequest } from "./resources/Resourc
 import { CORE_MODELS, HAT_MODELS, LEVEL_INDEX, levelRequest } from "./resources/assets";
 import {
 	createDomHandler, DomHandler, GameComponent, LevelsComponent, LoadingComponent, MainComponent, ShopComponent,
-	type DomActions, type ShopStat,
+	type DomActions, type ShopStat, type VolumeKind,
 } from "./DomHandler";
 import { Game, roundTenth } from "./game/Game";
 import { InputHandler } from "./game/InputHandler";
 import { renderSkinThumbnails } from "./game/skinThumbnails";
 import { loadSave, writeSave, type SaveData } from "./data/save";
+import { loadSettings, writeSettings, type Settings } from "./data/settings";
+import { audio } from "./audio/audio";
 import { airTime, getSkin, skinAbilities, skinPower, SKINS, type Skin } from "./data/skins";
 import type { LevelData, LevelIndex } from "./data/Level";
 import { locale, t } from "./i18n";
@@ -23,6 +25,7 @@ export class App implements DomActions {
 	private readonly renderer: THREE.WebGLRenderer;
 	private readonly dom: DomHandler;
 	private readonly save: SaveData = loadSave();
+	private readonly settings: Settings = loadSettings();
 
 	private levels: LevelIndex = [];
 	private levelResource: string | null = null;
@@ -42,6 +45,12 @@ export class App implements DomActions {
 
 		this.dom = createDomHandler(this);
 		this.dom.coins = this.save.coins;
+		this.dom.volumes = { music: this.settings.music, sounds: this.settings.sounds };
+		audio.setVolumes(this.settings.music, this.settings.sounds);
+		// Every button of the interface clicks.
+		document.addEventListener("click", e => {
+			if ((e.target as Element | null)?.closest?.("button")) audio.play("click");
+		}, true);
 		listenBackButton(() => this.back());
 		// Leaving the app (home, app switcher, screen off) pauses the game.
 		document.addEventListener("visibilitychange", () => {
@@ -58,6 +67,7 @@ export class App implements DomActions {
 		await this.openLevel();
 		requestAnimationFrame(t => this.loop(t));
 		this.loadInBackground().catch(err => console.error(err));
+		void audio.load();
 	}
 
 	/** Loads the other hats and renders the shop thumbnails without blocking the game. */
@@ -96,6 +106,7 @@ export class App implements DomActions {
 		}
 
 		this.buildGame();
+		audio.duck(false);
 		const level = this.resources.getJson<LevelData>(request.id);
 		this.dom.show(new MainComponent(this.current + 1, levelTitle(level)));
 	}
@@ -143,6 +154,10 @@ export class App implements DomActions {
 
 	/** Android back button: true when handled, false to leave the app. */
 	private back(): boolean {
+		if (this.dom.settingsOpen) {
+			this.dom.closeSettings();
+			return true;
+		}
 		switch (this.dom.panel.panel) {
 			case "game": {
 				const phase = this.game?.phase;
@@ -259,6 +274,12 @@ export class App implements DomActions {
 
 	next() {
 		void this.openLevel();
+	}
+
+	setVolume(kind: VolumeKind, value: number) {
+		this.settings[kind] = value;
+		writeSettings(this.settings);
+		audio.setVolumes(this.settings.music, this.settings.sounds);
 	}
 
 	retry() {

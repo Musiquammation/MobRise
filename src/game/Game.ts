@@ -33,6 +33,7 @@ import type { LevelData } from "../data/Level";
 import { skinAbilities, type Skin, type SkinAbilities } from "../data/skins";
 import type { ResourceManager } from "../resources/ResourceManager";
 import type { GameComponent } from "../DomHandler";
+import { audio } from "../audio/audio";
 
 export const MAX_PLAYERS = 400;
 /** Half width of a player, used to keep the crowd on the track. */
@@ -124,6 +125,11 @@ const COMBO_K = 3;
 /** Coins earned by the x-th box hit in a row: ln(3x+10) - ln(k+10) + 1, rounded to a tenth. */
 export function comboGain(x: number) {
 	return roundTenth(Math.log(3 * x + 10) - Math.log(COMBO_K + 10) + 1);
+}
+
+/** One pop per player joining the crowd, higher and higher along a burst. */
+function playSpawn() {
+	audio.enqueue("spawn", b => 1.25 + 0.5 * b, { detune: 0.06 });
 }
 
 export function roundTenth(v: number) {
@@ -334,6 +340,7 @@ export class Game extends GameLayer {
 		this.ui = ui;
 		this.phase = "run";
 		this.speed = this.runSpeed();
+		audio.duck(false);
 		this.syncUi();
 	}
 
@@ -405,6 +412,7 @@ export class Game extends GameLayer {
 
 	/** Speed strip touched: the crowd runs `factor` times faster for `duration` s. */
 	boost(factor: number, duration: number) {
+		if (this.boostTime <= 0) audio.play("boost");
 		this.boostFactor = this.boostTime > 0 ? Math.max(this.boostFactor, factor) : factor;
 		this.boostTime = Math.max(this.boostTime, duration);
 	}
@@ -499,6 +507,7 @@ export class Game extends GameLayer {
 						this.crowd.push(joined);
 						this.entities.add("player", joined);
 						zone.joined++;
+						playSpawn();
 						break;
 					}
 				}
@@ -507,6 +516,7 @@ export class Game extends GameLayer {
 			const zoneZ = zone.label.sprite.position.z;
 			if (zone.joined > 0 && (zone.recruits.every(r => !r.isAlive()) || zoneZ > this.centerZ + 3)) {
 				zone.reported = true;
+				audio.play("gateUp");
 				if (this.ui) {
 					this.ui.gateDelta = zone.joined;
 					this.ui.gateKey++;
@@ -597,6 +607,8 @@ export class Game extends GameLayer {
 				p.shield = Math.random() < this.abilities.shieldChance;
 				this.crowd.push(p);
 				this.entities.add("player", p);
+				// Not for the crowd of the level start.
+				if (this.phase === "run") playSpawn();
 			}
 		} else if (diff < 0) {
 			const dist = (p: Player) => (p.position.x - this.crowdX) ** 2 + (p.position.z - this.centerZ) ** 2;
@@ -621,6 +633,9 @@ export class Game extends GameLayer {
 		const before = this.crowd.length;
 		const after = Math.max(0, Math.min(MAX_PLAYERS, gate.apply(before)));
 		this.setCrowdCount(after);
+		// Higher for bigger gains.
+		if (after > before) audio.play("gateUp", { rate: 1 + Math.min(0.35, (after - before) / 150) });
+		else if (after < before) audio.play("gateDown");
 		if (this.ui) {
 			this.ui.gateDelta = after - before;
 			this.ui.gateKey++;
@@ -651,6 +666,7 @@ export class Game extends GameLayer {
 		const p = new Player(0, 0, 0);
 		p.shoot(from, velocity);
 		this.entities.add("player", p);
+		audio.play("shoot", { detune: 0.1 });
 	}
 
 	onBoxHit(box: MysteryBox, player: Player) {
@@ -666,6 +682,9 @@ export class Game extends GameLayer {
 		this.comboBox = box;
 		const gain = comboGain(this.combo);
 		this.earned = roundTenth(this.earned + gain);
+		// The combo climbs a scale (one semitone per hit, up to an octave and a half).
+		// Higher and higher with the gain shown on screen (+1.0, +1.2... up to about +3).
+		audio.play("coin", { rate: Math.min(2.5, gain ** 0.8), detune: 0 });
 		this.callbacks.onCoins(gain);
 		if (this.ui) {
 			this.ui.combo = this.combo;
@@ -874,6 +893,8 @@ export class Game extends GameLayer {
 		}
 		this.phase = won ? "won" : "lost";
 		this.speed = 0;
+		audio.duck(true);
+		audio.play(won ? "win" : "lose");
 		this.fighting = false;
 		this.callbacks.onEnd(won);
 		this.syncUi();

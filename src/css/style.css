@@ -877,8 +877,198 @@ progress::-moz-progress-bar {
 	margin-bottom: 4px;
 }
 
-#game > article[data-pause] button[data-quit] {
+/* Secondary actions (back to the menu, settings): grey. */
+#game > article button[data-quit],
+#game > article button[data-secondary] {
 	--c: #8a94a8;
 	--c-light: #a7b1c2;
 	--c-dark: #6a7488;
+}
+
+#game > article[data-lost] button + button {
+	margin-top: 14px;
+}
+
+/* settings button of the main menu */
+#main > button[data-settings] {
+	position: absolute;
+	left: 12px;
+	top: calc(12px + var(--safe-top));
+	display: grid;
+	place-items: center;
+	width: 52px;
+	min-height: 0;
+	height: 52px;
+	padding: 0;
+	border-radius: 16px;
+}
+
+#main > button[data-settings] svg {
+	width: 28px;
+	height: 28px;
+	fill: #fff;
+	fill-rule: evenodd;
+	filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.3));
+}
+
+/* settings window, above every panel */
+#settings {
+	position: fixed;
+	inset: 0;
+	z-index: 20;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: calc(16px + var(--safe-top)) 16px calc(16px + var(--safe-bottom));
+	background: rgba(29, 37, 64, 0.5);
+	touch-action: manipulation;
+}
+
+#settings article {
+	width: min(100%, 340px);
+	padding: 0 20px 18px;
+	text-align: center;
+	background: #fff;
+	border: 4px solid var(--ink);
+	border-radius: 26px;
+	box-shadow: 0 8px 0 var(--ink), 0 20px 40px rgba(0, 0, 0, 0.3);
+	overflow: hidden;
+}
+
+#settings h2 {
+	margin: 0 -20px 18px;
+	padding: 14px 0 16px;
+	background: linear-gradient(var(--blue-light), var(--blue) 60%);
+	border-bottom: 4px solid var(--ink);
+}
+
+#settings article > div {
+	display: grid;
+	grid-template-columns: auto 1fr;
+	grid-template-rows: auto auto;
+	column-gap: 12px;
+	row-gap: 4px;
+	align-items: center;
+	margin-bottom: 16px;
+	text-align: left;
+}
+
+#settings article > div > button {
+	grid-row: span 2;
+	display: grid;
+	place-items: center;
+	width: 52px;
+	height: 52px;
+	min-height: 0;
+	padding: 0;
+	border-radius: 16px;
+}
+
+#settings article > div > button svg {
+	width: 26px;
+	height: 26px;
+	fill: #fff;
+	stroke: #fff;
+	stroke-width: 0;
+	filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.3));
+}
+
+/* The waves of the speaker icon are strokes. */
+#settings article > div > button svg path {
+	stroke-width: 2.2;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}
+
+#settings article > div > span {
+	font-size: 22px;
+}
+
+/* Muted: grey button with a slash. */
+#settings article > div[data-muted="true"] > button {
+	--c: #8a94a8;
+	--c-light: #a7b1c2;
+	--c-dark: #6a7488;
+	position: relative;
+}
+
+#settings article > div[data-muted="true"] > button::after {
+	content: "";
+	position: absolute;
+	width: 34px;
+	height: 4px;
+	background: var(--red);
+	border: 2px solid var(--ink);
+	border-radius: 4px;
+	transform: rotate(-45deg);
+}
+
+#settings input[type="range"] {
+	--v: 50%;
+	width: 100%;
+	height: 26px;
+	margin: 0;
+	background: transparent;
+	-webkit-appearance: none;
+	appearance: none;
+	touch-action: none;
+	cursor: pointer;
+}
+
+#settings input[type="range"]::-webkit-slider-runnable-track {
+	height: 14px;
+	border: 3px solid var(--ink);
+	border-radius: 999px;
+	background: linear-gradient(to right, var(--green) var(--v), #dfe4ec var(--v));
+}
+
+#settings input[type="range"]::-moz-range-track {
+	height: 8px;
+	border: 3px solid var(--ink);
+	border-radius: 999px;
+	background: #dfe4ec;
+}
+
+#settings input[type="range"]::-moz-range-progress {
+	height: 8px;
+	border: 3px solid var(--ink);
+	border-radius: 999px;
+	background: var(--green);
+}
+
+#settings input[type="range"]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	width: 26px;
+	height: 26px;
+	margin-top: -9px;
+	border: 3px solid var(--ink);
+	border-radius: 50%;
+	background: linear-gradient(#fff, #dfe4ec);
+	box-shadow: 0 2px 0 var(--ink);
+}
+
+#settings input[type="range"]::-moz-range-thumb {
+	width: 20px;
+	height: 20px;
+	border: 3px solid var(--ink);
+	border-radius: 50%;
+	background: linear-gradient(#fff, #dfe4ec);
+}
+
+#settings article > button {
+	--c: var(--green);
+	--c-light: var(--green-light);
+	--c-dark: var(--green-dark);
+	display: block;
+	margin: 4px auto 0;
+	min-width: 180px;
+	font-size: 26px;
+}
+
+#settings small {
+	display: block;
+	margin-top: 16px;
+	font: 13px/1.3 system-ui, sans-serif;
+	letter-spacing: 0;
+	color: #6a7488;
 }

@@ -28,6 +28,9 @@
 
 	<template x-if="$store.dom.is('main')">
 		<section id="main" x-data="{ get p() { return $store.dom.panel } }" @click="$store.dom.play()">
+			<button data-settings @click.stop="$store.dom.openSettings()" :aria-label="$t('settings.title')">
+				<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.3 2h3.4l.5 2.6a7.6 7.6 0 0 1 1.9 1.1l2.5-.9 1.7 2.9-2 1.7a7.7 7.7 0 0 1 0 2.2l2 1.7-1.7 2.9-2.5-.9a7.6 7.6 0 0 1-1.9 1.1l-.5 2.6h-3.4l-.5-2.6a7.6 7.6 0 0 1-1.9-1.1l-2.5.9-1.7-2.9 2-1.7a7.7 7.7 0 0 1 0-2.2l-2-1.7 1.7-2.9 2.5.9a7.6 7.6 0 0 1 1.9-1.1L10.3 2ZM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/></svg>
+			</button>
 			<h1>MobRise</h1>
 			<p x-html="$t('main.level', { n: `<b>${p.levelNumber}</b>` })"></p>
 			<small x-text="p.levelName"></small>
@@ -76,6 +79,7 @@
 			<article x-show="p.paused" x-transition data-pause @pointerdown.stop>
 				<h2 x-text="$t('game.paused')"></h2>
 				<button @click="$store.dom.resume()" x-text="$t('game.resume')"></button>
+				<button data-secondary @click="$store.dom.openSettings()" x-text="$t('settings.title')"></button>
 				<button data-quit @click="$store.dom.quit()" x-text="$t('game.quit')"></button>
 			</article>
 			<article x-show="p.phase === 'won'" x-transition>
@@ -86,6 +90,7 @@
 			<article x-show="p.phase === 'lost'" x-transition data-lost>
 				<h2 x-text="$t('game.lost')"></h2>
 				<button @click="$store.dom.retry()" x-text="$t('game.retry')"></button>
+				<button data-quit @click="$store.dom.quit()" x-text="$t('game.quit')"></button>
 			</article>
 		</section>
 	</template>
@@ -165,5 +170,29 @@
 			<button @click="$store.dom.closeShop()" x-text="$t('shop.back')"></button>
 		</section>
 	</template>
+
+	<div id="settings" x-cloak x-show="$store.dom.settingsOpen" x-transition.opacity
+		@click.self="$store.dom.closeSettings()" @pointerdown.stop>
+		<article role="dialog" aria-modal="true" :aria-label="$t('settings.title')">
+			<h2 x-text="$t('settings.title')"></h2>
+			<template x-for="kind in ['music', 'sounds']" :key="kind">
+				<div :data-muted="$store.dom.volumes[kind] === 0">
+					<button type="button" @click.prevent="$store.dom.toggleMute(kind)" :aria-label="$t('settings.' + kind)"
+						:aria-pressed="$store.dom.volumes[kind] === 0">
+						<svg x-show="kind === 'music'" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4.5 20 2v13.5a3.5 3.5 0 1 1-2-3.2V6.4l-7 1.6v9.5A3.5 3.5 0 1 1 9 14.3V4.5Z"/></svg>
+						<svg x-show="kind === 'sounds'" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9h4l6-5v16l-6-5H3V9Zm13.5-1.5a6 6 0 0 1 0 9M19 4.5a10 10 0 0 1 0 15"/></svg>
+					</button>
+					<span x-text="$t('settings.' + kind)"></span>
+					<input type="range" min="0" max="100" step="1"
+						:value="Math.round($store.dom.volumes[kind] * 100)"
+						:style="`--v:${$store.dom.volumes[kind] * 100}%`"
+						:aria-label="$t('settings.' + kind)"
+						@input="$store.dom.setVolume(kind, $event.target.value / 100)">
+				</div>
+			</template>
+			<button @click="$store.dom.closeSettings()" x-text="$t('settings.ok')"></button>
+			<small x-text="$t('settings.credits')"></small>
+		</article>
+	</div>
 </body>
 </html>

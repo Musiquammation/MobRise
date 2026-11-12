@@ -19,6 +19,13 @@ export default {
 		resume: "Continuar",
 		quit: "Menú",
 	},
+	settings: {
+		title: "Ajustes",
+		music: "Música",
+		sounds: "Sonidos",
+		ok: "OK",
+		credits: "Música: «Riverside Ride» de Matthew Pablo (CC-BY 3.0) · Otra música y sonidos: OpenGameArt y Kenney (CC0)",
+	},
 	shop: {
 		title: "Aspectos",
 		equipped: "Equipado",

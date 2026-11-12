@@ -106,7 +106,11 @@ export interface DomActions {
 	pause(): void;
 	resume(): void;
 	quit(): void;
+	/** Volume in [0, 1] of the music or of the sound effects. */
+	setVolume(kind: VolumeKind, value: number): void;
 }
+
+export type VolumeKind = "music" | "sounds";
 
 // Kept outside the reactive store: Alpine would otherwise wrap the whole
 // game (three.js objects included) in reactive proxies.
@@ -119,6 +123,12 @@ let actions: DomActions | null = null;
 export class DomHandler {
 	panel: Panel = new LoadingComponent();
 	coins = 0;
+	/** The settings window is shown above the current panel. */
+	settingsOpen = false;
+	/** Volumes in [0, 1] (written by App, changed through setVolume). */
+	volumes: Record<VolumeKind, number> = { music: 1, sounds: 1 };
+	/** Volume before muting, restored by toggleMute. */
+	private unmuted: Record<VolumeKind, number> = { music: 0.6, sounds: 0.8 };
 
 	is(symbol: PanelSymbol): boolean {
 		return this.panel.panel === symbol;
@@ -145,6 +155,21 @@ export class DomHandler {
 	pause() { actions?.pause(); }
 	resume() { actions?.resume(); }
 	quit() { actions?.quit(); }
+	openSettings() { this.settingsOpen = true; }
+	closeSettings() { this.settingsOpen = false; }
+
+	setVolume(kind: VolumeKind, value: number | string) {
+		const v = Math.max(0, Math.min(1, Number(value)));
+		this.volumes[kind] = v;
+		actions?.setVolume(kind, v);
+	}
+
+	/** Mutes, or brings back the volume it had before. */
+	toggleMute(kind: VolumeKind) {
+		const v = this.volumes[kind];
+		if (v > 0) this.unmuted[kind] = v;
+		this.setVolume(kind, v > 0 ? 0 : this.unmuted[kind] || 0.6);
+	}
 }
 
 /** Registers the DomHandler in Alpine, starts Alpine and returns the reactive handler. */

@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { Entity } from "../../Entity";
 import type { Game } from "../../Game";
+import { audio } from "../../../audio/audio";
 import { GRAVITY } from "../Player";
 
 /**
@@ -40,6 +41,7 @@ export class Enemy extends Entity {
 		this.state = "dying";
 		this.deathTime = 0;
 		this.velocity.set(vx, vy, vz);
+		audio.enqueue("pop", b => 0.8 - 0.2 * b, { detune: 0.08 });
 	}
 
 	frame(game: Game, dt: number) {

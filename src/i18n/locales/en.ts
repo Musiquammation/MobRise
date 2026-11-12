@@ -24,6 +24,13 @@ const en = {
 		resume: "Resume",
 		quit: "Menu",
 	},
+	settings: {
+		title: "Settings",
+		music: "Music",
+		sounds: "Sounds",
+		ok: "OK",
+		credits: "Music: “Riverside Ride” by Matthew Pablo (CC-BY 3.0) · Other music and sounds: OpenGameArt and Kenney (CC0)",
+	},
 	shop: {
 		title: "Skins",
 		equipped: "Equipped",
