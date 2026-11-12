@@ -77,10 +77,11 @@ Check the whole list once more (2 + 8 + 8 + 8 files, all with the new suffix, in
 Managed publishing is off for this app, so once Google approves, the listing goes live automatically.
 
 1. In the listing editor (draft reloaded intact), click **"Suivant"**. This opens step 2, "Avis".
-2. **Déclaration relative aux éléments d'IA**: pick a radio button. The user chose **"Ne pas signaler les éléments"** on 2026-11-12, because the images are real game captures framed by a script, with no image-generation model. Ask again if the images are ever made differently. The page scrolls while it loads: click the radio by `find` ref, not by coordinates, then check `input[type=radio]` `.checked`.
+2. **Déclaration relative aux éléments d'IA**: pick a radio button. The user chose **"Ne pas signaler les éléments"** on 2026-11-12, because the images are real game captures framed by a script, with no image-generation model. The user kept the same choice on 2026-11-12 for listing text drafted with Claude. Ask again if the images are ever made differently. The page scrolls while it loads: click the radio by `find` ref, not by coordinates, then check `input[type=radio]` `.checked`.
 3. Click **"Enregistrer"**. In the dialog "Accéder à 'Vue d'ensemble de la publication' ?", click **"Accéder à l'aperçu"**.
 4. On the publishing overview (`…/app/4973667727940247656/publishing`), check the list under "Modifications pas encore envoyées pour examen". It should hold only our changes: icon, phone, 7", 10" screenshots and feature graphic (5 rows). If anything else is pending, ask before sending.
 5. Click **"Envoyer N modifications pour examen"**, then confirm with **"Envoi des modifications pour examen"** in the dialog. The heading turns into "Modifications en cours d'examen". Review usually takes up to 7 days, and the quick checks can still be running (≈ 15 min), which does not block sending.
+6. If a review is already running, Play shows "Voulez-vous recommencer l'examen ?": sending cancels and restarts it, which makes the wait longer. Ask the user before clicking "Recommencer l'examen".
 
 ## Notes
 
